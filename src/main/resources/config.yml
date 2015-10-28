@@ -1,0 +1,11 @@
+debug: false
+
+arenas:
+  default:
+    name: "Default Arena"
+    gamemode: deathmatch
+    maxplayers: 10
+    time_limit: 600
+    maps:
+    - samplemap
+    - anothermap

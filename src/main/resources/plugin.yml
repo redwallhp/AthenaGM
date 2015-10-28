@@ -1,0 +1,30 @@
+name: AthenaGM
+main: io.github.redwallhp.athenagm.AthenaGM
+description: Athena Game Manager
+version: ${project.version}
+load: startup
+
+
+permissions:
+  athenagm.admin:
+    description: Admin functions
+    children:
+      athenagm.moderator: true
+  athenagm.moderator:
+    description: Moderation functions
+  athenagm.player:
+    description: General functions
+    default: true
+
+
+commands:
+  arenas:
+    usage: /arenas
+    description: List arenas
+    permission: athenagm.player
+    permission-message: You don't have permission to do that.
+  join:
+    usage: /join <arena id>
+    description: Join an arena
+    permission: athenagm.player
+    permission-message: You don't have permission to do that.
