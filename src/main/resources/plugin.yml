@@ -18,6 +18,11 @@ permissions:
 
 
 commands:
+  athena:
+    usage: /athena <subcommand>
+    description: Admin commands
+    permission: athenagm.admin
+    permission-message: You don't have permission to do that.
   arenas:
     usage: /arenas
     description: List arenas

@@ -48,6 +48,11 @@ public class PermissionsModule implements Module {
     }
 
 
+    public void reload() {
+        reloadPermissions();
+    }
+
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         addAttachment(event.getPlayer());
