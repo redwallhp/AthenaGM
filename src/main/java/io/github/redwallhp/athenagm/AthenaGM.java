@@ -4,6 +4,8 @@ import io.github.redwallhp.athenagm.arenas.ArenaHandler;
 import io.github.redwallhp.athenagm.commands.ArenaCommands;
 import io.github.redwallhp.athenagm.configuration.Configuration;
 import io.github.redwallhp.athenagm.maps.VoidGenerator;
+import io.github.redwallhp.athenagm.modules.Module;
+import io.github.redwallhp.athenagm.modules.ModuleLoader;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,14 +17,22 @@ public class AthenaGM extends JavaPlugin {
 
     public Configuration config;
     public ArenaHandler arenaHandler;
+    private ModuleLoader moduleLoader;
 
 
     @Override
     public void onEnable() {
         this.config = new Configuration(this);
         setupDirectories();
-        registerCommands();
         this.arenaHandler = new ArenaHandler(this);
+        this.moduleLoader = new ModuleLoader(this);
+        registerCommands();
+    }
+
+
+    @Override
+    public void onDisable() {
+        this.moduleLoader.unload();
     }
 
 
@@ -32,8 +42,6 @@ public class AthenaGM extends JavaPlugin {
 
 
     private void setupDirectories() {
-        // Set up directory structure if nonexistant
-        // This is where a default maps would be copied over
         getMapsDirectory().mkdir();
         getMatchesDirectory().mkdir();
     }
@@ -46,6 +54,11 @@ public class AthenaGM extends JavaPlugin {
 
     public File getMatchesDirectory() {
         return new File("matches");
+    }
+
+
+    public Module getModule(String name) {
+        return this.moduleLoader.getModule(name);
     }
 
 

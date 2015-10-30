@@ -1,0 +1,16 @@
+groups:
+  default:
+    inherits: []
+    permissions:
+      - someplugin.playerpermission
+
+  admin:
+    inherits:
+      - moderator
+    permissions:
+      - someplugin.adminpermission
+
+  moderator:
+    inherits: []
+    permissions:
+      - someplugin.modpermission
