@@ -2,6 +2,7 @@ package io.github.redwallhp.athenagm.commands;
 
 
 import io.github.redwallhp.athenagm.AthenaGM;
+import io.github.redwallhp.athenagm.modules.Permissions.PermissionsModule;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -50,7 +51,8 @@ public class AdminCommands implements CommandExecutor {
         String what = args[1];
 
         if (what.equalsIgnoreCase("permissions")) {
-            plugin.getModule("permissions").reload();
+            PermissionsModule module = (PermissionsModule) plugin.getModule("permissions");
+            module.reloadPermissions();
             sender.sendMessage(ChatColor.LIGHT_PURPLE + "Permissions reloaded.");
         }
 

@@ -7,6 +7,5 @@ public interface Module extends Listener {
 
     String getModuleName();
     void unload();
-    void reload();
 
 }
