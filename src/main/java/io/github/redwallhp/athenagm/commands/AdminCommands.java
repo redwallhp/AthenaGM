@@ -2,7 +2,7 @@ package io.github.redwallhp.athenagm.commands;
 
 
 import io.github.redwallhp.athenagm.AthenaGM;
-import io.github.redwallhp.athenagm.modules.Permissions.PermissionsModule;
+import io.github.redwallhp.athenagm.modules.permissions.PermissionsModule;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

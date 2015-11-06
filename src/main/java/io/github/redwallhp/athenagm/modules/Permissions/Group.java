@@ -1,4 +1,4 @@
-package io.github.redwallhp.athenagm.modules.Permissions;
+package io.github.redwallhp.athenagm.modules.permissions;
 
 
 import java.util.List;

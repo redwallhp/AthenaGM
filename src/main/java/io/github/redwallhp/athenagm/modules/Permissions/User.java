@@ -1,7 +1,6 @@
-package io.github.redwallhp.athenagm.modules.Permissions;
+package io.github.redwallhp.athenagm.modules.permissions;
 
 
-import java.util.List;
 import java.util.UUID;
 
 public class User {

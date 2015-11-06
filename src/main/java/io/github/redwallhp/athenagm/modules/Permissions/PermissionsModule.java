@@ -1,4 +1,4 @@
-package io.github.redwallhp.athenagm.modules.Permissions;
+package io.github.redwallhp.athenagm.modules.permissions;
 
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.modules.Module;
