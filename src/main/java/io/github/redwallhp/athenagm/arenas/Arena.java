@@ -3,6 +3,7 @@ package io.github.redwallhp.athenagm.arenas;
 
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.configuration.ConfiguredArena;
+import io.github.redwallhp.athenagm.events.MatchCreateEvent;
 import io.github.redwallhp.athenagm.maps.MapLoader;
 import io.github.redwallhp.athenagm.maps.Rotation;
 import io.github.redwallhp.athenagm.matches.Match;
@@ -54,19 +55,25 @@ public class Arena {
 
 
     public void startNewMatch() {
+
         if (rotation.getNextMap().equals(mapLoader.getMap())) {
             rotation.advance();
         }
+
         World oldWorld = (this.world == null) ? null : getWorld();
         File oldFile = (this.worldFile == null) ? null : getWorldFile();
+
         mapLoader.load();
         this.match = new Match(this, this.mapLoader.getUUID(), this.mapLoader.getMap());
-        //todo: throw match start/end events so game plugins can do setup/cleanup (MatchCreateEvent)
+        MatchCreateEvent event = new MatchCreateEvent(this.match);
+        Bukkit.getPluginManager().callEvent(event);
         mapLoader = new MapLoader(rotation.getNextMap(), this);
+
         if (oldWorld != null) {
             Bukkit.unloadWorld(oldWorld, false);
             mapLoader.destroyWorldInstanceCopy(oldFile);
         }
+
     }
 
 

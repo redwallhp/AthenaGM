@@ -15,6 +15,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class ArenaListener implements Listener {
@@ -93,6 +94,12 @@ public class ArenaListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuit(PlayerQuitEvent event) {
+        removePlayer(event.getPlayer());
+    }
+
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerKick(PlayerKickEvent event) {
         removePlayer(event.getPlayer());
     }
 

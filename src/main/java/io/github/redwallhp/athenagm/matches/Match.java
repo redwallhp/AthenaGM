@@ -2,10 +2,12 @@ package io.github.redwallhp.athenagm.matches;
 
 
 import io.github.redwallhp.athenagm.arenas.Arena;
+import io.github.redwallhp.athenagm.events.MatchStateChangedEvent;
 import io.github.redwallhp.athenagm.maps.GameMap;
 import io.github.redwallhp.athenagm.maps.MapInfoSpawnPoint;
 import io.github.redwallhp.athenagm.maps.MapInfoTeam;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -74,8 +76,10 @@ public class Match {
 
 
     public void setState(MatchState state) {
+        MatchState previousState = this.state;
         this.state = state;
-        // todo: throw a MatchStateChangedEvent
+        MatchStateChangedEvent event = new MatchStateChangedEvent(this, previousState);
+        Bukkit.getPluginManager().callEvent(event);
     }
 
 
