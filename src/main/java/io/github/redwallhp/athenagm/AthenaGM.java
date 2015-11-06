@@ -17,7 +17,7 @@ public class AthenaGM extends JavaPlugin {
 
 
     public Configuration config;
-    public ArenaHandler arenaHandler;
+    private ArenaHandler arenaHandler;
     private ModuleLoader moduleLoader;
 
 
@@ -56,6 +56,11 @@ public class AthenaGM extends JavaPlugin {
 
     public File getMatchesDirectory() {
         return new File("matches");
+    }
+
+
+    public ArenaHandler getArenaHandler() {
+        return arenaHandler;
     }
 
 

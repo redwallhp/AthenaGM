@@ -25,6 +25,11 @@ public class ArenaCommands implements CommandExecutor {
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
+        if (cmd.getName().equalsIgnoreCase("hub")) {
+            // return to hub world
+            return true;
+        }
+
         if (cmd.getName().equalsIgnoreCase("arenas")) {
             listArenas(sender);
             return true;
@@ -39,18 +44,13 @@ public class ArenaCommands implements CommandExecutor {
             return true;
         }
 
-        if (cmd.getName().equalsIgnoreCase("hub")) {
-            // return to hub world
-            return true;
-        }
-
         return false;
 
     }
 
 
     private void listArenas(CommandSender sender) {
-        for (Arena arena : plugin.arenaHandler.getArenas()) {
+        for (Arena arena : plugin.getArenaHandler().getArenas()) {
             int players = arena.getMatch().getTotalPlayers();
             StringBuilder head = new StringBuilder("" + ChatColor.STRIKETHROUGH);
             head.append("--- ");
@@ -75,7 +75,7 @@ public class ArenaCommands implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "Console can't join an arena.");
             return;
         }
-        for (Arena arena : plugin.arenaHandler.getArenas()) {
+        for (Arena arena : plugin.getArenaHandler().getArenas()) {
             if (arena.getId().equals(id)) {
                 Player player = (Player) sender;
                 Location loc = arena.getMatch().getSpawnPoint(player);
