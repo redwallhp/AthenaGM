@@ -2,6 +2,7 @@ package io.github.redwallhp.athenagm.arenas;
 
 
 import io.github.redwallhp.athenagm.events.PlayerEnterMatchWorldEvent;
+import io.github.redwallhp.athenagm.events.PlayerMatchRespawnEvent;
 import io.github.redwallhp.athenagm.maps.GameMap;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
@@ -104,7 +105,10 @@ public class ArenaListener implements Listener {
         Player player = event.getPlayer();
         Arena arena = arenaHandler.getArenaForPlayer(player);
         if (arena != null) {
-            //todo: emit PlayerMatchRespawnEvent
+            Location respawnLocation = arena.getMatch().getSpawnPoint(player);
+            PlayerMatchRespawnEvent customEvent = new PlayerMatchRespawnEvent(player, arena.getMatch(), respawnLocation);
+            Bukkit.getPluginManager().callEvent(customEvent);
+            event.setRespawnLocation(customEvent.getRespawnLocation());
         }
     }
 

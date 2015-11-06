@@ -1,6 +1,7 @@
 package io.github.redwallhp.athenagm.matches;
 
 import io.github.redwallhp.athenagm.events.PlayerChangeTeamEvent;
+import io.github.redwallhp.athenagm.events.PlayerMatchRespawnEvent;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -75,9 +76,10 @@ public class Team {
         } else {
             player.setGameMode(GameMode.SURVIVAL);
         }
-        player.teleport(this.getMatch().getSpawnPoint(player));
+        PlayerMatchRespawnEvent event = new PlayerMatchRespawnEvent(player, getMatch(), getMatch().getSpawnPoint(player));
+        Bukkit.getPluginManager().callEvent(event);
+        player.teleport(event.getRespawnLocation());
         //todo: apply kit (possibly in a Kits module using an event?)
-        //todo: emit PlayerMatchRespawnEvent
     }
 
 
