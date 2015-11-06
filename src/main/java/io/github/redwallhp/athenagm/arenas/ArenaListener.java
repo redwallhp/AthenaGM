@@ -13,10 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 
 public class ArenaListener implements Listener {
 
@@ -99,6 +96,16 @@ public class ArenaListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerKick(PlayerKickEvent event) {
         removePlayer(event.getPlayer());
+    }
+
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        Arena arena = arenaHandler.getArenaForPlayer(player);
+        if (arena != null) {
+            //todo: emit PlayerMatchRespawnEvent
+        }
     }
 
 

@@ -67,7 +67,7 @@ public class MatchCommands implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        Arena arena = PlayerUtil.getArenaForPlayer(plugin.getArenaHandler(), player);
+        Arena arena = plugin.getArenaHandler().getArenaForPlayer(player);
 
         if (arena == null) {
             sender.sendMessage(ChatColor.RED + "You must join an arena to list teams.");
@@ -98,7 +98,7 @@ public class MatchCommands implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        Arena arena = PlayerUtil.getArenaForPlayer(plugin.getArenaHandler(), player);
+        Arena arena = plugin.getArenaHandler().getArenaForPlayer(player);
 
         if (arena == null) {
             sender.sendMessage(ChatColor.RED + "You must join an arena first.");
@@ -125,7 +125,7 @@ public class MatchCommands implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        Arena arena = PlayerUtil.getArenaForPlayer(plugin.getArenaHandler(), player);
+        Arena arena = plugin.getArenaHandler().getArenaForPlayer(player);
 
         if (arena == null) {
             sender.sendMessage(ChatColor.RED + "You must join an arena first.");

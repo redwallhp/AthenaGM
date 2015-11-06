@@ -76,7 +76,8 @@ public class Team {
             player.setGameMode(GameMode.SURVIVAL);
         }
         player.teleport(this.getMatch().getSpawnPoint(player));
-        //todo: apply kit
+        //todo: apply kit (possibly in a Kits module using an event?)
+        //todo: emit PlayerMatchRespawnEvent
     }
 
 
