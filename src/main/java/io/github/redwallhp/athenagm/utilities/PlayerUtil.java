@@ -52,4 +52,13 @@ public class PlayerUtil {
     }
 
 
+    public static Arena getArenaForPlayer(ArenaHandler arenaHandler, Player player) {
+        for (Arena arena : arenaHandler.getArenas()) {
+            Team team = getTeamForPlayer(arena.getMatch(), player);
+            if (team != null) return arena;
+        }
+        return null;
+    }
+
+
 }

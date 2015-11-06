@@ -3,6 +3,7 @@ package io.github.redwallhp.athenagm;
 import io.github.redwallhp.athenagm.arenas.ArenaHandler;
 import io.github.redwallhp.athenagm.commands.AdminCommands;
 import io.github.redwallhp.athenagm.commands.ArenaCommands;
+import io.github.redwallhp.athenagm.commands.MatchCommands;
 import io.github.redwallhp.athenagm.configuration.Configuration;
 import io.github.redwallhp.athenagm.maps.VoidGenerator;
 import io.github.redwallhp.athenagm.modules.Module;
@@ -40,6 +41,7 @@ public class AthenaGM extends JavaPlugin {
     private void registerCommands() {
         AdminCommands adminCommands = new AdminCommands(this);
         ArenaCommands arenaCommands = new ArenaCommands(this);
+        MatchCommands matchCommands = new MatchCommands(this);
     }
 
 

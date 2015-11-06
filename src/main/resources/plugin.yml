@@ -23,6 +23,11 @@ commands:
     description: Admin commands
     permission: athenagm.admin
     permission-message: You don't have permission to do that.
+  hub:
+    usage: /hub
+    description: Return to the minigames hub
+    permission: athenagm.player
+    permission-message: You don't have permission to do that.
   arenas:
     usage: /arenas
     description: List arenas
@@ -31,5 +36,15 @@ commands:
   join:
     usage: /join <arena id>
     description: Join an arena
+    permission: athenagm.player
+    permission-message: You don't have permission to do that.
+  teams:
+    usage: /teams
+    description: List the teams available in a match
+    permission: athenagm.player
+    permission-message: You don't have permission to do that.
+  team:
+    usage: /team <team id>
+    description: Join a team in the current match
     permission: athenagm.player
     permission-message: You don't have permission to do that.

@@ -18,6 +18,7 @@ public class ArenaCommands implements CommandExecutor {
 
     public ArenaCommands(AthenaGM plugin) {
         this.plugin = plugin;
+        plugin.getCommand("hub").setExecutor(this);
         plugin.getCommand("arenas").setExecutor(this);
         plugin.getCommand("join").setExecutor(this);
     }

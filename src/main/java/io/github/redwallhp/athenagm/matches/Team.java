@@ -4,6 +4,7 @@ import io.github.redwallhp.athenagm.events.PlayerChangeTeamEvent;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class Team {
             if (oldTeam != null) {
                 oldTeam.remove(player);
             }
+            playerSetup(player);
             player.sendMessage(String.format("%sYou have joined team %s.", ChatColor.DARK_AQUA, getColoredName()));
             return true;
         } else {
@@ -62,6 +64,18 @@ public class Team {
             return true;
         }
         return false;
+    }
+
+
+    private void playerSetup(Player player) {
+        PlayerUtil.resetPlayer(player);
+        if (this.isSpectator()) {
+            player.setGameMode(GameMode.SPECTATOR);
+        } else {
+            player.setGameMode(GameMode.SURVIVAL);
+        }
+        //todo: teleport to a spawn point
+        //todo: apply kit
     }
 
 

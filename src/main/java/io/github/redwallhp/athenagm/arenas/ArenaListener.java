@@ -49,11 +49,9 @@ public class ArenaListener implements Listener {
             // player has entered the match world
             PlayerEnterMatchWorldEvent e = new PlayerEnterMatchWorldEvent(arena, player);
             Bukkit.getPluginManager().callEvent(e);
-            PlayerUtil.resetPlayer(player);
 
             // make them a spectator to start
             arena.getMatch().addPlayerToTeam("spectator", player);
-            player.setGameMode(GameMode.SPECTATOR);
 
             // print map information
             GameMap map = arena.getMatch().getMap();
