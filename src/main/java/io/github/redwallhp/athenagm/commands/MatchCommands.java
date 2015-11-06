@@ -6,7 +6,6 @@ import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import io.github.redwallhp.athenagm.utilities.StringUtil;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 
 public class MatchCommands implements CommandExecutor {
@@ -26,6 +26,8 @@ public class MatchCommands implements CommandExecutor {
         this.plugin = plugin;
         plugin.getCommand("teams").setExecutor(this);
         plugin.getCommand("team").setExecutor(this);
+        plugin.getCommand("autojoin").setExecutor(this);
+        plugin.getCommand("spectate").setExecutor(this);
     }
 
 
@@ -38,6 +40,17 @@ public class MatchCommands implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("team")) {
             joinTeam(sender, args);
+            return true;
+        }
+
+        if (cmd.getName().equalsIgnoreCase("autojoin")) {
+            autoJoinTeam(sender);
+            return true;
+        }
+
+        if (cmd.getName().equalsIgnoreCase("spectate")) {
+            String[] arguments = { "spectator" };
+            joinTeam(sender, arguments);
             return true;
         }
 
@@ -99,7 +112,35 @@ public class MatchCommands implements CommandExecutor {
             }
         }
 
-        sender.sendMessage(ChatColor.RED + "Invalid team name.");
+        sender.sendMessage(ChatColor.RED + "Invalid team id.");
+
+    }
+
+
+    private void autoJoinTeam(CommandSender sender) {
+
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "Console can't join a team.");
+            return;
+        }
+
+        Player player = (Player) sender;
+        Arena arena = PlayerUtil.getArenaForPlayer(plugin.getArenaHandler(), player);
+
+        if (arena == null) {
+            sender.sendMessage(ChatColor.RED + "You must join an arena first.");
+            return;
+        }
+
+        TreeMap<Integer, Team> teamSizeMap = new TreeMap<Integer, Team>();
+        for (Team team : arena.getMatch().getTeams().values()) {
+            if (team.getPlayers().size() < team.getSize() || team.getPlayers().size() == 0) {
+                teamSizeMap.put(team.getPlayers().size(), team);
+            }
+        }
+        for (Team team : teamSizeMap.values()) {
+            if (! team.isSpectator()) team.add(player, false);
+        }
 
     }
 

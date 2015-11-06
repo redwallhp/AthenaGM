@@ -48,3 +48,15 @@ commands:
     description: Join a team in the current match
     permission: athenagm.player
     permission-message: You don't have permission to do that.
+  autojoin:
+    usage: /autojoin
+    description: Automatically join a team
+    permission: athenagm.player
+    permission-message: You don't have permission to do that.
+    aliases: [aj]
+  spectate:
+    usage: /spectate
+    description: Switch to the Spectator team
+    permission: athenagm.player
+    permission-message: You don't have permission to do that.
+    aliases: [spec]
