@@ -5,6 +5,7 @@ import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class Team {
         } else {
             player.setGameMode(GameMode.SURVIVAL);
         }
-        //todo: teleport to a spawn point
+        player.teleport(this.getMatch().getSpawnPoint(player));
         //todo: apply kit
     }
 
