@@ -14,12 +14,11 @@ public class HelpBook extends ItemStack {
     private BookMeta book;
 
 
-    public HelpBook(String title, String author, String contents) {
+    public HelpBook(String title, String contents) {
         this.setType(Material.WRITTEN_BOOK);
         this.setAmount(1);
         this.book = (BookMeta) this.getItemMeta();
         book.setTitle(title);
-        book.setAuthor(author);
         parseBookContents(contents);
         this.setItemMeta(this.book);
     }

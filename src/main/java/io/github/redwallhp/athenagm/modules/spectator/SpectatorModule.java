@@ -4,17 +4,23 @@ import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.events.PlayerMatchRespawnEvent;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.modules.Module;
+import io.github.redwallhp.athenagm.utilities.ItemUtil;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -48,7 +54,7 @@ public class SpectatorModule implements Module {
     public void onPlayerMatchRespawn(PlayerMatchRespawnEvent event) {
         if (!isPlayerSpectator(event.getPlayer())) return;
         Inventory inventory = event.getPlayer().getInventory();
-        ItemStack helpBook = new HelpBook("Help", plugin.config.NETWORK_NAME, readHelpBookFile());
+        ItemStack helpBook = new HelpBook("Help", readHelpBookFile());
         inventory.addItem(helpBook);
     }
 
@@ -58,13 +64,19 @@ public class SpectatorModule implements Module {
 
         if (!isPlayerSpectator(event.getPlayer())) return;
 
-        List<Material> allowed = new ArrayList<Material>();
-        allowed.add(Material.WRITTEN_BOOK);
-
-        // Cancel event if the player isn't using an allowed tool item
-        if (event.getPlayer().getItemInHand() == null || !allowed.contains(event.getPlayer().getItemInHand().getType())) {
-            event.setCancelled(true);
+        // Player is using the Help Book
+        if (event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.WRITTEN_BOOK) {
+            // No interacting with pressure plates, buttons, etc
+            if (event.getAction() == Action.PHYSICAL) {
+                event.setCancelled(true);
+            }
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK && ItemUtil.getInteractiveBlocks().contains(event.getClickedBlock().getType())) {
+                event.setCancelled(true);
+            }
+            return;
         }
+
+        event.setCancelled(true);
 
     }
 
@@ -99,6 +111,47 @@ public class SpectatorModule implements Module {
         } else {
             event.getPlayer().setItemInHand(event.getItemDrop().getItemStack());
             event.getItemDrop().remove();
+        }
+    }
+
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player) {
+            Player damager = (Player) event.getDamager();
+            Bukkit.dispatchCommand(damager, "kick redwall_hp"); //testing
+            if (isPlayerSpectator(damager)) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        if (!isPlayerSpectator(event.getPlayer())) return;
+        event.setCancelled(true);
+    }
+
+
+    @EventHandler
+    public void onVehicleEnter(VehicleEnterEvent event) {
+        if (event.getEntered() instanceof Player) {
+            Player player = (Player) event.getEntered();
+            if (isPlayerSpectator(player)) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+
+    @EventHandler
+    public void onVehicleDamage(VehicleDamageEvent event) {
+        if (event.getAttacker() instanceof Player) {
+            Player player = (Player) event.getAttacker();
+            if (isPlayerSpectator(player)) {
+                event.setCancelled(true);
+            }
         }
     }
 
