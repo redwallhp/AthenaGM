@@ -73,28 +73,6 @@ public class Team {
 
         PlayerUtil.resetPlayer(player);
 
-        if (this.isSpectator()) {
-            player.setGameMode(GameMode.CREATIVE);
-            player.spigot().setCollidesWithEntities(false);
-            player.setCanPickupItems(false);
-            for (Team t : this.getMatch().getTeams().values()) {
-                if (!t.getPlayers().contains(player)) {
-                    for (Player p : t.getPlayers()) {
-                        p.hidePlayer(player);
-                    }
-                }
-            }
-        } else {
-            player.setGameMode(GameMode.SURVIVAL);
-            player.spigot().setCollidesWithEntities(true);
-            player.setCanPickupItems(true);
-            for (Team t : this.getMatch().getTeams().values()) {
-                for (Player p : t.getPlayers()) {
-                    p.showPlayer(player);
-                }
-            }
-        }
-
         PlayerMatchRespawnEvent event = new PlayerMatchRespawnEvent(player, getMatch(), getMatch().getSpawnPoint(player));
         Bukkit.getPluginManager().callEvent(event);
 

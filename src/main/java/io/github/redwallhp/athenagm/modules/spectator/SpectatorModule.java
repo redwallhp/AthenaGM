@@ -30,12 +30,16 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class SpectatorModule implements Module {
 
 
     private AthenaGM plugin;
+    private HashMap<Player, Integer> compassIndex;
 
 
     public String getModuleName() {
@@ -45,6 +49,7 @@ public class SpectatorModule implements Module {
 
     public SpectatorModule(AthenaGM plugin) {
         this.plugin = plugin;
+        this.compassIndex = new HashMap<Player, Integer>();
     }
 
 
@@ -52,7 +57,39 @@ public class SpectatorModule implements Module {
 
 
     @EventHandler
-    public void onPlayerMatchRespawn(PlayerMatchRespawnEvent event) {
+    public void handleSpectatorMode(PlayerMatchRespawnEvent event) {
+
+        Player player = event.getPlayer();
+        Match match = plugin.getArenaHandler().getArenaForPlayer(player).getMatch();
+        Team playerTeam = PlayerUtil.getTeamForPlayer(match, player);
+
+        // Set spectator/non-spectator attributes
+        if (playerTeam != null && playerTeam.isSpectator()) {
+            player.setGameMode(GameMode.CREATIVE);
+            player.spigot().setCollidesWithEntities(false);
+            player.setCanPickupItems(false);
+        } else {
+            player.setGameMode(GameMode.SURVIVAL);
+            player.spigot().setCollidesWithEntities(true);
+            player.setCanPickupItems(true);
+        }
+
+        // Handle spectator invisibility
+        for (Team t : match.getTeams().values()) {
+            for (Player p : t.getPlayers()) {
+                if (!t.isSpectator()) {
+                    p.hidePlayer(event.getPlayer());
+                } else {
+                    p.showPlayer(event.getPlayer());
+                }
+            }
+        }
+
+    }
+
+
+    @EventHandler
+    public void giveSpectatorKit(PlayerMatchRespawnEvent event) {
 
         if (!isPlayerSpectator(event.getPlayer())) return;
         Inventory inventory = event.getPlayer().getInventory();
@@ -108,6 +145,13 @@ public class SpectatorModule implements Module {
             return;
         }
 
+        // Player is using the navigation compass
+        if (event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.COMPASS) {
+            event.setCancelled(true);
+            doCompassTeleport(event);
+            return;
+        }
+
         // Cancel all other interact events
         event.setCancelled(true);
 
@@ -127,15 +171,18 @@ public class SpectatorModule implements Module {
                     player.closeInventory();
                     player.playSound(player.getLocation(), Sound.CLICK, 1, 2);
                     Bukkit.dispatchCommand(player, String.format("team %s", teamName));
+                    return;
                 }
                 if (item.getType().equals(Material.STONE_BUTTON)) {
                     event.setCancelled(true);
                     player.closeInventory();
                     player.playSound(player.getLocation(), Sound.CLICK, 1, 2);
                     Bukkit.dispatchCommand(player, "autojoin");
+                    return;
                 }
             }
         }
+        event.setCancelled(true);
     }
 
 
@@ -169,7 +216,6 @@ public class SpectatorModule implements Module {
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player) {
             Player damager = (Player) event.getDamager();
-            Bukkit.dispatchCommand(damager, "kick redwall_hp"); //testing
             if (isPlayerSpectator(damager)) {
                 event.setCancelled(true);
             }
@@ -227,6 +273,38 @@ public class SpectatorModule implements Module {
         item.setItemMeta(meta);
         inventory.addItem(item);
         return inventory;
+    }
+
+
+    private void doCompassTeleport(PlayerInteractEvent event) {
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK  || event.getAction() == Action.LEFT_CLICK_AIR) {
+            // Teleport to the next player
+            Match match = plugin.getArenaHandler().getArenaForPlayer(event.getPlayer()).getMatch();
+            List<Player> players = new ArrayList<Player>();
+            for (Team team : match.getTeams().values()) {
+                if (team.isSpectator()) continue;
+                for (Player player : team.getPlayers()) {
+                    players.add(player);
+                }
+            }
+            Integer nextIndex = 0;
+            if (this.compassIndex.containsKey(event.getPlayer())) {
+                nextIndex = this.compassIndex.get(event.getPlayer()) + 1;
+                if (nextIndex > players.size() - 1) nextIndex = 0;
+                this.compassIndex.put(event.getPlayer(), nextIndex);
+            } else {
+                this.compassIndex.put(event.getPlayer(), 0);
+            }
+            if (players.size() > 0) {
+                event.getPlayer().teleport(players.get(nextIndex).getLocation());
+                event.getPlayer().sendMessage(String.format("%sTeleporting to %s", ChatColor.GRAY, players.get(nextIndex).getName()));
+            }
+        }
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
+            // Teleport back to spawn point
+            Match match = plugin.getArenaHandler().getArenaForPlayer(event.getPlayer()).getMatch();
+            event.getPlayer().teleport(match.getSpawnPoint(event.getPlayer()));
+        }
     }
 
 
