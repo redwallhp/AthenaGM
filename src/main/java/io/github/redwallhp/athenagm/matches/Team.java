@@ -3,6 +3,7 @@ package io.github.redwallhp.athenagm.matches;
 import io.github.redwallhp.athenagm.events.PlayerChangeTeamEvent;
 import io.github.redwallhp.athenagm.events.PlayerMatchRespawnEvent;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
+import io.github.redwallhp.athenagm.utilities.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -25,10 +26,10 @@ public class Team {
     private List<Player> players;
 
 
-    public Team(Match match, String id, String name, String color, String kit, Integer size, Boolean spectator) {
+    public Team(Match match, String id, String color, String kit, Integer size, Boolean spectator) {
         this.match = match;
         this.id = id;
-        this.name = name;
+        this.name = StringUtil.capitalize(id);
         this.color = color;
         this.kit = kit;
         this.size = size;

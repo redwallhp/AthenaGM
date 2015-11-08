@@ -1,5 +1,6 @@
 package io.github.redwallhp.athenagm.utilities;
 
+import org.bukkit.Color;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -54,8 +55,49 @@ public class ItemUtil {
         interactive.add(Material.TRAP_DOOR);
         interactive.add(Material.TRAPPED_CHEST);
         interactive.add(Material.WOOD_BUTTON);
+        interactive.add(Material.WOODEN_DOOR);
         interactive.add(Material.WORKBENCH);
         return interactive;
+    }
+
+
+    /**
+     * Returns limited Color objects (e.g. for team-colored armor) based
+     * on a string representation of a ChatColor returned from the Team object.
+     * @param color String representation of a ChatColor object (as returned from Team object)
+     * @return Color object
+     */
+    public static Color getColorFormString(String color) {
+        if (color.equalsIgnoreCase("red")) {
+            return Color.RED;
+        }
+        else if (color.equalsIgnoreCase("blue")) {
+            return Color.BLUE;
+        }
+        else if (color.equalsIgnoreCase("green")) {
+            return Color.GREEN;
+        }
+        else if (color.equalsIgnoreCase("aqua")) {
+            return Color.AQUA;
+        }
+        else if (color.equalsIgnoreCase("dark_purple")) {
+            return Color.PURPLE;
+        }
+        else if (color.equalsIgnoreCase("gold")) {
+            return Color.ORANGE;
+        }
+        else if (color.equalsIgnoreCase("black")) {
+            return Color.BLACK;
+        }
+        else if (color.equalsIgnoreCase("white")) {
+            return Color.WHITE;
+        }
+        else if (color.equalsIgnoreCase("yellow")) {
+            return Color.YELLOW;
+        }
+        else {
+            return Color.GRAY;
+        }
     }
 
 

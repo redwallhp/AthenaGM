@@ -34,10 +34,10 @@ public class Match {
 
     public void setUpTeams() {
         teams = new HashMap<String, Team>();
-        Team spectator = new Team(this, "spectator", "Spectator", "gray", "nokit", 99, true);
+        Team spectator = new Team(this, "spectator", "gray", "nokit", 99, true);
         teams.put("spectator", spectator);
         for (MapInfoTeam ct : map.getTeams().values()) {
-            Team team = new Team(this, ct.getId(), ct.getName(), ct.getColor(), ct.getKit(), ct.getSize(), false);
+            Team team = new Team(this, ct.getId(), ct.getColor(), ct.getKit(), ct.getSize(), false);
             teams.put(ct.getId(), team);
         }
     }

@@ -50,11 +50,10 @@ public class GameMap {
         Set<String> ids = yaml.getConfigurationSection("teams").getKeys(false);
         if (ids.size() > 0) {
             for (String id : ids) {
-                String name = yaml.getString(String.format("teams.%s.name", id), null);
                 String color = yaml.getString(String.format("teams.%s.color", id), null);
                 String kit = yaml.getString(String.format("teams.%s.kit", id), null);
                 Integer size = yaml.getInt(String.format("teams.%s.size", id), 10);
-                MapInfoTeam team = new MapInfoTeam(id, name, color, kit, size);
+                MapInfoTeam team = new MapInfoTeam(id, color, kit, size);
                 if (team.isValidTeam()) {
                     teams.put(id, team);
                 }
@@ -62,8 +61,8 @@ public class GameMap {
         }
         if (teams.size() < 1) {
             // add some defaults if teams aren't configured
-            MapInfoTeam red = new MapInfoTeam("red", "Red", "red", "red", 10);
-            MapInfoTeam blue = new MapInfoTeam("blue", "Blue", "blue", "blue", 10);
+            MapInfoTeam red = new MapInfoTeam("red", "red", "red", 10);
+            MapInfoTeam blue = new MapInfoTeam("blue", "blue", "blue", 10);
             teams.put("red", red);
             teams.put("blue", blue);
         }
