@@ -3,6 +3,7 @@ package io.github.redwallhp.athenagm.modules;
 
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.modules.permissions.PermissionsModule;
+import io.github.redwallhp.athenagm.modules.spectator.SpectatorModule;
 
 import java.util.HashMap;
 
@@ -10,7 +11,8 @@ public class ModuleLoader {
 
 
     private static Class[] moduleClasses = {
-            PermissionsModule.class
+            PermissionsModule.class,
+            SpectatorModule.class
     };
 
 

@@ -7,7 +7,7 @@ import org.bukkit.event.HandlerList;
 
 public class MatchStateChangedEvent extends Event {
 
-    private HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private Match match;
     private MatchState previousState;
 
@@ -17,6 +17,10 @@ public class MatchStateChangedEvent extends Event {
     }
 
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 

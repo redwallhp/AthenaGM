@@ -8,7 +8,7 @@ import org.bukkit.event.HandlerList;
 
 public class PlayerMatchRespawnEvent extends Event {
 
-    private HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private Player player;
     private Match match;
     private Location respawnLocation;
@@ -20,6 +20,10 @@ public class PlayerMatchRespawnEvent extends Event {
     }
 
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 

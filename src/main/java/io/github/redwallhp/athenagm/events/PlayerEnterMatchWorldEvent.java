@@ -10,7 +10,7 @@ import org.bukkit.event.HandlerList;
 
 public class PlayerEnterMatchWorldEvent extends Event {
 
-    private HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private Arena arena;
     private World world;
     private Match match;
@@ -28,6 +28,9 @@ public class PlayerEnterMatchWorldEvent extends Event {
         return handlers;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
     public Arena getArena() {
         return arena;

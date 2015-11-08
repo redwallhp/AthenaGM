@@ -10,6 +10,7 @@ public class Configuration {
 
     private final AthenaGM plugin;
     public boolean DEBUG;
+    public String NETWORK_NAME;
     public HashMap<String, ConfiguredArena> ARENAS;
 
     public Configuration(AthenaGM instance) {
@@ -25,6 +26,7 @@ public class Configuration {
     public void load() {
         plugin.reloadConfig();
         DEBUG = plugin.getConfig().getBoolean("debug", false);
+        NETWORK_NAME = plugin.getConfig().getString("network_name", "Server");
         getArenas();
     }
 

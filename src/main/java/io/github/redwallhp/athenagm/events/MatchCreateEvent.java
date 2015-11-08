@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 
 public class MatchCreateEvent extends Event {
 
-    private HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private Match match;
 
     public MatchCreateEvent(Match match) {
@@ -14,6 +14,10 @@ public class MatchCreateEvent extends Event {
     }
 
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 

@@ -10,7 +10,7 @@ import org.bukkit.event.HandlerList;
 public class PlayerChangeTeamEvent extends Event implements Cancellable {
 
 
-    private HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
     private Player player;
     private Team team;
@@ -32,6 +32,11 @@ public class PlayerChangeTeamEvent extends Event implements Cancellable {
 
 
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 

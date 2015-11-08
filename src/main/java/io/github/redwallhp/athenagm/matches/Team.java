@@ -6,7 +6,6 @@ import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -70,16 +69,38 @@ public class Team {
 
 
     private void playerSetup(Player player) {
+
         PlayerUtil.resetPlayer(player);
+
         if (this.isSpectator()) {
-            player.setGameMode(GameMode.SPECTATOR);
+            player.setGameMode(GameMode.CREATIVE);
+            player.spigot().setCollidesWithEntities(false);
+            player.setCanPickupItems(false);
+            for (Team t : this.getMatch().getTeams().values()) {
+                if (!t.getPlayers().contains(player)) {
+                    for (Player p : t.getPlayers()) {
+                        p.hidePlayer(player);
+                    }
+                }
+            }
         } else {
             player.setGameMode(GameMode.SURVIVAL);
+            player.spigot().setCollidesWithEntities(true);
+            player.setCanPickupItems(true);
+            for (Team t : this.getMatch().getTeams().values()) {
+                for (Player p : t.getPlayers()) {
+                    p.showPlayer(player);
+                }
+            }
         }
+
         PlayerMatchRespawnEvent event = new PlayerMatchRespawnEvent(player, getMatch(), getMatch().getSpawnPoint(player));
         Bukkit.getPluginManager().callEvent(event);
+
         player.teleport(event.getRespawnLocation());
+
         //todo: apply kit (possibly in a Kits module using an event?)
+
     }
 
 
