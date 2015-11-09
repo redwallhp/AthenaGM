@@ -27,13 +27,31 @@
     </dependencies>
 
 
+    <distributionManagement>
+        <repository>
+            <id>rdwl-repository</id>
+            <url>scpexe://maven.rdwl.xyz/repository</url>
+        </repository>
+    </distributionManagement>
+
+
     <build>
+
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>
+
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh-external</artifactId>
+                <version>1.0-beta-6</version>
+            </extension>
+        </extensions>
+
     </build>
 
 

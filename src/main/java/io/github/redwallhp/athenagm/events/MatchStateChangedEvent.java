@@ -5,6 +5,12 @@ import io.github.redwallhp.athenagm.matches.MatchState;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+/**
+ * Called when the MatchState of a Match changes
+ * e.g. when it goes from active gameplay to a win state
+ * @see MatchState
+ * @see Match
+ */
 public class MatchStateChangedEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();

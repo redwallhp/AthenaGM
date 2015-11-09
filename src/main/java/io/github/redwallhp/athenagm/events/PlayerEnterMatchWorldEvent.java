@@ -8,6 +8,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+/**
+ * Called when a player enters a world owned by a Match
+ * @see Match
+ */
 public class PlayerEnterMatchWorldEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();

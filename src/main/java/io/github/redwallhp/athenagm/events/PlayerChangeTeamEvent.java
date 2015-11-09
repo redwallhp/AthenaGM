@@ -7,6 +7,11 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+/**
+ * Called when a player joins a team. If they are a part of a team already, a previous team
+ * will be included. This should be most cases, save for when a player is assigned to
+ * Spectator when they first join an Arena.
+ */
 public class PlayerChangeTeamEvent extends Event implements Cancellable {
 
 

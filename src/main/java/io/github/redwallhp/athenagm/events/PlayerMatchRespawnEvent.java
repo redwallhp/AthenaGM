@@ -6,6 +6,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+/**
+ * Called when a player spawns in a world owned by a Match. This includes respawning
+ * after a death, as well as joining a team. The Match object assigns the spawn location
+ * based on the configured points it loaded from the map config.
+ * @see Match
+ */
 public class PlayerMatchRespawnEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
