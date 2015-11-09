@@ -5,6 +5,7 @@ import io.github.redwallhp.athenagm.events.PlayerMatchRespawnEvent;
 import io.github.redwallhp.athenagm.matches.Match;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.modules.Module;
+import io.github.redwallhp.athenagm.utilities.BookBuilder;
 import io.github.redwallhp.athenagm.utilities.ItemUtil;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.*;
@@ -26,10 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -40,6 +38,7 @@ public class SpectatorModule implements Module {
 
     private AthenaGM plugin;
     private HashMap<Player, Integer> compassIndex;
+    private ItemStack helpBookItem;
 
 
     public String getModuleName() {
@@ -50,6 +49,7 @@ public class SpectatorModule implements Module {
     public SpectatorModule(AthenaGM plugin) {
         this.plugin = plugin;
         this.compassIndex = new HashMap<Player, Integer>();
+        this.helpBookItem = getHelpBookItem();
     }
 
 
@@ -106,8 +106,7 @@ public class SpectatorModule implements Module {
         helmet.setItemMeta(helmetMeta);
         inventory.addItem(helmet);
 
-        ItemStack helpBook = new HelpBook("Help", readHelpBookFile());
-        inventory.addItem(helpBook);
+        inventory.addItem(this.helpBookItem);
 
         ItemStack exitDoor = new ItemStack(Material.WOOD_DOOR, 1);
         ItemMeta exitDoorMeta = exitDoor.getItemMeta();
@@ -315,24 +314,13 @@ public class SpectatorModule implements Module {
     }
 
 
-    private String readHelpBookFile() {
+    private ItemStack getHelpBookItem() {
         File file = new File(plugin.getDataFolder(), "helpbook.txt");
-        if (!file.exists()) return null;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            StringBuilder sb = new StringBuilder();
-            String line = reader.readLine();
-            while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = reader.readLine();
-            }
-            reader.close();
-            return sb.toString();
-        } catch(IOException ex) {
-            ex.printStackTrace();
-        }
-        return null;
+        BookBuilder bookBuilder = new BookBuilder("Help");
+        bookBuilder.setDefaultContents("This book will be populated with the contents of a &lhelpbook.txt&r file in the plugin directory.");
+        bookBuilder.setPagesFromFile(file);
+        this.helpBookItem = bookBuilder.getBook(); //cache to avoid hitting the disk all the time
+        return bookBuilder.getBook();
     }
 
 
