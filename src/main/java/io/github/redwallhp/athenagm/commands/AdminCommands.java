@@ -3,6 +3,7 @@ package io.github.redwallhp.athenagm.commands;
 
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.modules.permissions.PermissionsModule;
+import io.github.redwallhp.athenagm.modules.spectator.SpectatorModule;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -44,7 +45,7 @@ public class AdminCommands implements CommandExecutor {
 
         if (args.length < 2) {
             sender.sendMessage(ChatColor.RED + "Usage: /athena reload <what>");
-            sender.sendMessage(ChatColor.RED + "What: permissions");
+            sender.sendMessage(ChatColor.RED + "What: permissions, helpbook");
             return;
         }
 
@@ -54,6 +55,12 @@ public class AdminCommands implements CommandExecutor {
             PermissionsModule module = (PermissionsModule) plugin.getModule("permissions");
             module.reloadPermissions();
             sender.sendMessage(ChatColor.LIGHT_PURPLE + "Permissions reloaded.");
+        }
+
+        if (what.equalsIgnoreCase("helpbook")) {
+            SpectatorModule module = (SpectatorModule) plugin.getModule("spectator");
+            module.getHelpBookItem();
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "Spectator help book reloaded.");
         }
 
     }

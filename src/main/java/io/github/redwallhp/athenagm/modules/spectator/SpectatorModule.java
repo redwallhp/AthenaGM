@@ -42,7 +42,7 @@ public class SpectatorModule implements Module {
 
 
     public String getModuleName() {
-        return "spectatorUI";
+        return "spectator";
     }
 
 
@@ -314,7 +314,7 @@ public class SpectatorModule implements Module {
     }
 
 
-    private ItemStack getHelpBookItem() {
+    public ItemStack getHelpBookItem() {
         File file = new File(plugin.getDataFolder(), "helpbook.txt");
         BookBuilder bookBuilder = new BookBuilder("Help");
         bookBuilder.setDefaultContents("This book will be populated with the contents of a &lhelpbook.txt&0 file in the plugin directory.");
