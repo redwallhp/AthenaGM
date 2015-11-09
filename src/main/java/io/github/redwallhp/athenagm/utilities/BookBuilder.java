@@ -109,6 +109,7 @@ public class BookBuilder {
     /**
      * Splits a string into page-sized strings and sets them on the BookMeta.
      * Also handles manual page breaks and applies formatting codes.
+     * For an unknown reason, &r does not reset formatting. &0 works as a substitute.
      * @param contents Book contents
      */
     private void parseBookContents(String contents) {

@@ -317,7 +317,7 @@ public class SpectatorModule implements Module {
     private ItemStack getHelpBookItem() {
         File file = new File(plugin.getDataFolder(), "helpbook.txt");
         BookBuilder bookBuilder = new BookBuilder("Help");
-        bookBuilder.setDefaultContents("This book will be populated with the contents of a &lhelpbook.txt&r file in the plugin directory.");
+        bookBuilder.setDefaultContents("This book will be populated with the contents of a &lhelpbook.txt&0 file in the plugin directory.");
         bookBuilder.setPagesFromFile(file);
         this.helpBookItem = bookBuilder.getBook(); //cache to avoid hitting the disk all the time
         return bookBuilder.getBook();

@@ -46,7 +46,7 @@ public class Match {
     public void start(int timeLimit) {
         if (this.state == MatchState.WAITING) {
             setState(MatchState.PLAYING);
-            // Start MatchTimer, which will end the round, or a gamemodep plugin will call the end() method
+            // Start MatchTimer, which will end the round, or a gamemode plugin will call the end() method
             // when an objective is met.
             // todo: start MatchTimer
         }
