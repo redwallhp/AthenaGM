@@ -30,7 +30,7 @@
     <distributionManagement>
         <repository>
             <id>rdwl-repository</id>
-            <url>scp://maven.rdwl.xyz/home/maven/repository</url>
+            <url>scp://maven.rdwl.xyz/home/maven</url>
         </repository>
     </distributionManagement>
 
