@@ -30,9 +30,16 @@
     <distributionManagement>
         <repository>
             <!-- Deploy to remote Maven repository with "mvn deploy" -->
+            <!-- Result URL: http://maven.rdwl.xyz -->
             <id>rdwl-repository</id>
-            <url>scp://maven.rdwl.xyz/home/maven</url>
+            <url>scp://maven.rdwl.xyz/home/maven/repository</url>
         </repository>
+        <site>
+            <!-- Generate with "mvn javadoc:javadoc" and deploy with "mvn site" -->
+            <!-- Result URL: http://javadoc.rdwl.xyz -->
+            <id>rdwl-javadoc</id>
+            <url>scp://maven.rdwl.xyz/home/maven/javadoc/athenagm</url>
+        </site>
     </distributionManagement>
 
 
