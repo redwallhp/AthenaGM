@@ -66,6 +66,11 @@ public class AthenaGM extends JavaPlugin {
     }
 
 
+    public File getPluginDirectory() {
+        return getDataFolder();
+    }
+
+
     public Module getModule(String name) {
         return this.moduleLoader.getModule(name);
     }

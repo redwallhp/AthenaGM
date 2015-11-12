@@ -108,6 +108,28 @@ public class Match {
     }
 
 
+    public List<Player> getAllPlayers() {
+        List<Player> players = new ArrayList<Player>();
+        for (Team t : this.getTeams().values()) {
+            for (Player p : t.getPlayers()) {
+                players.add(p);
+            }
+        }
+        return players;
+    }
+
+
+    public HashMap<Team, Player> getPlayerTeamMap() {
+        HashMap<Team, Player> map = new HashMap<Team, Player>();
+        for (Team t : this.getTeams().values()) {
+            for (Player p : t.getPlayers()) {
+                map.put(t, p);
+            }
+        }
+        return map;
+    }
+
+
     public Location getSpawnPoint(Player player) {
         Team team = PlayerUtil.getTeamForPlayer(this, player);
         if (team == null) {

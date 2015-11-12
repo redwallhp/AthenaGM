@@ -29,6 +29,7 @@
 
     <distributionManagement>
         <repository>
+            <!-- Deploy to remote Maven repository with "mvn deploy" -->
             <id>rdwl-repository</id>
             <url>scp://maven.rdwl.xyz/home/maven</url>
         </repository>
@@ -51,6 +52,14 @@
                 <version>1.0-beta-6</version>
             </extension>
         </extensions>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+            </plugin>
+        </plugins>
 
     </build>
 

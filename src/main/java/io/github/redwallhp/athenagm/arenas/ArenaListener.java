@@ -31,6 +31,7 @@ public class ArenaListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         // temporary measure to ensure player is kicked back to the hub if they rejoin later
         // Will rework after the minigames hub world system is fleshed out more
+        // Hub will need to set player visibility to counter spectator mode stuff
         Player player = event.getPlayer();
         PlayerUtil.resetPlayer(player);
         player.teleport(new Location(Bukkit.getWorld("world"), 0, 65, 0));

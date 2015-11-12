@@ -28,10 +28,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class SpectatorModule implements Module {
 
@@ -56,7 +53,7 @@ public class SpectatorModule implements Module {
     public void unload() {}
 
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void handleSpectatorMode(PlayerMatchRespawnEvent event) {
 
         Player player = event.getPlayer();
@@ -68,21 +65,12 @@ public class SpectatorModule implements Module {
             player.setGameMode(GameMode.CREATIVE);
             player.spigot().setCollidesWithEntities(false);
             player.setCanPickupItems(false);
+            this.setPlayerVisibility(player, true, match);
         } else {
             player.setGameMode(GameMode.SURVIVAL);
             player.spigot().setCollidesWithEntities(true);
             player.setCanPickupItems(true);
-        }
-
-        // Handle spectator invisibility
-        for (Team t : match.getTeams().values()) {
-            for (Player p : t.getPlayers()) {
-                if (!t.isSpectator()) {
-                    p.hidePlayer(event.getPlayer());
-                } else {
-                    p.showPlayer(event.getPlayer());
-                }
-            }
+            this.setPlayerVisibility(player, false, match);
         }
 
     }
@@ -321,6 +309,42 @@ public class SpectatorModule implements Module {
         bookBuilder.setPagesFromFile(file);
         this.helpBookItem = bookBuilder.getBook(); //cache to avoid hitting the disk all the time
         return bookBuilder.getBook();
+    }
+
+
+    private void setPlayerVisibility(Player player, boolean playerIsSpectator, Match match) {
+
+        HashMap<Team, Player> teamMap = match.getPlayerTeamMap();
+
+        // Handle respawning player
+        for (Map.Entry<Team, Player> entry : teamMap.entrySet()) {
+            if (playerIsSpectator) {
+                // Show all other players to the player respawning
+                player.showPlayer(entry.getValue());
+            } else {
+                // Hide spectators from the player respawning, but show all others
+                if (entry.getKey().isSpectator()) {
+                    player.hidePlayer(entry.getValue());
+                } else {
+                    player.showPlayer(entry.getValue());
+                }
+            }
+        }
+
+        // Handle other players
+        for (Map.Entry<Team, Player> entry : teamMap.entrySet()) {
+            if (playerIsSpectator) {
+                // Hide the respawning player from others who are not on the spectator team
+                if (entry.getKey().isSpectator()) {
+                    entry.getValue().showPlayer(player);
+                } else {
+                    entry.getValue().hidePlayer(player);
+                }
+            } else {
+                entry.getValue().showPlayer(player);
+            }
+        }
+
     }
 
 
