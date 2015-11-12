@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Handles the main plugin configuration.
+ * All loaded configuration keys are exposed via public properties.
+ */
 public class Configuration {
 
     private final AthenaGM plugin;
@@ -19,10 +23,16 @@ public class Configuration {
         this.load();
     }
 
+    /**
+     * Save the config out to disk
+     */
     public void save() {
         plugin.saveConfig();
     }
 
+    /**
+     * Load the configuration from disk and set the simple keys to public properties
+     */
     public void load() {
         plugin.reloadConfig();
         DEBUG = plugin.getConfig().getBoolean("debug", false);
@@ -30,6 +40,9 @@ public class Configuration {
         getArenas();
     }
 
+    /**
+     * Handle the loading of arena configuration blocks, creating ConfiguredArena objects
+     */
     private void getArenas() {
         this.ARENAS = new HashMap<String, ConfiguredArena>();
         Set<String> ids = plugin.getConfig().getConfigurationSection("arenas").getKeys(false);
