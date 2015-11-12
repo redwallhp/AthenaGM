@@ -14,6 +14,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 
 
+/**
+ * Project copyright 2015 redwall_hp
+ * Licensed under the Lesser GNU Public License
+ * http://www.gnu.org/licenses/lgpl-3.0.en.html
+ * http://github.com/redwallhp
+ */
 public class AthenaGM extends JavaPlugin {
 
 
