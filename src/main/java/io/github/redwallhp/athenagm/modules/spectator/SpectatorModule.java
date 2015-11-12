@@ -314,34 +314,38 @@ public class SpectatorModule implements Module {
 
     private void setPlayerVisibility(Player player, boolean playerIsSpectator, Match match) {
 
-        HashMap<Team, Player> teamMap = match.getPlayerTeamMap();
+        HashMap<Player, Team> teamMap = match.getPlayerTeamMap();
 
         // Handle respawning player
-        for (Map.Entry<Team, Player> entry : teamMap.entrySet()) {
+        for (Map.Entry<Player, Team> entry : teamMap.entrySet()) {
+            Player lPlayer = entry.getKey();
+            Team lTeam = entry.getValue();
             if (playerIsSpectator) {
                 // Show all other players to the player respawning
-                player.showPlayer(entry.getValue());
+                player.showPlayer(lPlayer);
             } else {
                 // Hide spectators from the player respawning, but show all others
-                if (entry.getKey().isSpectator()) {
-                    player.hidePlayer(entry.getValue());
+                if (lTeam.isSpectator()) {
+                    player.hidePlayer(lPlayer);
                 } else {
-                    player.showPlayer(entry.getValue());
+                    player.showPlayer(lPlayer);
                 }
             }
         }
 
         // Handle other players
-        for (Map.Entry<Team, Player> entry : teamMap.entrySet()) {
+        for (Map.Entry<Player, Team> entry : teamMap.entrySet()) {
+            Player lPlayer = entry.getKey();
+            Team lTeam = entry.getValue();
             if (playerIsSpectator) {
                 // Hide the respawning player from others who are not on the spectator team
-                if (entry.getKey().isSpectator()) {
-                    entry.getValue().showPlayer(player);
+                if (lTeam.isSpectator()) {
+                    lPlayer.showPlayer(player);
                 } else {
-                    entry.getValue().hidePlayer(player);
+                    lPlayer.hidePlayer(player);
                 }
             } else {
-                entry.getValue().showPlayer(player);
+                lPlayer.showPlayer(player);
             }
         }
 

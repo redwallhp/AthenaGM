@@ -51,34 +51,55 @@ public class AthenaGM extends JavaPlugin {
     }
 
 
+    /**
+     * Exposes the plugin's void world generator for Spigot and other plugins to use
+     */
+    @Override
+    public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
+        return new VoidGenerator();
+    }
+
+
+    /**
+     * Returns a File object representing the directory maps are stored in
+     */
     public File getMapsDirectory() {
         return new File("maps");
     }
 
 
+    /**
+     * Returns a File object representing the directory where instanced maps for matches are stored
+     */
     public File getMatchesDirectory() {
         return new File("matches");
     }
 
 
-    public ArenaHandler getArenaHandler() {
-        return arenaHandler;
-    }
-
-
+    /**
+     * Get a File object representing the AthenaGM plugin directory.
+     * Mostly a convenience method for other plugins.
+     */
     public File getPluginDirectory() {
         return getDataFolder();
     }
 
 
-    public Module getModule(String name) {
-        return this.moduleLoader.getModule(name);
+    /**
+     * Get a reference to the ArenaHandler, to look up active arenas or player-arena membership
+     */
+    public ArenaHandler getArenaHandler() {
+        return arenaHandler;
     }
 
 
-    @Override
-    public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
-        return new VoidGenerator();
+    /**
+     * Get a reference to a loaded Module
+     * @param name The name of the Module, as returned by its getModuleName() method
+     * @return A Module object, which can be cast to the original class of the module to access its methods
+     */
+    public Module getModule(String name) {
+        return this.moduleLoader.getModule(name);
     }
 
 
