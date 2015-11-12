@@ -6,6 +6,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles the rotation of maps for an Arena
+ */
 public class Rotation {
 
 
@@ -15,6 +18,11 @@ public class Rotation {
     private int mapIndex;
 
 
+    /**
+     * Constructor
+     * @param plugin The AthenaGM instance
+     * @param mapList String list of the maps in the configured map rotation
+     */
     public Rotation(AthenaGM plugin, List<String> mapList) {
         this.plugin = plugin;
         this.mapList = mapList;
@@ -23,6 +31,10 @@ public class Rotation {
     }
 
 
+    /**
+     * Create GameMap objects containing the metadata of every map configured for the arena
+     * @see GameMap
+     */
     private void loadMaps() {
         this.maps = new ArrayList<GameMap>();
         for (String mapName : mapList) {
@@ -44,11 +56,17 @@ public class Rotation {
     }
 
 
+    /**
+     * Returns the map list
+     */
     public List<GameMap> getMaps() {
         return maps;
     }
 
 
+    /**
+     * Returns the map that is currently active
+     */
     public GameMap getCurrentMap() {
         try {
             return maps.get(mapIndex - 1);
@@ -58,6 +76,9 @@ public class Rotation {
     }
 
 
+    /**
+     * Advance the rotation by one
+     */
     public int advance() {
         mapIndex++;
         if (mapIndex > maps.size() - 1) mapIndex = 0;
@@ -65,11 +86,18 @@ public class Rotation {
     }
 
 
+    /**
+     * Return the upcoming map in the rotation
+     */
     public GameMap getNextMap() {
         return maps.get(mapIndex);
     }
 
 
+    /**
+     * Get a configured map by name
+     * @param name String representation of the map name
+     */
     public GameMap getMapByName(String name) {
         for (GameMap map : maps) {
             if (map.getName().toLowerCase().equals(name.toLowerCase())) {

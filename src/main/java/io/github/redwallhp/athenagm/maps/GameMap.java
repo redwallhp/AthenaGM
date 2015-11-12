@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Represents the configuration loaded from a map's YAML metadata file
+ */
 public class GameMap {
 
 
@@ -21,6 +24,11 @@ public class GameMap {
     private List<MapInfoSpawnPoint> spawnPoints;
 
 
+    /**
+     * Loads a map's agm.yml file and parses it
+     * @param mapDir File object pointing to the directory of a specific map
+     * @throws IOException
+     */
     public GameMap(File mapDir) throws IOException {
 
         this.path = mapDir;
@@ -36,6 +44,10 @@ public class GameMap {
     }
 
 
+    /**
+     * Parse the basic metadata
+     * @param meta The FileConfiguration reference from the constructor
+     */
     private void loadBasicMeta(FileConfiguration meta) {
         this.name = meta.getString("name");
         this.author = meta.getString("author");
@@ -45,6 +57,12 @@ public class GameMap {
     }
 
 
+    /**
+     * Parse the team configuration, creating MapInfoTeam objects
+     * to hold the data.
+     * @param yaml The FileConfiguration reference from the constructor
+     * @see MapInfoTeam
+     */
     private void loadTeams(FileConfiguration yaml) {
         this.teams = new HashMap<String, MapInfoTeam>();
         Set<String> ids = yaml.getConfigurationSection("teams").getKeys(false);
@@ -69,6 +87,11 @@ public class GameMap {
     }
 
 
+    /**
+     * Parse the configured spawn points, creating MapInfoSpawnPoint objects
+     * to hold the data.
+     * @param yaml The FileConfiguration reference from the constructor
+     */
     private void loadSpawnPoints(FileConfiguration yaml) {
         this.spawnPoints = new ArrayList<MapInfoSpawnPoint>();
         List yamlPoints = yaml.getList("spawn_points");
@@ -91,38 +114,71 @@ public class GameMap {
     }
 
 
+    /**
+     * Get the File object of the the specific map's directory
+     */
     public File getPath() {
         return this.path;
     }
 
+    /**
+     * Get the string representation of the path to the specific map's directory
+     */
     public String getFileName() {
         return this.fileName;
     }
 
+    /**
+     * The map's name
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * The map's author
+     */
     public String getAuthor() {
         return this.author;
     }
 
+    /**
+     * The map's version
+     */
     public String getVersion() {
         return this.version;
     }
 
+    /**
+     * The map's objective. This is the description that is printed under the
+     * name and author when a player joins. This could be instructions and/or
+     * flavor text.
+     */
     public String getObjective() {
         return this.objective;
     }
 
+    /**
+     * The gamemode this map is intended for. (e.g. "koth")
+     * Plugins that handle gameplay for different modes will listen for this identifier.
+     */
     public String getGameMode() {
         return this.gameMode;
     }
 
+    /**
+     * Get the configured teams. The Match object will use this to build new Team objects
+     * @see io.github.redwallhp.athenagm.matches.Match
+     * @see io.github.redwallhp.athenagm.matches.Team
+     */
     public HashMap<String, MapInfoTeam> getTeams() {
         return this.teams;
     }
 
+    /**
+     * Get the configured spawn points. The Match object uses this List in its
+     * getSpawnPoint() method, which controls where players respawn, based on team.
+     */
     public List<MapInfoSpawnPoint> getSpawnPoints() {
         return this.spawnPoints;
     }
