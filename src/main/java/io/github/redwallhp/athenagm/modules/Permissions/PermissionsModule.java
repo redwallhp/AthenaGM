@@ -15,6 +15,12 @@ import java.io.File;
 import java.util.*;
 
 
+/**
+ * A lightweight permission management module that doesn't care about worlds.
+ * Most permission plugins are geared toward servers with static worlds and
+ * are not designed to have worlds loaded and deleted constantly. This module
+ * is a simple permissions solution that is designed entirely for a minigame server.
+ */
 public class PermissionsModule implements Module {
 
 
@@ -48,6 +54,10 @@ public class PermissionsModule implements Module {
     }
 
 
+    /**
+     * When a player joins, apply a PermissionAttachment to the player so this
+     * module can manage permissions for them.
+     */
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         addAttachment(event.getPlayer());
@@ -55,24 +65,38 @@ public class PermissionsModule implements Module {
     }
 
 
+    /**
+     * Remove the PermissionAttachment when the player leaves
+     */
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         removeAttachment(event.getPlayer());
     }
 
 
+    /**
+     * Remove the PermissionAttachment when the player leaves
+     */
     @EventHandler
     public void onPlayerKick(PlayerKickEvent event) {
         removeAttachment(event.getPlayer());
     }
 
 
+    /**
+     * Method to add a PermissionAttachment to a player, so the module can manage
+     * their permissions. Saves a reference so permissions can be manipulated later.
+     * @param player
+     */
     public void addAttachment(Player player) {
         PermissionAttachment attachment = player.addAttachment(plugin);
         this.attachments.put(player.getUniqueId(), attachment);
     }
 
 
+    /**
+     * Method to remove a PermissionAttachment from a player
+     */
     public void removeAttachment(Player player) {
         if (attachments.containsKey(player.getUniqueId())) {
             player.removeAttachment(attachments.get(player.getUniqueId()));
@@ -81,6 +105,10 @@ public class PermissionsModule implements Module {
     }
 
 
+    /**
+     * Method to remove all PermissionAttachments from players.
+     * Called on module unload.
+     */
     public void removeAllAttachments() {
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             removeAttachment(player);
@@ -88,6 +116,11 @@ public class PermissionsModule implements Module {
     }
 
 
+    /**
+     * Move the default configuration files from the jar to the plugin's data directory.
+     * groups.yml sets up groups and the permissions they have.
+     * users.yml is for user-group membership.
+     */
     private void copyDefaults() {
         if (!groupsFile.exists()) {
             plugin.saveResource("groups.yml", false);
@@ -98,6 +131,9 @@ public class PermissionsModule implements Module {
     }
 
 
+    /**
+     * Parse the YAML files and load the permission settings from them.
+     */
     private void loadPermissions() {
 
         groupsConfig = YamlConfiguration.loadConfiguration(groupsFile);
@@ -130,6 +166,10 @@ public class PermissionsModule implements Module {
     }
 
 
+    /**
+     * Reload permissions by re-parsing the files, removing existing permissions from
+     * every online player, and re-adding the new ones.
+     */
     public void reloadPermissions() {
         loadPermissions();
         for (Player player : plugin.getServer().getOnlinePlayers()) {
@@ -139,6 +179,9 @@ public class PermissionsModule implements Module {
     }
 
 
+    /**
+     * Remove all permissions from the specified player.
+     */
     private void removePermissions(Player player) {
         PermissionAttachment attachment = attachments.get(player.getUniqueId());
         for (String perm : attachment.getPermissions().keySet()) {
@@ -147,6 +190,9 @@ public class PermissionsModule implements Module {
     }
 
 
+    /**
+     * Look up the permissions for the specified player and apply them
+     */
     private void applyPermissions(Player player) {
         PermissionAttachment attachment = attachments.get(player.getUniqueId());
         User user = null;
@@ -166,6 +212,10 @@ public class PermissionsModule implements Module {
     }
 
 
+    /**
+     * Get the complete list of permission nodes for a group by
+     * iterating all of the inherited groups and consolidating the list.
+     */
     private List<Permission> getGroupPermissions(Group group) {
         List<Permission> permissions = new ArrayList<Permission>();
         List<Group> groups = new ArrayList<Group>();

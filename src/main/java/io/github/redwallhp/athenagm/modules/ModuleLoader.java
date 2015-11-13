@@ -7,9 +7,16 @@ import io.github.redwallhp.athenagm.modules.spectator.SpectatorModule;
 
 import java.util.HashMap;
 
+/**
+ * Does what it says on the box: builds and loads modules,
+ * registering their event listeners as it does so.
+ */
 public class ModuleLoader {
 
 
+    /**
+     * List of module classes to load
+     */
     private static Class[] moduleClasses = {
             PermissionsModule.class,
             SpectatorModule.class
@@ -27,6 +34,11 @@ public class ModuleLoader {
     }
 
 
+    /**
+     * Build and load modules, registering their events and stashing references for later use.
+     * Modules are cast to their Module interface to make this sorcery work, but can be
+     * recast to their original class later in order to access methods.
+     */
     public void load() {
         for (Class c : moduleClasses) {
             try {
@@ -42,6 +54,9 @@ public class ModuleLoader {
     }
 
 
+    /**
+     * Iterate the loaded modules and call the unload() method each one implements.
+     */
     public void unload() {
         for (Module module : modules.values()) {
             module.unload();
@@ -49,6 +64,13 @@ public class ModuleLoader {
     }
 
 
+    /**
+     * Get the module with a specified name.
+     * The returned object will be a Module, but you can recast it to the module's original class
+     * in order to access its methods. e.g. casting the module found by getting "permissions"
+     * to be a PermissionsModule will allow you to access its member methods.
+     * @param name Name of the module, as returned by its getModuleName() method
+     */
     public Module getModule(String name) {
         return modules.get(name);
     }
