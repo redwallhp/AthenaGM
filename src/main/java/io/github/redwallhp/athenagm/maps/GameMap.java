@@ -2,6 +2,8 @@ package io.github.redwallhp.athenagm.maps;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +24,7 @@ public class GameMap {
     private String gameMode;
     private HashMap<String, MapInfoTeam> teams;
     private List<MapInfoSpawnPoint> spawnPoints;
+    private HashMap<String, List<MapInfoKitItem>> kits;
 
 
     /**
@@ -40,6 +43,7 @@ public class GameMap {
         loadBasicMeta(metaYaml);
         loadTeams(metaYaml);
         loadSpawnPoints(metaYaml);
+        loadKits(metaYaml);
 
     }
 
@@ -111,6 +115,80 @@ public class GameMap {
             spawnPoints.add(spawnPoint);
             i++;
         }
+    }
+
+
+    /**
+     * Load the kits and save the resulting lists of items in a HashMap
+     * @param yaml The FileConfiguration reference from the constructor
+     */
+    private void loadKits(FileConfiguration yaml) {
+        this.kits = new HashMap<String, List<MapInfoKitItem>>();
+        Set<String> ids = yaml.getConfigurationSection("kits").getKeys(false);
+        for (String id : ids) {
+            String inherit = yaml.getString(String.format("kits.%s.inherit", id), null);
+            List<MapInfoKitItem> itemList = new ArrayList<MapInfoKitItem>();
+            itemList.addAll(loadKit(id, yaml));
+            if (inherit != null) {
+                itemList.addAll(loadKit(inherit, yaml));
+            }
+            this.kits.put(id, itemList);
+        }
+    }
+
+
+    /**
+     * Do the heavy lifting, reading the YAML spaghetti for kits
+     * @param kitId The name of the kit to load
+     * @param yaml The FileConfiguration reference from the constructor
+     */
+    private List<MapInfoKitItem> loadKit(String kitId, FileConfiguration yaml) {
+        List<MapInfoKitItem> items = new ArrayList<MapInfoKitItem>();
+        List yamlItems = yaml.getList(String.format("kits.%s.items", kitId));
+        int i = 0;
+        while (i < yamlItems.size()) {
+
+            Map map = (Map) yamlItems.get(i);
+
+            if (map.get("slot") == null || map.get("quantity") == null || map.get("material") == null) {
+                continue; //skip this item if it doesn't have the required fields
+            }
+
+            Integer slot = Integer.parseInt(map.get("slot").toString());
+            Integer quantity = Integer.parseInt(map.get("quantity").toString());
+            String material = map.get("material").toString();
+
+            MapInfoKitItem item = new MapInfoKitItem(kitId, slot.intValue(), material, quantity.intValue());
+
+            // Colorize the armor if this is a leather armor item
+            if (item.getItem().getItemMeta() instanceof LeatherArmorMeta) {
+                if (map.get("color") != null) {
+                    item.colorizeArmor(map.get("color").toString());
+                }
+            }
+
+            // Add enchantments
+            List yamlEnchants = (List) map.get("enchantments");
+            if (yamlEnchants != null && yamlEnchants.size() > 0) {
+                int k = 0;
+                while (k < yamlEnchants.size()) {
+                    Map emap = (Map) yamlEnchants.get(k);
+                    if (emap.get("name") == null || emap.get("level") == null) {
+                        continue;
+                    }
+                    String enchant = emap.get("name").toString();
+                    Integer level = Integer.parseInt(emap.get("level").toString());
+                    item.addEnchantment(enchant, level);
+                    k++;
+                }
+            }
+
+            //Get the ItemStack and continue
+            items.add(item);
+            i++;
+
+        }
+        return items;
     }
 
 
