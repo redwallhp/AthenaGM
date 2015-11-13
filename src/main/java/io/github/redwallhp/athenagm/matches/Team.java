@@ -2,6 +2,7 @@ package io.github.redwallhp.athenagm.matches;
 
 import io.github.redwallhp.athenagm.events.PlayerChangeTeamEvent;
 import io.github.redwallhp.athenagm.events.PlayerMatchRespawnEvent;
+import io.github.redwallhp.athenagm.maps.MapInfoKitItem;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import io.github.redwallhp.athenagm.utilities.StringUtil;
 import org.bukkit.Bukkit;
@@ -169,6 +170,15 @@ public class Team {
      */
     public String getKit() {
         return this.kit;
+    }
+
+
+    /**
+     * Return the MapInfoKitItem objects that a respawning player on this team should receive.
+     * MapInfoKitItem exposes a getItem() method to get the ItemStack.
+     */
+    public List<MapInfoKitItem> getKitItems() {
+        return this.getMatch().getMap().getKitItems(getKit());
     }
 
 

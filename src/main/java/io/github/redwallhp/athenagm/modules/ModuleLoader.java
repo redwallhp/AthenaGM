@@ -2,6 +2,7 @@ package io.github.redwallhp.athenagm.modules;
 
 
 import io.github.redwallhp.athenagm.AthenaGM;
+import io.github.redwallhp.athenagm.modules.kits.KitsModule;
 import io.github.redwallhp.athenagm.modules.permissions.PermissionsModule;
 import io.github.redwallhp.athenagm.modules.spectator.SpectatorModule;
 
@@ -19,7 +20,8 @@ public class ModuleLoader {
      */
     private static Class[] moduleClasses = {
             PermissionsModule.class,
-            SpectatorModule.class
+            SpectatorModule.class,
+            KitsModule.class
     };
 
 

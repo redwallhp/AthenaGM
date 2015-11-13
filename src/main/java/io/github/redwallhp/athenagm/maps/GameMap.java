@@ -261,5 +261,22 @@ public class GameMap {
         return this.spawnPoints;
     }
 
+    /**
+     * Get a kit by its name
+     * @param id String identifier of the kit to return
+     */
+    public List<MapInfoKitItem> getKitItems(String id) {
+        if (this.kits.containsKey(id)) {
+            return this.kits.get(id);
+        }
+        return null;
+    }
+
+    /**
+     * Get all kits
+     */
+    public HashMap<String, List<MapInfoKitItem>> getKitsMap() {
+        return kits;
+    }
 
 }

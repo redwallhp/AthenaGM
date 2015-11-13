@@ -41,6 +41,14 @@ public class MapInfoKitItem {
 
 
     /**
+     * Return the inventory slot for the item
+     */
+    public int getInventorySlot() {
+        return inventorySlot;
+    }
+
+
+    /**
      * Add a named enchantment to the ItemStack
      * @param name String identifier of the enchantment
      * @param level Level of the enchantment
