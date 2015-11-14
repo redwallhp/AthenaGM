@@ -19,6 +19,8 @@ public class PlayerUtil {
         player.setSaturation(20);
         player.setExp(0);
         player.setTotalExperience(0);
+        player.spigot().setCollidesWithEntities(true);
+        player.setCanPickupItems(true);
         ItemStack[] noArmor = new ItemStack[] {
                 new ItemStack(Material.AIR),
                 new ItemStack(Material.AIR),

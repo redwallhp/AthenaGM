@@ -35,7 +35,7 @@
             <url>scp://maven.rdwl.xyz/home/maven/repository</url>
         </repository>
         <site>
-            <!-- Generate with "mvn javadoc:javadoc" and deploy with "mvn site" -->
+            <!-- Generate with "mvn javadoc:javadoc" and deploy with "mvn site:deploy" -->
             <!-- Result URL: http://javadoc.rdwl.xyz -->
             <id>rdwl-javadoc</id>
             <url>scp://maven.rdwl.xyz/home/maven/javadoc/athenagm</url>

@@ -11,6 +11,7 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -28,6 +29,7 @@ public class Team {
     private Integer size;
     private Boolean spectator;
     private List<Player> players;
+    private HashMap<Player, PlayerScore> playerScores;
 
 
     /**
@@ -48,6 +50,7 @@ public class Team {
         this.size = size;
         this.spectator = spectator;
         this.players = new ArrayList<Player>();
+        this.playerScores = new HashMap<Player, PlayerScore>();
     }
 
 
@@ -203,6 +206,69 @@ public class Team {
      */
     public List<Player> getPlayers() {
         return this.players;
+    }
+
+
+    /**
+     * Get an object representing the player's score values, to
+     * increment, decrement or simply read them.
+     */
+    public PlayerScore getPlayerScore(Player player) {
+        if (playerScores.containsKey(player)) {
+            return playerScores.get(player);
+        } else {
+            PlayerScore newScore = new PlayerScore(player, this);
+            playerScores.put(player, newScore);
+            return newScore;
+        }
+    }
+
+
+    /**
+     * Get the total points for the team
+     */
+    public int getTotalPoints() {
+        int score = 0;
+        for (PlayerScore ps : playerScores.values()) {
+            score = score + ps.getPoints();
+        }
+        return score;
+    }
+
+
+    /**
+     * Get the total kills for the team
+     */
+    public int getTotalKills() {
+        int kills = 0;
+        for (PlayerScore ps : playerScores.values()) {
+            kills = kills + ps.getKills();
+        }
+        return kills;
+    }
+
+
+    /**
+     * Get the total kills for the team
+     */
+    public int getTotalDeaths() {
+        int deaths = 0;
+        for (PlayerScore ps : playerScores.values()) {
+            deaths = deaths + ps.getDeaths();
+        }
+        return deaths;
+    }
+
+
+    /**
+     * Get the overall (points + kills) score
+     */
+    public int getOverallScore() {
+        int score = 0;
+        for (PlayerScore ps : playerScores.values()) {
+            score = score + ps.getOverallScore();
+        }
+        return score;
     }
 
 
