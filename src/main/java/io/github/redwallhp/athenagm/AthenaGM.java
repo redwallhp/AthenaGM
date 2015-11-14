@@ -32,8 +32,8 @@ public class AthenaGM extends JavaPlugin {
     public void onEnable() {
         this.config = new Configuration(this);
         setupDirectories();
-        this.arenaHandler = new ArenaHandler(this);
         this.moduleLoader = new ModuleLoader(this);
+        this.arenaHandler = new ArenaHandler(this);
         registerCommands();
     }
 

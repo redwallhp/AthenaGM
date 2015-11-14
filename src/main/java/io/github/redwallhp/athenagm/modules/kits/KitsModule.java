@@ -11,8 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.Inventory;
 
-import java.util.List;
-
 /**
  * Handle player kits on respawn
  */
