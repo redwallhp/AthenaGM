@@ -4,7 +4,9 @@ package io.github.redwallhp.athenagm.arenas;
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.events.PlayerEnterMatchWorldEvent;
 import io.github.redwallhp.athenagm.events.PlayerMatchRespawnEvent;
+import io.github.redwallhp.athenagm.events.PlayerScorePointEvent;
 import io.github.redwallhp.athenagm.maps.GameMap;
+import io.github.redwallhp.athenagm.matches.PlayerScore;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.Bukkit;
@@ -13,11 +15,12 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.*;
 
 public class ArenaListener implements Listener {
@@ -107,11 +110,29 @@ public class ArenaListener implements Listener {
     /**
      * Update player scores on player death
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
+
+        Player victim = null;
+        Player killer = null;
+
+        // Melee kills
         if (event.getEntityType().equals(EntityType.PLAYER) && event.getDamager().getType().equals(EntityType.PLAYER)) {
-            Player victim = (Player) event.getEntity();
-            Player killer = (Player) event.getDamager();
+            victim = (Player) event.getEntity();
+            killer = (Player) event.getDamager();
+        }
+
+        // Projectile kills
+        if (event.getEntityType().equals(EntityType.PLAYER) && event.getCause().equals(EntityDamageEvent.DamageCause.PROJECTILE)) {
+            Projectile a = (Projectile) event.getDamager();
+            if (a.getShooter() instanceof Player) {
+                victim = (Player) event.getEntity();
+                killer = (Player) a.getShooter();
+            }
+        }
+
+        // Do scoring
+        if (killer != null && victim != null) {
             Arena arena = arenaHandler.getArenaForPlayer(victim);
             if (arena != null && event.getEntity().isDead()) {
                 Team victimTeam = PlayerUtil.getTeamForPlayer(arena.getMatch(), victim);
@@ -122,6 +143,17 @@ public class ArenaListener implements Listener {
                 }
             }
         }
+
+    }
+
+
+    /**
+     * Update player score object when a PlayerScorePointEvent is emitted.
+     */
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerScorePointEvent(PlayerScorePointEvent event) {
+        PlayerScore score = event.getTeam().getPlayerScore(event.getPlayer());
+        score.incrementPointsBy(event.getPointsScored());
     }
 
 

@@ -5,6 +5,7 @@ import io.github.redwallhp.athenagm.arenas.Arena;
 import io.github.redwallhp.athenagm.events.MatchCreateEvent;
 import io.github.redwallhp.athenagm.events.PlayerChangeTeamEvent;
 import io.github.redwallhp.athenagm.events.PlayerEnterMatchWorldEvent;
+import io.github.redwallhp.athenagm.events.PlayerScorePointEvent;
 import io.github.redwallhp.athenagm.matches.Match;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.modules.Module;
@@ -80,6 +81,17 @@ public class ScoreboardModule implements Module {
     @EventHandler
     public void onPlayerEnterMatchWorld(PlayerEnterMatchWorldEvent event) {
         event.getPlayer().setScoreboard(boards.get(event.getMatch()));
+    }
+
+
+    /**
+     * Update sidebar score box when points are scored
+     */
+    @EventHandler
+    public void onPlayerScorePointEvent(PlayerScorePointEvent event) {
+        Objective objective = boards.get(event.getTeam().getMatch()).getObjective("matchscore");
+        Score score = objective.getScore(event.getTeam().getChatColor() + event.getTeam().getName());
+        score.setScore(score.getScore() + event.getPointsScored());
     }
 
 

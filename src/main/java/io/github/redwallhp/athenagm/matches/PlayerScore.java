@@ -38,6 +38,12 @@ public class PlayerScore {
     }
 
 
+    public int incrementPointsBy(int value) {
+        points = points + value;
+        return points;
+    }
+
+
     public int decrementPoints() {
         points--;
         return points;

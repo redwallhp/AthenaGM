@@ -96,6 +96,7 @@ public class Team {
     public boolean remove(Player player) {
         if (this.players.contains(player)) {
             this.players.remove(player);
+            this.playerScores.remove(player);
             return true;
         }
         return false;
