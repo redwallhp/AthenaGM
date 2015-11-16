@@ -183,6 +183,14 @@ public class GameMap {
                 }
             }
 
+            // Set whether this item will drop or not
+            if (map.get("drop") != null) {
+                boolean doesDrop = Boolean.parseBoolean(map.get("drop").toString());
+                item.setDropOnDeath(doesDrop);
+            } else {
+                item.setDropOnDeath(true);
+            }
+
             //Get the ItemStack and continue
             items.add(item);
             i++;

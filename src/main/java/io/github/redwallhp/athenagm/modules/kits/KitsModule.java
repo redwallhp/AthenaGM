@@ -9,7 +9,12 @@ import io.github.redwallhp.athenagm.modules.Module;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handle player kits on respawn
@@ -33,6 +38,9 @@ public class KitsModule implements Module {
     public void unload() {}
 
 
+    /**
+     * When a player respawns, give them the appropriate kit from the map configuration
+     */
     @EventHandler
     public void giveKitOnRespawn(PlayerMatchRespawnEvent event) {
 
@@ -49,6 +57,26 @@ public class KitsModule implements Module {
             }
         }
         player.updateInventory();
+
+    }
+
+
+    /**
+     * Blacklist item drops flagged as "drop: false" in the kit definition
+     */
+    public void EntityDeathEvent(EntityDeathEvent event) {
+
+        if (!(event.getEntity() instanceof Player)) return;
+        Player player = (Player) event.getEntity();
+        Team team = PlayerUtil.getTeamForPlayer(plugin.getArenaHandler(), player);
+        if (team == null) return;
+
+        List<ItemStack> blacklist = new ArrayList<ItemStack>();
+        for (MapInfoKitItem kitItem : team.getKitItems()) {
+            if (!kitItem.dropOnDeath()) blacklist.add(kitItem.getItem());
+        }
+
+        event.getDrops().removeAll(blacklist);
 
     }
 

@@ -16,6 +16,7 @@ public class MapInfoKitItem {
     private ItemStack item;
     private String kit;
     private int inventorySlot;
+    private boolean dropOnDeath;
 
 
     /**
@@ -70,6 +71,22 @@ public class MapInfoKitItem {
         LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
         meta.setColor(color);
         item.setItemMeta(meta);
+    }
+
+
+    /**
+     * Whether the item will be dropped or blacklisted on player death
+     */
+    public boolean dropOnDeath() {
+        return dropOnDeath;
+    }
+
+
+    /**
+     * Determine whether the item will be dropped or blacklisted on player death
+     */
+    public void setDropOnDeath(boolean drop) {
+        dropOnDeath = drop;
     }
 
 
