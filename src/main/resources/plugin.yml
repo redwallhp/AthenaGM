@@ -60,3 +60,8 @@ commands:
     permission: athenagm.player
     permission-message: You don't have permission to do that.
     aliases: [spec]
+  score:
+    usage: /score
+    description: Show your own score
+    permission: athenagm.player
+    permission-message: You don't have permission to do that.

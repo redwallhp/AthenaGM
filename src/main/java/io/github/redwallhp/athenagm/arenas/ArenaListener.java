@@ -21,6 +21,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.*;
 
 public class ArenaListener implements Listener {
@@ -108,7 +109,7 @@ public class ArenaListener implements Listener {
 
 
     /**
-     * Update player scores on player death
+     * Update PlayerScore on kill
      */
     @EventHandler(priority = EventPriority.LOW)
     public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
@@ -138,12 +139,29 @@ public class ArenaListener implements Listener {
                 Team victimTeam = PlayerUtil.getTeamForPlayer(arena.getMatch(), victim);
                 Team killerTeam = PlayerUtil.getTeamForPlayer(arena.getMatch(), killer);
                 if (victimTeam != null && killerTeam != null) {
-                    victimTeam.getPlayerScore(victim).incrementDeaths();
                     killerTeam.getPlayerScore(killer).incrementKills();
                 }
             }
         }
 
+    }
+
+
+    /**
+     * Update PlayerScore on death
+     */
+    @EventHandler(priority = EventPriority.LOW)
+    public void EntityDeathEvent(EntityDeathEvent event) {
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            Arena arena = arenaHandler.getArenaForPlayer(player);
+            if (arena != null) {
+                Team team = PlayerUtil.getTeamForPlayer(arena.getMatch(), player);
+                if (team != null) {
+                    team.getPlayerScore(player).incrementDeaths();
+                }
+            }
+        }
     }
 
 

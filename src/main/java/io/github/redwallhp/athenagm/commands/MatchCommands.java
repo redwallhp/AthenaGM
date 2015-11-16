@@ -2,6 +2,7 @@ package io.github.redwallhp.athenagm.commands;
 
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.arenas.Arena;
+import io.github.redwallhp.athenagm.matches.PlayerScore;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import io.github.redwallhp.athenagm.utilities.StringUtil;
@@ -11,9 +12,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 
 public class MatchCommands implements CommandExecutor {
@@ -28,6 +27,7 @@ public class MatchCommands implements CommandExecutor {
         plugin.getCommand("team").setExecutor(this);
         plugin.getCommand("autojoin").setExecutor(this);
         plugin.getCommand("spectate").setExecutor(this);
+        plugin.getCommand("score").setExecutor(this);
     }
 
 
@@ -51,6 +51,11 @@ public class MatchCommands implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase("spectate")) {
             String[] arguments = { "spectator" };
             joinTeam(sender, arguments);
+            return true;
+        }
+
+        if (cmd.getName().equalsIgnoreCase("score")) {
+            printPlayerScore(sender);
             return true;
         }
 
@@ -141,6 +146,46 @@ public class MatchCommands implements CommandExecutor {
         for (Team team : teamSizeMap.values()) {
             if (! team.isSpectator()) team.add(player, false);
         }
+
+    }
+
+
+    private void printPlayerScore(CommandSender sender) {
+
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "Console can't have a score.");
+            return;
+        }
+
+        Player player = (Player) sender;
+        Arena arena = plugin.getArenaHandler().getArenaForPlayer(player);
+        if (arena == null) {
+            sender.sendMessage(ChatColor.RED + "You must join an arena first.");
+            return;
+        }
+        Team team = PlayerUtil.getTeamForPlayer(arena.getMatch(), player);
+        if (team == null || team.isSpectator()) {
+            sender.sendMessage(ChatColor.RED + "You must join a team to have a score.");
+            return;
+        }
+        PlayerScore playerScore = team.getPlayerScore(player);
+
+        LinkedHashMap<String, Integer> values = new LinkedHashMap<String, Integer>();
+        values.put("Points", playerScore.getPoints());
+        values.put("Kills", playerScore.getKills());
+        values.put("Deaths", playerScore.getDeaths());
+        try {
+            values.put("KDR", (playerScore.getKills() / playerScore.getDeaths()));
+        } catch(ArithmeticException ex) {
+            values.put("KDR", 0);
+        }
+
+        StringBuilder sb = new StringBuilder(ChatColor.DARK_AQUA + "Personal score: ");
+        for (Map.Entry<String, Integer> pair : values.entrySet()) {
+            sb.append(String.format("%s%s: %s%d", ChatColor.AQUA, pair.getKey(), ChatColor.GREEN, pair.getValue()));
+            sb.append(" ");
+        }
+        sender.sendMessage(sb.toString());
 
     }
 

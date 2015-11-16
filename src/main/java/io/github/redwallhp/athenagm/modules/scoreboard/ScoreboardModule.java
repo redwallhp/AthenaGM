@@ -59,8 +59,8 @@ public class ScoreboardModule implements Module {
     public void onMatchCreate(MatchCreateEvent event) {
         clearUnusedScoreboards();
         registerMatchScoreboardAndTeams(event.getMatch());
-        createSidebarObjective(event.getMatch());
-        createPlayerNameTagObjective(event.getMatch());
+        createSidebarTeamScoreObjective(event.getMatch());
+        createPlayerHealthObjective(event.getMatch());
     }
 
 
@@ -143,7 +143,7 @@ public class ScoreboardModule implements Module {
     /**
      * Show the player's health under their nameplate
      */
-    private void createPlayerNameTagObjective(Match match) {
+    private void createPlayerHealthObjective(Match match) {
 
         Scoreboard board = boards.get(match);
         Objective objective = board.registerNewObjective("playerhealth", "health");
@@ -163,7 +163,7 @@ public class ScoreboardModule implements Module {
     /**
      * Set up the sidebar score box
      */
-    private void createSidebarObjective(Match match) {
+    private void createSidebarTeamScoreObjective(Match match) {
 
         Scoreboard board = boards.get(match);
         Objective objective = board.registerNewObjective("matchscore", "dummy");
