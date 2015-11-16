@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Handle player kits on respawn
@@ -64,6 +65,7 @@ public class KitsModule implements Module {
     /**
      * Blacklist item drops flagged as "drop: false" in the kit definition
      */
+    @EventHandler
     public void EntityDeathEvent(EntityDeathEvent event) {
 
         if (!(event.getEntity() instanceof Player)) return;
@@ -76,7 +78,15 @@ public class KitsModule implements Module {
             if (!kitItem.dropOnDeath()) blacklist.add(kitItem.getItem());
         }
 
-        event.getDrops().removeAll(blacklist);
+        ListIterator<ItemStack> it = event.getDrops().listIterator();
+        while (it.hasNext()) {
+            ItemStack item = it.next();
+            for (ItemStack blacklisted : blacklist) {
+                if (blacklisted.getType().equals(item.getType())) {
+                    it.remove();
+                }
+            }
+        }
 
     }
 
