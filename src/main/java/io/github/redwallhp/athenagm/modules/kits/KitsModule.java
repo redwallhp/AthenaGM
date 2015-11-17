@@ -1,6 +1,7 @@
 package io.github.redwallhp.athenagm.modules.kits;
 
 import io.github.redwallhp.athenagm.AthenaGM;
+import io.github.redwallhp.athenagm.events.PlayerMatchDeathEvent;
 import io.github.redwallhp.athenagm.events.PlayerMatchRespawnEvent;
 import io.github.redwallhp.athenagm.maps.MapInfoKitItem;
 import io.github.redwallhp.athenagm.matches.Match;
@@ -66,15 +67,10 @@ public class KitsModule implements Module {
      * Blacklist item drops flagged as "drop: false" in the kit definition
      */
     @EventHandler
-    public void EntityDeathEvent(EntityDeathEvent event) {
-
-        if (!(event.getEntity() instanceof Player)) return;
-        Player player = (Player) event.getEntity();
-        Team team = PlayerUtil.getTeamForPlayer(plugin.getArenaHandler(), player);
-        if (team == null) return;
+    public void onPlayerMatchDeathEvent(PlayerMatchDeathEvent event) {
 
         List<ItemStack> blacklist = new ArrayList<ItemStack>();
-        for (MapInfoKitItem kitItem : team.getKitItems()) {
+        for (MapInfoKitItem kitItem : event.getTeam().getKitItems()) {
             if (!kitItem.dropOnDeath()) blacklist.add(kitItem.getItem());
         }
 

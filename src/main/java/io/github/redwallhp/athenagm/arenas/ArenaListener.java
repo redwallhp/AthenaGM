@@ -2,9 +2,7 @@ package io.github.redwallhp.athenagm.arenas;
 
 
 import io.github.redwallhp.athenagm.AthenaGM;
-import io.github.redwallhp.athenagm.events.PlayerEnterMatchWorldEvent;
-import io.github.redwallhp.athenagm.events.PlayerMatchRespawnEvent;
-import io.github.redwallhp.athenagm.events.PlayerScorePointEvent;
+import io.github.redwallhp.athenagm.events.*;
 import io.github.redwallhp.athenagm.maps.GameMap;
 import io.github.redwallhp.athenagm.matches.PlayerScore;
 import io.github.redwallhp.athenagm.matches.Team;
@@ -109,28 +107,50 @@ public class ArenaListener implements Listener {
 
 
     /**
-     * Update PlayerScore on death
+     * Call PlayerDamagePlayerEvent when a player attacks another player
+     * while in an ongoing match.
+     * @see PlayerDamagePlayerEvent
      */
     @EventHandler(priority = EventPriority.LOW)
-    public void updateScoreOnDeath(EntityDeathEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
-            Arena arena = arenaHandler.getArenaForPlayer(player);
-            if (arena != null) {
-                Team team = PlayerUtil.getTeamForPlayer(arena.getMatch(), player);
-                if (team != null) {
-                    team.getPlayerScore(player).incrementDeaths();
-                }
+    public void triggerPlayerDamagePlayerEvent(EntityDamageByEntityEvent event) {
+
+        Player victim = null;
+        Player attacker = null;
+
+        // Melee
+        if (event.getEntityType().equals(EntityType.PLAYER) && event.getDamager().getType().equals(EntityType.PLAYER)) {
+            victim = (Player) event.getEntity();
+            attacker = (Player) event.getDamager();
+        }
+
+        // Projectile
+        if (event.getEntityType().equals(EntityType.PLAYER) && event.getCause().equals(EntityDamageEvent.DamageCause.PROJECTILE)) {
+            Projectile a = (Projectile) event.getDamager();
+            if (a.getShooter() instanceof Player) {
+                victim = (Player) event.getEntity();
+                attacker = (Player) a.getShooter();
             }
         }
+
+        if (attacker == null || victim == null) return;
+        Arena arena = arenaHandler.getArenaForPlayer(victim);
+        if (arena == null) return;
+
+        PlayerDamagePlayerEvent e = new PlayerDamagePlayerEvent(arena.getMatch(), attacker, victim, event);
+        Bukkit.getPluginManager().callEvent(e);
+        if (e.isCancelled()) {
+            event.setCancelled(true);
+        }
+
     }
 
 
     /**
-     * Update PlayerScore on kill
+     * Call PlayerMurderPlayerEvent when a player kills another player during a match
+     * @see PlayerMurderPlayerEvent
      */
     @EventHandler(priority = EventPriority.LOW)
-    public void updateScoreOnKill(EntityDeathEvent event) {
+    public void triggerPlayerMurderEvent(EntityDeathEvent event) {
 
         if (!(event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)) return;
 
@@ -153,21 +173,61 @@ public class ArenaListener implements Listener {
             }
         }
 
-        // Do scoring
-        if (killer != null && victim != null) {
-            plugin.getLogger().info("Scoring time");
-            Arena arena = arenaHandler.getArenaForPlayer(victim);
-            if (arena != null) {
-                plugin.getLogger().info("Ding dong " + victim.getName() + " is dead!");
-                Team victimTeam = PlayerUtil.getTeamForPlayer(arena.getMatch(), victim);
-                Team killerTeam = PlayerUtil.getTeamForPlayer(arena.getMatch(), killer);
-                if (victimTeam != null && killerTeam != null && victimTeam != killerTeam) {
-                    killerTeam.getPlayerScore(killer).incrementKills();
-                    plugin.getLogger().info("Updated score");
-                }
-            }
-        }
+        if (killer == null || victim == null) return;
+        Arena arena = arenaHandler.getArenaForPlayer(victim);
+        if (arena == null) return;
 
+        PlayerMurderPlayerEvent murderEvent = new PlayerMurderPlayerEvent(arena.getMatch(), killer, victim, e);
+        Bukkit.getPluginManager().callEvent(murderEvent);
+
+    }
+
+
+    /**
+     * Call PlayerMatchDeathEvent when a player dies during a match
+     * @see PlayerMatchDeathEvent
+     */
+    @EventHandler(priority = EventPriority.LOW)
+    public void triggerPlayerMatchDeathEvent(EntityDeathEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+        Player player = (Player) event.getEntity();
+        Arena arena = arenaHandler.getArenaForPlayer(player);
+        if (arena == null) return;
+        PlayerMatchDeathEvent e = new PlayerMatchDeathEvent(arena.getMatch(), player, event);
+        Bukkit.getPluginManager().callEvent(e);
+    }
+
+
+    /**
+     * Update PlayerScore on death
+     */
+    @EventHandler(priority = EventPriority.LOW)
+    public void updateScoreOnDeath(PlayerMatchDeathEvent event) {
+        if (event.getTeam() != null) {
+            event.getTeam().getPlayerScore(event.getPlayer()).incrementDeaths();
+        }
+    }
+
+
+    /**
+     * Update PlayerScore on kill
+     */
+    @EventHandler(priority = EventPriority.LOW)
+    public void updateScoreOnKill(PlayerMurderPlayerEvent event) {
+        if (event.getVictimTeam() != null && event.getKillerTeam() != null && event.getVictimTeam() != event.getKillerTeam()) {
+            event.getKillerTeam().getPlayerScore(event.getKiller()).incrementKills();
+        }
+    }
+
+
+    /**
+     * Block friendly fire, so players don't intentionally disrupt matches by killing their own team
+     */
+    @EventHandler(priority = EventPriority.LOW)
+    public void blockFriendlyFire(PlayerDamagePlayerEvent event) {
+        if (event.isFriendlyFire()) {
+            event.setCancelled(true);
+        }
     }
 
 
