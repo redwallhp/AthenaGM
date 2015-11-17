@@ -30,6 +30,7 @@ public class Team {
     private Boolean spectator;
     private List<Player> players;
     private HashMap<Player, PlayerScore> playerScores;
+    private int points;
 
 
     /**
@@ -51,6 +52,7 @@ public class Team {
         this.spectator = spectator;
         this.players = new ArrayList<Player>();
         this.playerScores = new HashMap<Player, PlayerScore>();
+        this.points = 0;
     }
 
 
@@ -226,18 +228,6 @@ public class Team {
 
 
     /**
-     * Get the total points for the team
-     */
-    public int getTotalPoints() {
-        int score = 0;
-        for (PlayerScore ps : playerScores.values()) {
-            score = score + ps.getPoints();
-        }
-        return score;
-    }
-
-
-    /**
      * Get the total kills for the team
      */
     public int getTotalKills() {
@@ -250,7 +240,7 @@ public class Team {
 
 
     /**
-     * Get the total kills for the team
+     * Get the total deaths for the team
      */
     public int getTotalDeaths() {
         int deaths = 0;
@@ -262,14 +252,37 @@ public class Team {
 
 
     /**
-     * Get the overall (points + kills) score
+     * Get the team's score
      */
-    public int getOverallScore() {
-        int score = 0;
-        for (PlayerScore ps : playerScores.values()) {
-            score = score + ps.getOverallScore();
-        }
-        return score;
+    public int getPoints() {
+        return points;
+    }
+
+
+    /**
+     * Increment the team's points by one
+     */
+    public int incrementPoints() {
+        points++;
+        return points;
+    }
+
+
+    /**
+     * Add an arbitrary value to the team's points
+     */
+    public int incrementPointsBy(int value) {
+        points = points + value;
+        return points;
+    }
+
+
+    /**
+     * Subtract a point from the team's score
+     */
+    public int decrementPoints() {
+        points--;
+        return points;
     }
 
 

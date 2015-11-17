@@ -177,7 +177,11 @@ public class MatchCommands implements CommandExecutor {
         try {
             values.put("KDR", (playerScore.getKills() / playerScore.getDeaths()));
         } catch(ArithmeticException ex) {
-            values.put("KDR", 0);
+            if (playerScore.getKills() > 0) {
+                values.put("KDR", playerScore.getKills());
+            } else {
+                values.put("KDR", 0);
+            }
         }
 
         StringBuilder sb = new StringBuilder(ChatColor.DARK_AQUA + "Personal score: ");

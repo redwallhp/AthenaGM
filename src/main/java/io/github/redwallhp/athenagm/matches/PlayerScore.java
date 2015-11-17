@@ -34,18 +34,21 @@ public class PlayerScore {
 
     public int incrementPoints() {
         points++;
+        team.incrementPoints();
         return points;
     }
 
 
     public int incrementPointsBy(int value) {
         points = points + value;
+        team.incrementPointsBy(value);
         return points;
     }
 
 
     public int decrementPoints() {
         points--;
+        team.decrementPoints();
         return points;
     }
 

@@ -109,49 +109,10 @@ public class ArenaListener implements Listener {
 
 
     /**
-     * Update PlayerScore on kill
-     */
-    @EventHandler(priority = EventPriority.LOW)
-    public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
-
-        Player victim = null;
-        Player killer = null;
-
-        // Melee kills
-        if (event.getEntityType().equals(EntityType.PLAYER) && event.getDamager().getType().equals(EntityType.PLAYER)) {
-            victim = (Player) event.getEntity();
-            killer = (Player) event.getDamager();
-        }
-
-        // Projectile kills
-        if (event.getEntityType().equals(EntityType.PLAYER) && event.getCause().equals(EntityDamageEvent.DamageCause.PROJECTILE)) {
-            Projectile a = (Projectile) event.getDamager();
-            if (a.getShooter() instanceof Player) {
-                victim = (Player) event.getEntity();
-                killer = (Player) a.getShooter();
-            }
-        }
-
-        // Do scoring
-        if (killer != null && victim != null) {
-            Arena arena = arenaHandler.getArenaForPlayer(victim);
-            if (arena != null && event.getEntity().isDead()) {
-                Team victimTeam = PlayerUtil.getTeamForPlayer(arena.getMatch(), victim);
-                Team killerTeam = PlayerUtil.getTeamForPlayer(arena.getMatch(), killer);
-                if (victimTeam != null && killerTeam != null) {
-                    killerTeam.getPlayerScore(killer).incrementKills();
-                }
-            }
-        }
-
-    }
-
-
-    /**
      * Update PlayerScore on death
      */
     @EventHandler(priority = EventPriority.LOW)
-    public void EntityDeathEvent(EntityDeathEvent event) {
+    public void updateScoreOnDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             Arena arena = arenaHandler.getArenaForPlayer(player);
@@ -162,6 +123,51 @@ public class ArenaListener implements Listener {
                 }
             }
         }
+    }
+
+
+    /**
+     * Update PlayerScore on kill
+     */
+    @EventHandler(priority = EventPriority.LOW)
+    public void updateScoreOnKill(EntityDeathEvent event) {
+
+        if (!(event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)) return;
+
+        Player victim = null;
+        Player killer = null;
+        EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
+
+        // Melee kills
+        if (e.getEntityType().equals(EntityType.PLAYER) && e.getDamager().getType().equals(EntityType.PLAYER)) {
+            victim = (Player) e.getEntity();
+            killer = (Player) e.getDamager();
+        }
+
+        // Projectile kills
+        if (e.getEntityType().equals(EntityType.PLAYER) && e.getCause().equals(EntityDamageEvent.DamageCause.PROJECTILE)) {
+            Projectile a = (Projectile) e.getDamager();
+            if (a.getShooter() instanceof Player) {
+                victim = (Player) e.getEntity();
+                killer = (Player) a.getShooter();
+            }
+        }
+
+        // Do scoring
+        if (killer != null && victim != null) {
+            plugin.getLogger().info("Scoring time");
+            Arena arena = arenaHandler.getArenaForPlayer(victim);
+            if (arena != null) {
+                plugin.getLogger().info("Ding dong " + victim.getName() + " is dead!");
+                Team victimTeam = PlayerUtil.getTeamForPlayer(arena.getMatch(), victim);
+                Team killerTeam = PlayerUtil.getTeamForPlayer(arena.getMatch(), killer);
+                if (victimTeam != null && killerTeam != null && victimTeam != killerTeam) {
+                    killerTeam.getPlayerScore(killer).incrementKills();
+                    plugin.getLogger().info("Updated score");
+                }
+            }
+        }
+
     }
 
 
