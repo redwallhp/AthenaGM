@@ -65,3 +65,8 @@ commands:
     description: Show your own score
     permission: athenagm.player
     permission-message: You don't have permission to do that.
+  players:
+    usage: /players
+    description: Show the players in the current match, ranked by score.
+    permission: athenagm.player
+    permission-message: You don't have permission to do that.

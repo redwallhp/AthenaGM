@@ -28,6 +28,7 @@ public class MatchCommands implements CommandExecutor {
         plugin.getCommand("autojoin").setExecutor(this);
         plugin.getCommand("spectate").setExecutor(this);
         plugin.getCommand("score").setExecutor(this);
+        plugin.getCommand("players").setExecutor(this);
     }
 
 
@@ -56,6 +57,11 @@ public class MatchCommands implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("score")) {
             printPlayerScore(sender);
+            return true;
+        }
+
+        if (cmd.getName().equalsIgnoreCase("players")) {
+            printPlayersList(sender);
             return true;
         }
 
@@ -190,6 +196,45 @@ public class MatchCommands implements CommandExecutor {
             sb.append(" ");
         }
         sender.sendMessage(sb.toString());
+
+    }
+
+
+    private void printPlayersList(CommandSender sender) {
+
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "Console can't join a team.");
+            return;
+        }
+
+        Player player = (Player) sender;
+        Arena arena = plugin.getArenaHandler().getArenaForPlayer(player);
+
+        if (arena == null) {
+            sender.sendMessage(ChatColor.RED + "You must join an arena first.");
+            return;
+        }
+
+        for (Team team : arena.getMatch().getTeams().values()) {
+
+            if (team.getPlayers().size() < 1) continue;
+
+            TreeMap<Integer, PlayerScore> ranking = new TreeMap<Integer, PlayerScore>();
+            for (Player p : team.getPlayers()) {
+                PlayerScore ps = team.getPlayerScore(p);
+                ranking.put(ps.getOverallScore(), ps);
+            }
+
+            StringBuilder sb = new StringBuilder(team.getColoredName() + ChatColor.RESET + ": ");
+            for (PlayerScore ps : ranking.values()) {
+                sb.append(String.format("%s %s(%d)%s", ps.getPlayer().getName(), ChatColor.GRAY, ps.getOverallScore(), ChatColor.RESET));
+                if (ranking.lastEntry().getValue() != ps) {
+                    sb.append(", ");
+                }
+            }
+            sender.sendMessage(sb.toString());
+
+        }
 
     }
 
