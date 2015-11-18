@@ -1,6 +1,7 @@
 package io.github.redwallhp.athenagm.regions;
 
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -9,6 +10,7 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 
 /**
@@ -18,9 +20,10 @@ public class CuboidRegion {
 
 
     private String name;
-    private World world;
+    private UUID worldID;
     private Vector min;
     private Vector max;
+    private RegionFlags flags;
 
 
     /**
@@ -32,9 +35,10 @@ public class CuboidRegion {
      */
     public CuboidRegion(String name, World world, Vector min, Vector max) {
         this.name = name;
-        this.world = world;
+        this.worldID = world.getUID();
         this.min = min;
         this.max = max;
+        this.flags = new RegionFlags();
     }
 
 
@@ -84,7 +88,7 @@ public class CuboidRegion {
      * The World the region is in
      */
     public World getWorld() {
-        return world;
+        return Bukkit.getWorld(worldID);
     }
 
 
@@ -111,7 +115,8 @@ public class CuboidRegion {
      */
     public boolean contains(World world, Vector vector) {
         boolean isInVector = vector.isInAABB(min, max);
-        return (isInVector && world.equals(this.world));
+        boolean isWorld = (Bukkit.getWorld(worldID) != null && world.equals(Bukkit.getWorld(worldID)));
+        return (isInVector && isWorld);
     }
 
 
@@ -137,7 +142,7 @@ public class CuboidRegion {
      */
     public Block getCenterBlock() {
         Vector center = getCenter();
-        return world.getBlockAt((int) center.getX(), (int) center.getY(), (int) center.getZ());
+        return getWorld().getBlockAt((int) center.getX(), (int) center.getY(), (int) center.getZ());
     }
 
 
@@ -149,7 +154,7 @@ public class CuboidRegion {
         double x = r.nextInt((int)max.getX()-(int)min.getX()) + min.getX();
         double y = r.nextInt((int)max.getY()-(int)min.getY()) + min.getY();
         double z = r.nextInt((int)max.getZ()-(int)min.getZ()) + min.getZ();
-        return new Location(world, x, y, z);
+        return new Location(getWorld(), x, y, z);
     }
 
 
@@ -161,11 +166,19 @@ public class CuboidRegion {
         for (int x = (int)min.getX(); x < max.getX(); x++) {
             for (int y = (int)min.getY(); x < max.getY(); y++) {
                 for (int z = (int)min.getZ(); x < max.getZ(); z++) {
-                    blocks.add(world.getBlockAt(x, y, z));
+                    blocks.add(getWorld().getBlockAt(x, y, z));
                 }
             }
         }
         return blocks;
+    }
+
+
+    /**
+     * Get the region's RegionFlags object
+     */
+    public RegionFlags getFlags() {
+        return flags;
     }
 
 

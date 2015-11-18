@@ -3,9 +3,13 @@ package io.github.redwallhp.athenagm.regions;
 
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.maps.GameMap;
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class RegionHandler {
 
@@ -20,12 +24,12 @@ public class RegionHandler {
     }
 
 
-    public void loadRegion(CuboidRegion region) {
+    public void addRegion(CuboidRegion region) {
         regions.put(region.getName(), region);
     }
 
 
-    public void unloadRegion(CuboidRegion region) {
+    public void removeRegion(CuboidRegion region) {
         regions.remove(region.getName());
     }
 
@@ -35,10 +39,24 @@ public class RegionHandler {
     }
 
 
+    public List<CuboidRegion> applicableRegions(World world, Vector vector) {
+        List<CuboidRegion> inRegions = new ArrayList<CuboidRegion>();
+        for (CuboidRegion region : regions.values()) {
+            if (region.contains(world, vector)) inRegions.add(region);
+        }
+        return inRegions;
+    }
+
+
+    public List<CuboidRegion> applicableRegions(Location location) {
+        return applicableRegions(location.getWorld(), location.toVector());
+    }
+
+
     /**
      * Load configured regions for a map. This is called when a new match starts.
      */
-    public void loadRegions(GameMap map) {
+    public void loadRegions(World world, GameMap map) {
     }
 
 
@@ -48,7 +66,7 @@ public class RegionHandler {
     public void unloadRegions(World world) {
         for (CuboidRegion region : regions.values()) {
             if (region.getWorld().getUID() == world.getUID()) {
-                unloadRegion(region);
+                removeRegion(region);
             }
         }
     }

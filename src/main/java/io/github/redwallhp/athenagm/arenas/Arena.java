@@ -64,11 +64,11 @@ public class Arena {
         File oldFile = (this.worldFile == null) ? null : getWorldFile();
 
         mapLoader.load();
+        plugin.getRegionHandler().loadRegions(world.get(), mapLoader.getMap());
         this.match = new Match(this, this.mapLoader.getUUID(), this.mapLoader.getMap());
         MatchCreateEvent event = new MatchCreateEvent(this.match);
         Bukkit.getPluginManager().callEvent(event);
         mapLoader = new MapLoader(rotation.getNextMap(), this);
-        plugin.getRegionHandler().loadRegions(mapLoader.getMap());
 
         if (oldWorld != null) {
             plugin.getRegionHandler().unloadRegions(oldWorld);
