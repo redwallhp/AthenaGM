@@ -68,8 +68,10 @@ public class Arena {
         MatchCreateEvent event = new MatchCreateEvent(this.match);
         Bukkit.getPluginManager().callEvent(event);
         mapLoader = new MapLoader(rotation.getNextMap(), this);
+        plugin.getRegionHandler().loadRegions(mapLoader.getMap());
 
         if (oldWorld != null) {
+            plugin.getRegionHandler().unloadRegions(oldWorld);
             Bukkit.unloadWorld(oldWorld, false);
             mapLoader.destroyWorldInstanceCopy(oldFile);
         }

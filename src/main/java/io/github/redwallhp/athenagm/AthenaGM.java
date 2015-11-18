@@ -8,6 +8,7 @@ import io.github.redwallhp.athenagm.configuration.Configuration;
 import io.github.redwallhp.athenagm.maps.VoidGenerator;
 import io.github.redwallhp.athenagm.modules.Module;
 import io.github.redwallhp.athenagm.modules.ModuleLoader;
+import io.github.redwallhp.athenagm.regions.RegionHandler;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,6 +27,7 @@ public class AthenaGM extends JavaPlugin {
     public Configuration config;
     private ArenaHandler arenaHandler;
     private ModuleLoader moduleLoader;
+    private RegionHandler regionHandler;
 
 
     @Override
@@ -33,6 +35,7 @@ public class AthenaGM extends JavaPlugin {
         this.config = new Configuration(this);
         setupDirectories();
         this.moduleLoader = new ModuleLoader(this);
+        this.regionHandler = new RegionHandler(this);
         this.arenaHandler = new ArenaHandler(this);
         registerCommands();
     }
@@ -96,6 +99,14 @@ public class AthenaGM extends JavaPlugin {
      */
     public ArenaHandler getArenaHandler() {
         return arenaHandler;
+    }
+
+
+    /**
+     * Get a reference to the RegionHandler
+     */
+    public RegionHandler getRegionHandler() {
+        return regionHandler;
     }
 
 
