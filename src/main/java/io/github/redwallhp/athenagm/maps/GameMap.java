@@ -1,5 +1,6 @@
 package io.github.redwallhp.athenagm.maps;
 
+import io.github.redwallhp.athenagm.regions.RegionFlags;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -25,6 +26,7 @@ public class GameMap {
     private HashMap<String, MapInfoTeam> teams;
     private List<MapInfoSpawnPoint> spawnPoints;
     private HashMap<String, List<MapInfoKitItem>> kits;
+    private HashMap<String, MapInfoRegion> regions;
 
 
     /**
@@ -44,6 +46,7 @@ public class GameMap {
         loadTeams(metaYaml);
         loadSpawnPoints(metaYaml);
         loadKits(metaYaml);
+        loadRegions(metaYaml);
 
     }
 
@@ -197,6 +200,47 @@ public class GameMap {
 
         }
         return items;
+    }
+
+
+    /**
+     * Load the region configuration from the YAML, to be later used by
+     * RegionHandler to set up the regions.
+     * @param yaml The FileConfiguration reference from the constructor
+     * @see io.github.redwallhp.athenagm.regions.RegionHandler
+     */
+    private void loadRegions(FileConfiguration yaml) {
+        this.regions = new HashMap<String, MapInfoRegion>();
+        Set<String> names = yaml.getConfigurationSection("regions").getKeys(false);
+        for (String name : names) {
+            String min = yaml.getString(String.format("regions.%s.min", name), null);
+            String max = yaml.getString(String.format("regions.%s.max", name), null);
+            MapInfoRegion rg = new MapInfoRegion(name, min, max);
+            rg.setFlags(loadRegionFlags(name, yaml));
+            if (rg.isValid()) {
+                this.regions.put(name, rg);
+            }
+        }
+    }
+
+
+    /**
+     * Load the flags for the region, creating a RegionFlags object.
+     * @param name The region name in the YAML
+     * @param yaml The FileConfiguration reference from the constructor
+     */
+    private RegionFlags loadRegionFlags(String name, FileConfiguration yaml) {
+        RegionFlags rf = new RegionFlags();
+        rf.setBlockPlace(yaml.getBoolean(String.format("regions.%s.block_place", name), true));
+        rf.setBlockDestroy(yaml.getBoolean(String.format("regions.%s.block_destroy", name), true));
+        rf.setInteract(yaml.getBoolean(String.format("regions.%s.interact", name), true));
+        rf.setDenyEntry(yaml.getBoolean(String.format("regions.%s.deny_entry", name), false));
+        rf.setDenyExit(yaml.getBoolean(String.format("regions.%s.deny_exit", name), false));
+        rf.setTeamRestricted(yaml.getString(String.format("regions.%s.team_restricted", name), null));
+        rf.setEntryHail(yaml.getString(String.format("regions.%s.entry_hail", name), null));
+        rf.setExitHail(yaml.getString(String.format("regions.%s.exit_hail", name), null));
+        rf.setTags(yaml.getStringList(String.format("regions.%s.tags", name)));
+        return rf;
     }
 
 
