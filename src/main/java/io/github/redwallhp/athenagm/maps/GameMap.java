@@ -1,6 +1,7 @@
 package io.github.redwallhp.athenagm.maps;
 
 import io.github.redwallhp.athenagm.regions.RegionFlags;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -111,12 +112,20 @@ public class GameMap {
             String[] coords = delimitedPoint.split(",");
             if (coords.length != 3) continue;
             if (team.length() < 1) continue;
-            Double x = Double.parseDouble(coords[0]);
-            Double y = Double.parseDouble(coords[1]);
-            Double z = Double.parseDouble(coords[2]);
-            MapInfoSpawnPoint spawnPoint = new MapInfoSpawnPoint(team, x, y, z, yaw);
-            spawnPoints.add(spawnPoint);
+            MapInfoSpawnPoint spawnPoint = new MapInfoSpawnPoint(team, delimitedPoint, yaw);
+            if (spawnPoint.isValid()) {
+                spawnPoints.add(spawnPoint);
+            } else {
+                Bukkit.getLogger().warning(String.format("Error parsing spawn point %d, skipping.", i));
+            }
             i++;
+        }
+        if (spawnPoints.size() < 1) {
+            Bukkit.getLogger().warning("No spawn points found in map config. Adding defaults.");
+            for (String team : this.teams.keySet()) {
+                spawnPoints.add(new MapInfoSpawnPoint(team, "0,69,0", 0f));
+            }
+            spawnPoints.add(new MapInfoSpawnPoint("spectator", "0,69,0", 0f));
         }
     }
 
