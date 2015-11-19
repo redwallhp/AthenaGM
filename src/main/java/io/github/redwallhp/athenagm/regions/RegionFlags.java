@@ -28,7 +28,7 @@ public class RegionFlags {
         denyExit = false;
         teamRestricted = null;
         entryHail = null;
-        entryHail = null;
+        exitHail = null;
         tags = new ArrayList<String>();
     }
 

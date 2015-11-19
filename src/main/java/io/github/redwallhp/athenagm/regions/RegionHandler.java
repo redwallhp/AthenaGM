@@ -6,6 +6,7 @@ import io.github.redwallhp.athenagm.maps.GameMap;
 import io.github.redwallhp.athenagm.maps.MapInfoRegion;
 import io.github.redwallhp.athenagm.regions.listeners.BlockBreakListener;
 import io.github.redwallhp.athenagm.regions.listeners.BlockPlaceListener;
+import io.github.redwallhp.athenagm.regions.listeners.PlayerMovementListener;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -32,6 +33,7 @@ public class RegionHandler {
     private void listen() {
         BlockPlaceListener blockPlaceListener = new BlockPlaceListener(this);
         BlockBreakListener blockBreakListener = new BlockBreakListener(this);
+        PlayerMovementListener playerMovementListener = new PlayerMovementListener(this);
     }
 
 
