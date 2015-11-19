@@ -21,8 +21,9 @@ public class CuboidRegion {
 
     private String name;
     private UUID worldID;
-    private Vector min;
-    private Vector max;
+    private Vector start;
+    private Vector end;
+    private int priority;
     private RegionFlags flags;
 
 
@@ -30,14 +31,15 @@ public class CuboidRegion {
      * Primary constructor
      * @param name The name of the region
      * @param world The world the region is a part of
-     * @param min The min point of the cuboid
-     * @param max The max point of the cuboid
+     * @param start The start point of the cuboid
+     * @param end The end point of the cuboid
      */
-    public CuboidRegion(String name, World world, Vector min, Vector max) {
+    public CuboidRegion(String name, World world, Vector start, Vector end) {
         this.name = name;
         this.worldID = world.getUID();
-        this.min = min;
-        this.max = max;
+        this.start = start;
+        this.end = end;
+        this.priority = 0;
         this.flags = new RegionFlags();
     }
 
@@ -46,11 +48,11 @@ public class CuboidRegion {
      * Alternate constructor that accepts Location objects instead of Vectors.
      * The region's world is pulled from one of the Location objects.
      * @param name The region name
-     * @param min The min point of the cuboid
-     * @param max The max point of the cuboid
+     * @param start The start point of the cuboid
+     * @param end The end point of the cuboid
      */
-    public CuboidRegion(String name, Location min, Location max) {
-        this(name, min.getWorld(), min.toVector(), max.toVector());
+    public CuboidRegion(String name, Location start, Location end) {
+        this(name, start.getWorld(), start.toVector(), end.toVector());
     }
 
 
@@ -93,18 +95,34 @@ public class CuboidRegion {
 
 
     /**
-     * The min point of the region
+     * The start point of the region
      */
-    public Vector getMin() {
-        return min;
+    public Vector getStart() {
+        return start;
     }
 
 
     /**
-     * The max point of the region
+     * The end point of the region
+     */
+    public Vector getEnd() {
+        return end;
+    }
+
+
+    /**
+     * Get a Vector representing the minimum coordinate for the region
+     */
+    public Vector getMin() {
+        return new Vector(Math.min(start.getX(), end.getX()), Math.min(start.getY(), end.getY()), Math.min(start.getZ(), end.getZ()));
+    }
+
+
+    /**
+     * Get a Vector representing the maximum coordinate for the region
      */
     public Vector getMax() {
-        return max;
+        return new Vector(Math.max(start.getX(), end.getX()), Math.max(start.getY(), end.getY()), Math.max(start.getZ(), end.getZ()));
     }
 
 
@@ -114,7 +132,7 @@ public class CuboidRegion {
      * @param vector The point to check
      */
     public boolean contains(World world, Vector vector) {
-        boolean isInVector = vector.isInAABB(min, max);
+        boolean isInVector = vector.isInAABB(getMin(), getMax());
         boolean isWorld = (Bukkit.getWorld(worldID) != null && world.equals(Bukkit.getWorld(worldID)));
         return (isInVector && isWorld);
     }
@@ -133,7 +151,7 @@ public class CuboidRegion {
      * Center point of the region
      */
     public Vector getCenter() {
-        return min.getMidpoint(max);
+        return start.getMidpoint(end);
     }
 
 
@@ -142,7 +160,7 @@ public class CuboidRegion {
      */
     public Block getCenterBlock() {
         Vector center = getCenter();
-        return getWorld().getBlockAt((int) center.getX(), (int) center.getY(), (int) center.getZ());
+        return getWorld().getBlockAt(center.getBlockX(), center.getBlockY(), center.getBlockZ());
     }
 
 
@@ -150,11 +168,8 @@ public class CuboidRegion {
      * Get a random Location object inside the region
      */
     public Location getRandomLocation() {
-        Random r = new Random();
-        double x = r.nextInt((int)max.getX()-(int)min.getX()) + min.getX();
-        double y = r.nextInt((int)max.getY()-(int)min.getY()) + min.getY();
-        double z = r.nextInt((int)max.getZ()-(int)min.getZ()) + min.getZ();
-        return new Location(getWorld(), x, y, z);
+        List<Block> blocks = getBlocks();
+        return blocks.get(new Random().nextInt(blocks.size())).getLocation();
     }
 
 
@@ -163,9 +178,9 @@ public class CuboidRegion {
      */
     public List<Block> getBlocks() {
         List<Block> blocks = new ArrayList<Block>();
-        for (int x = (int)min.getX(); x < max.getX(); x++) {
-            for (int y = (int)min.getY(); x < max.getY(); y++) {
-                for (int z = (int)min.getZ(); x < max.getZ(); z++) {
+        for (int x = (int)getMin().getX(); x <= (int)getMax().getX(); x++) {
+            for (int y = (int)getMin().getY(); y <= (int)getMax().getY(); y++) {
+                for (int z = (int)getMin().getZ(); z <= (int)getMax().getZ(); z++) {
                     blocks.add(getWorld().getBlockAt(x, y, z));
                 }
             }
@@ -187,6 +202,22 @@ public class CuboidRegion {
      */
     public void setFlags(RegionFlags flags) {
         this.flags = flags;
+    }
+
+
+    /**
+     * Get the priority of the region (higher overrides lower)
+     */
+    public int getPriority() {
+        return priority;
+    }
+
+
+    /**
+     * Set the priority of the region (higher overrides lower)
+     */
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
 

@@ -12,21 +12,23 @@ public class MapInfoRegion {
 
 
     private String name;
-    private Vector min;
-    private Vector max;
+    private Vector start;
+    private Vector end;
+    private int priority;
     private RegionFlags flags;
 
 
     /**
      * Constructor
      * @param name The name of the region
-     * @param min  The start point of the cuboid
-     * @param max  The end point of the cuboid
+     * @param start  The start point of the cuboid
+     * @param end  The end point of the cuboid
      */
-    public MapInfoRegion(String name, String min, String max) {
+    public MapInfoRegion(String name, String start, String end, int priority) {
         this.name = name;
-        this.min = parseVectorString(min);
-        this.max = parseVectorString(max);
+        this.start = parseVectorString(start);
+        this.end = parseVectorString(end);
+        this.priority = priority;
         this.flags = new RegionFlags();
     }
 
@@ -60,16 +62,24 @@ public class MapInfoRegion {
     /**
      * The start point of the cuboid
      */
-    public Vector getMin() {
-        return min;
+    public Vector getStart() {
+        return start;
     }
 
 
     /**
      * The end point of the cuboid
      */
-    public Vector getMax() {
-        return max;
+    public Vector getEnd() {
+        return end;
+    }
+
+
+    /**
+     * Get the priority of the region (higher overrides lower)
+     */
+    public int getPriority() {
+        return priority;
     }
 
 
@@ -94,7 +104,7 @@ public class MapInfoRegion {
      * Does this object have the required fields?
      */
     public boolean isValid() {
-        return (name != null && min != null && max != null);
+        return (name != null && start != null && end != null);
     }
 
 

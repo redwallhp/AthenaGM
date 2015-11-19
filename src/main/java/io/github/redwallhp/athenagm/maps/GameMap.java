@@ -222,9 +222,10 @@ public class GameMap {
         this.regions = new HashMap<String, MapInfoRegion>();
         Set<String> names = yaml.getConfigurationSection("regions").getKeys(false);
         for (String name : names) {
-            String min = yaml.getString(String.format("regions.%s.min", name), null);
-            String max = yaml.getString(String.format("regions.%s.max", name), null);
-            MapInfoRegion rg = new MapInfoRegion(name, min, max);
+            String start = yaml.getString(String.format("regions.%s.start", name), null);
+            String end = yaml.getString(String.format("regions.%s.end", name), null);
+            int priority = yaml.getInt(String.format("regions.%s.priority", name), 0);
+            MapInfoRegion rg = new MapInfoRegion(name, start, end, priority);
             rg.setFlags(loadRegionFlags(name, yaml));
             if (rg.isValid()) {
                 this.regions.put(name, rg);
@@ -240,15 +241,15 @@ public class GameMap {
      */
     private RegionFlags loadRegionFlags(String name, FileConfiguration yaml) {
         RegionFlags rf = new RegionFlags();
-        rf.setBlockPlace(yaml.getBoolean(String.format("regions.%s.block_place", name), true));
-        rf.setBlockDestroy(yaml.getBoolean(String.format("regions.%s.block_destroy", name), true));
-        rf.setInteract(yaml.getBoolean(String.format("regions.%s.interact", name), true));
-        rf.setDenyEntry(yaml.getBoolean(String.format("regions.%s.deny_entry", name), false));
-        rf.setDenyExit(yaml.getBoolean(String.format("regions.%s.deny_exit", name), false));
-        rf.setTeamRestricted(yaml.getString(String.format("regions.%s.team_restricted", name), null));
-        rf.setEntryHail(yaml.getString(String.format("regions.%s.entry_hail", name), null));
-        rf.setExitHail(yaml.getString(String.format("regions.%s.exit_hail", name), null));
-        rf.setTags(yaml.getStringList(String.format("regions.%s.tags", name)));
+        rf.setBlockPlace(yaml.getBoolean(String.format("regions.%s.flags.block_place", name), true));
+        rf.setBlockDestroy(yaml.getBoolean(String.format("regions.%s.flags.block_destroy", name), true));
+        rf.setInteract(yaml.getBoolean(String.format("regions.%s.flags.interact", name), true));
+        rf.setDenyEntry(yaml.getBoolean(String.format("regions.%s.flags.deny_entry", name), false));
+        rf.setDenyExit(yaml.getBoolean(String.format("regions.%s.flags.deny_exit", name), false));
+        rf.setTeamRestricted(yaml.getString(String.format("regions.%s.flags.team_restricted", name), null));
+        rf.setEntryHail(yaml.getString(String.format("regions.%s.flags.entry_hail", name), null));
+        rf.setExitHail(yaml.getString(String.format("regions.%s.flags.exit_hail", name), null));
+        rf.setTags(yaml.getStringList(String.format("regions.%s.flags.tags", name)));
         return rf;
     }
 

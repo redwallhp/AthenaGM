@@ -4,6 +4,7 @@ package io.github.redwallhp.athenagm.regions;
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.maps.GameMap;
 import io.github.redwallhp.athenagm.maps.MapInfoRegion;
+import io.github.redwallhp.athenagm.regions.listeners.BlockPlaceListener;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -11,6 +12,7 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 public class RegionHandler {
 
@@ -22,25 +24,46 @@ public class RegionHandler {
     public RegionHandler(AthenaGM plugin) {
         this.plugin = plugin;
         this.regions = new HashMap<String, CuboidRegion>();
+        listen();
     }
 
 
+    private void listen() {
+        BlockPlaceListener blockPlaceListener = new BlockPlaceListener(this);
+    }
+
+
+    /**
+     * Add a region to the map of currently loaded regions
+     */
     public void addRegion(CuboidRegion region) {
         regions.put(region.getName(), region);
     }
 
 
+    /**
+     * Remove a region from the map of currently loaded regions
+     */
     public void removeRegion(CuboidRegion region) {
         regions.remove(region.getName());
     }
 
 
+    /**
+     * Get a region by its name
+     */
     public CuboidRegion getRegion(String name) {
         return regions.get(name);
     }
 
 
-    public List<CuboidRegion> applicableRegions(World world, Vector vector) {
+    /**
+     * Returns a list of all regions that intersect a given vector point in a world.
+     * @param world The world the vector is in
+     * @param vector The point to check for applicable regions
+     * @return A list of region objects
+     */
+    public List<CuboidRegion> getAllApplicableRegions(World world, Vector vector) {
         List<CuboidRegion> inRegions = new ArrayList<CuboidRegion>();
         for (CuboidRegion region : regions.values()) {
             if (region.contains(world, vector)) inRegions.add(region);
@@ -49,8 +72,45 @@ public class RegionHandler {
     }
 
 
-    public List<CuboidRegion> applicableRegions(Location location) {
-        return applicableRegions(location.getWorld(), location.toVector());
+    /**
+     * Alternate getAllApplicableRegions() method that takes a Location instead of a Vector.
+     * Returns a list of all regions that intersect a given vector point in a world.
+     * @param location A Location to check for applicable regions.
+     * @return A list of region objects
+     */
+    public List<CuboidRegion> getAllApplicableRegions(Location location) {
+        return getAllApplicableRegions(location.getWorld(), location.toVector());
+    }
+
+
+    /**
+     * Returns the region with the highest priority that intersects a given vector point.
+     * If the regions have equal priority, their ordinal index will be used instead, with
+     * later regions superseding previous ones.
+     * @param world The world the vector is in
+     * @param vector The point to check for an applicable region
+     * @return A region object, or null if one does not exist at the vector's location
+     */
+    public CuboidRegion getApplicableRegion(World world, Vector vector) {
+        TreeMap<Integer, CuboidRegion> regionMap = new TreeMap<Integer, CuboidRegion>();
+        for (CuboidRegion rg : getAllApplicableRegions(world, vector)) {
+            regionMap.put(rg.getPriority(), rg);
+        }
+        if (regionMap.size() < 1) return null;
+        return regionMap.lastEntry().getValue();
+    }
+
+
+    /**
+     * Alternate getApplicableRegion method that takes a Location instead of a Vector.
+     * Returns the region with the highest priority that intersects a given vector point.
+     * If the regions have equal priority, their ordinal index will be used instead, with
+     * later regions superseding previous ones.
+     * @param location A Location to check for an applicable region.
+     * @return A region object, or null if one does not exist at the vector's location
+     */
+    public CuboidRegion getApplicableRegion(Location location) {
+        return getApplicableRegion(location.getWorld(), location.toVector());
     }
 
 
@@ -59,7 +119,7 @@ public class RegionHandler {
      */
     public void loadRegions(World world, GameMap map) {
         for (MapInfoRegion mir : map.getRegions().values()) {
-            CuboidRegion region = new CuboidRegion(mir.getName(), world, mir.getMin(), mir.getMax());
+            CuboidRegion region = new CuboidRegion(mir.getName(), world, mir.getStart(), mir.getEnd());
             region.setFlags(mir.getFlags());
             addRegion(region);
         }
@@ -75,6 +135,14 @@ public class RegionHandler {
                 removeRegion(region);
             }
         }
+    }
+
+
+    /**
+     * Get the plugin reference
+     */
+    public AthenaGM getPlugin() {
+        return plugin;
     }
 
 
