@@ -12,6 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -20,7 +21,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArenaListener implements Listener {
 
@@ -216,17 +223,6 @@ public class ArenaListener implements Listener {
     public void updateScoreOnKill(PlayerMurderPlayerEvent event) {
         if (event.getVictimTeam() != null && event.getKillerTeam() != null && event.getVictimTeam() != event.getKillerTeam()) {
             event.getKillerTeam().getPlayerScore(event.getKiller()).incrementKills();
-        }
-    }
-
-
-    /**
-     * Block friendly fire, so players don't intentionally disrupt matches by killing their own team
-     */
-    @EventHandler(priority = EventPriority.LOW)
-    public void blockFriendlyFire(PlayerDamagePlayerEvent event) {
-        if (event.isFriendlyFire()) {
-            event.setCancelled(true);
         }
     }
 

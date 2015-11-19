@@ -2,6 +2,7 @@ package io.github.redwallhp.athenagm.modules;
 
 
 import io.github.redwallhp.athenagm.AthenaGM;
+import io.github.redwallhp.athenagm.modules.friendlyFire.FriendlyFireModule;
 import io.github.redwallhp.athenagm.modules.kits.KitsModule;
 import io.github.redwallhp.athenagm.modules.permissions.PermissionsModule;
 import io.github.redwallhp.athenagm.modules.scoreboard.ScoreboardModule;
@@ -23,7 +24,8 @@ public class ModuleLoader {
             PermissionsModule.class,
             SpectatorModule.class,
             KitsModule.class,
-            ScoreboardModule.class
+            ScoreboardModule.class,
+            FriendlyFireModule.class
     };
 
 
