@@ -3,6 +3,7 @@ package io.github.redwallhp.athenagm.regions;
 
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.maps.GameMap;
+import io.github.redwallhp.athenagm.maps.MapInfoRegion;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -57,6 +58,11 @@ public class RegionHandler {
      * Load configured regions for a map. This is called when a new match starts.
      */
     public void loadRegions(World world, GameMap map) {
+        for (MapInfoRegion mir : map.getRegions().values()) {
+            CuboidRegion region = new CuboidRegion(mir.getName(), world, mir.getMin(), mir.getMax());
+            region.setFlags(mir.getFlags());
+            addRegion(region);
+        }
     }
 
 

@@ -340,4 +340,11 @@ public class GameMap {
         return kits;
     }
 
+    /**
+     * Get the configured regions
+     */
+    public HashMap<String, MapInfoRegion> getRegions() {
+        return this.regions;
+    }
+
 }

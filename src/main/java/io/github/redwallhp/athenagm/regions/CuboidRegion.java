@@ -182,4 +182,12 @@ public class CuboidRegion {
     }
 
 
+    /**
+     * Replace the entire RegionFlags object
+     */
+    public void setFlags(RegionFlags flags) {
+        this.flags = flags;
+    }
+
+
 }
