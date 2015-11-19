@@ -5,6 +5,7 @@ import io.github.redwallhp.athenagm.regions.CuboidRegion;
 import io.github.redwallhp.athenagm.regions.RegionHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +14,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
@@ -61,6 +63,25 @@ public class BlockBreakListener implements Listener {
             event.setCancelled(true);
             if (event.getRemover() instanceof Player) {
                 warnPlayer((Player) event.getRemover());
+            }
+        }
+    }
+
+
+    /**
+     * Prevent players from smacking items out of item frames
+     */
+    @EventHandler
+    public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
+        CuboidRegion region = regionHandler.getApplicableRegion(event.getEntity().getLocation());
+        if (!event.isCancelled() && region != null && !region.getFlags().isBlockDestroy()) {
+            if (event.getEntityType().equals(EntityType.ITEM_FRAME)) {
+                if (event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
+                    event.setCancelled(true);
+                    if (event.getDamager() instanceof Player) {
+                        warnPlayer((Player) event.getDamager());
+                    }
+                }
             }
         }
     }
