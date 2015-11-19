@@ -69,13 +69,16 @@ public class BlockBreakListener implements Listener {
 
 
     /**
-     * Prevent players from smacking items out of item frames
+     * Prevent players from smacking items out of item frames or killing armor stands
      */
     @EventHandler
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
+        List<EntityType> protectedEnts = new ArrayList<EntityType>();
+        protectedEnts.add(EntityType.ITEM_FRAME);
+        protectedEnts.add(EntityType.ARMOR_STAND);
         CuboidRegion region = regionHandler.getApplicableRegion(event.getEntity().getLocation());
         if (!event.isCancelled() && region != null && !region.getFlags().isBlockDestroy()) {
-            if (event.getEntityType().equals(EntityType.ITEM_FRAME)) {
+            if (protectedEnts.contains(event.getEntityType())) {
                 if (event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
                     event.setCancelled(true);
                     if (event.getDamager() instanceof Player) {
