@@ -10,10 +10,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.material.Dispenser;
 import org.bukkit.material.MaterialData;
@@ -103,6 +100,21 @@ public class BlockPlaceListener implements Listener {
         if (event.getItem().getType() == Material.LAVA_BUCKET || event.getItem().getType() == Material.WATER_BUCKET) {
             CuboidRegion region = regionHandler.getApplicableRegion(targetBlock.getLocation());
             if (region != null && !region.getFlags().isBlockPlace()) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+
+    /**
+     * Keep liquids from flowing into a protected region from outside
+     */
+    @EventHandler
+    public void onBLiquidFlow(BlockFromToEvent event) {
+        CuboidRegion toRegion = regionHandler.getApplicableRegion(event.getToBlock().getLocation());
+        CuboidRegion fromRegion = regionHandler.getApplicableRegion(event.getBlock().getLocation());
+        if (!event.isCancelled() && toRegion != null) {
+            if (!toRegion.getFlags().isBlockPlace() && (fromRegion == null || fromRegion.getFlags().isBlockPlace())) {
                 event.setCancelled(true);
             }
         }
