@@ -4,19 +4,24 @@ import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.regions.CuboidRegion;
 import io.github.redwallhp.athenagm.regions.RegionHandler;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.util.Vector;
+import org.bukkit.material.Dispenser;
+import org.bukkit.material.MaterialData;
 
 
+/**
+ * Handles the cancellation of unwanted block placement events
+ */
 public class BlockPlaceListener implements Listener {
 
 
@@ -59,7 +64,7 @@ public class BlockPlaceListener implements Listener {
 
 
     /**
-     * Prevent pistons from extending blocks into a region
+     * Prevent pistons from extending blocks into a region that disables placement
      */
     @EventHandler
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
@@ -74,7 +79,7 @@ public class BlockPlaceListener implements Listener {
 
 
     /**
-     * Prevent pistons from pulling blocks out of a region
+     * Prevent pistons from pulling blocks out of a region that disables placement
      */
     @EventHandler
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
@@ -83,6 +88,22 @@ public class BlockPlaceListener implements Listener {
             if (region != null && !region.getFlags().isBlockPlace()) {
                 event.setCancelled(true);
                 break;
+            }
+        }
+    }
+
+
+    /**
+     * Prevent a dispenser from placing liquid in a region that disables placement
+     */
+    @EventHandler
+    public void onBlockDispense(BlockDispenseEvent event) {
+        Dispenser dispenser = (Dispenser)event.getBlock().getState().getData();
+        Block targetBlock = event.getBlock().getRelative(dispenser.getFacing());
+        if (event.getItem().getType() == Material.LAVA_BUCKET || event.getItem().getType() == Material.WATER_BUCKET) {
+            CuboidRegion region = regionHandler.getApplicableRegion(targetBlock.getLocation());
+            if (region != null && !region.getFlags().isBlockPlace()) {
+                event.setCancelled(true);
             }
         }
     }

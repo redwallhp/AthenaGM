@@ -4,6 +4,7 @@ package io.github.redwallhp.athenagm.regions;
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.maps.GameMap;
 import io.github.redwallhp.athenagm.maps.MapInfoRegion;
+import io.github.redwallhp.athenagm.regions.listeners.BlockBreakListener;
 import io.github.redwallhp.athenagm.regions.listeners.BlockPlaceListener;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -30,6 +31,7 @@ public class RegionHandler {
 
     private void listen() {
         BlockPlaceListener blockPlaceListener = new BlockPlaceListener(this);
+        BlockBreakListener blockBreakListener = new BlockBreakListener(this);
     }
 
 
