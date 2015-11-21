@@ -27,7 +27,7 @@ public class GameMap {
     private HashMap<String, MapInfoTeam> teams;
     private List<MapInfoSpawnPoint> spawnPoints;
     private HashMap<String, List<MapInfoKitItem>> kits;
-    private HashMap<String, MapInfoRegion> regions;
+    private LinkedHashMap<String, MapInfoRegion> regions;
 
 
     /**
@@ -219,7 +219,7 @@ public class GameMap {
      * @see io.github.redwallhp.athenagm.regions.RegionHandler
      */
     private void loadRegions(FileConfiguration yaml) {
-        this.regions = new HashMap<String, MapInfoRegion>();
+        this.regions = new LinkedHashMap<String, MapInfoRegion>();
         Set<String> names = yaml.getConfigurationSection("regions").getKeys(false);
         for (String name : names) {
             String start = yaml.getString(String.format("regions.%s.start", name), null);

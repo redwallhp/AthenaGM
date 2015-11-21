@@ -7,7 +7,6 @@ import io.github.redwallhp.athenagm.maps.MapInfoRegion;
 import io.github.redwallhp.athenagm.regions.listeners.BlockBreakListener;
 import io.github.redwallhp.athenagm.regions.listeners.BlockPlaceListener;
 import io.github.redwallhp.athenagm.regions.listeners.PlayerMovementListener;
-import io.github.redwallhp.athenagm.utilities.StringUtil;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -18,12 +17,12 @@ public class RegionHandler {
 
 
     private AthenaGM plugin;
-    private HashMap<String, CuboidRegion> regions;
+    private LinkedHashMap<String, CuboidRegion> regions;
 
 
     public RegionHandler(AthenaGM plugin) {
         this.plugin = plugin;
-        this.regions = new HashMap<String, CuboidRegion>();
+        this.regions = new LinkedHashMap<String, CuboidRegion>();
         listen();
     }
 
@@ -88,7 +87,7 @@ public class RegionHandler {
     /**
      * Returns the region with the highest priority that intersects a given vector point.
      * Priority is determined by the priority value in the YAML. If a priority is not specified,
-     * it will try to fall back to the configured order, but this isn't entirely reliable.
+     * it will try to fall back to the configured ordinal index.
      * Regions with a positive priority will take priority over all that don't specify one.
      * @param world The world the vector is in
      * @param vector The point to check for an applicable region
@@ -97,11 +96,12 @@ public class RegionHandler {
     public CuboidRegion getApplicableRegion(World world, Vector vector) {
 
         // Get the highest priority region
+        List<CuboidRegion> applicableRegions = getAllApplicableRegions(world, vector);
         TreeMap<Integer, CuboidRegion> regionMap = new TreeMap<Integer, CuboidRegion>();
         int i = 0;
-        for (CuboidRegion rg : getAllApplicableRegions(world, vector)) {
+        for (CuboidRegion rg : applicableRegions) {
             if (rg.getPriority() > 0) {
-                regionMap.put(rg.getPriority()+regionMap.size()+1, rg);
+                regionMap.put(rg.getPriority()+applicableRegions.size()+1, rg);
             } else {
                 regionMap.put(i, rg);
             }
