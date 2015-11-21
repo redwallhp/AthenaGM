@@ -1,11 +1,19 @@
 package io.github.redwallhp.athenagm.maps;
 
 import io.github.redwallhp.athenagm.utilities.ItemUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionType;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Data structure defining a player kit
@@ -63,6 +71,27 @@ public class MapInfoKitItem {
 
 
     /**
+     * Turn an ItemStack with a Material of POTION into a functional potion
+     * @param typeName PotionType string representing the potion type. (Matches Bukkit PotionType enum.)
+     * @param level Integer representing the level of the potion
+     * @param splash Is this a splash potion?
+     * @param extended Is this an extended duration potion?
+     */
+    public void addPotion(String typeName, int level, boolean splash, boolean extended) {
+        if (!this.item.getType().equals(Material.POTION)) return;
+        try {
+            PotionType type = PotionType.valueOf(typeName.toUpperCase());
+            Potion potion = new Potion(type, level);
+            if (splash) potion.splash();
+            if (extended) potion.extend();
+            potion.apply(this.item);
+        } catch (Exception ex) {
+            return;
+        }
+    }
+
+
+    /**
      * Apply a color to leather armor
      * @param colorName String representation of a ChatColor
      */
@@ -71,6 +100,30 @@ public class MapInfoKitItem {
         LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
         meta.setColor(color);
         item.setItemMeta(meta);
+    }
+
+
+    /**
+     * Set the item name
+     * @param name Name to appear on the item. Accepts color codes with the '&' token.
+     */
+    public void setName(String name) {
+        if (name.length() < 1) return;
+        ItemMeta meta = this.item.getItemMeta();
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+        item.setItemMeta(meta);
+    }
+
+
+    public void setLore(String lore) {
+        if (lore.length() < 1) return;
+        lore = ChatColor.translateAlternateColorCodes('&', lore);
+        List<String> lines = new ArrayList<String>(Arrays.asList(lore.split("\\|")));
+        if (lines.size() > 0) {
+            ItemMeta meta = this.item.getItemMeta();
+            meta.setLore(lines);
+            item.setItemMeta(meta);
+        }
     }
 
 

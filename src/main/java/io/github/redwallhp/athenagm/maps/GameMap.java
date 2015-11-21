@@ -2,6 +2,7 @@ package io.github.redwallhp.athenagm.maps;
 
 import io.github.redwallhp.athenagm.regions.RegionFlags;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -195,12 +196,32 @@ public class GameMap {
                 }
             }
 
+            // Handle potions
+            if (material.equalsIgnoreCase("potion")) {
+                Map potion = (Map) map.get("potion");
+                String type = (potion.get("type") != null) ? (String)potion.get("type") : null;
+                Integer level = (potion.get("level") != null) ? Integer.parseInt(potion.get("level").toString()) : 1;
+                Boolean splash = (potion.get("splash") != null) ? (Boolean)potion.get("splash") : false;
+                Boolean extended = (potion.get("extended") != null) ? (Boolean)potion.get("extended") : false;
+                if (type != null) {
+                    item.addPotion(type, level, splash, extended);
+                }
+            }
+
             // Set whether this item will drop or not
             if (map.get("drop") != null) {
                 boolean doesDrop = Boolean.parseBoolean(map.get("drop").toString());
                 item.setDropOnDeath(doesDrop);
             } else {
                 item.setDropOnDeath(true);
+            }
+
+            // Set the item name and lore
+            if (map.get("name") != null) {
+                item.setName(map.get("name").toString());
+            }
+            if (map.get("lore") != null) {
+                item.setLore(map.get("lore").toString());
             }
 
             //Get the ItemStack and continue
