@@ -48,9 +48,9 @@ public class PlayerMovementListener implements Listener {
      * If the deny_entry flag is set to true, knock players back when they try to enter the region.
      */
     private void handleEntryDeny(PlayerMoveEvent event, CuboidRegion toRegion) {
-        if (toRegion != null && toRegion.getFlags().isDenyEntry()) {
+        if (toRegion != null && !toRegion.getFlags().getBoolean("entry")) {
             if (!toRegion.contains(event.getFrom())) {
-                knockBack(event.getPlayer(), event.getTo().toVector(), event.getFrom().toVector());
+                knockBack(event.getPlayer(), event.getTo().toVector(), event.getFrom().toVector(), 1.1f);
                 warnPlayer(event.getPlayer(), "You cannot go there.");
             }
         }
@@ -61,9 +61,9 @@ public class PlayerMovementListener implements Listener {
      * If the deny_exit flag is set to true, prevent players from exiting the region.
      */
     private void handleExitDeny(PlayerMoveEvent event, CuboidRegion fromRegion) {
-        if (fromRegion != null && fromRegion.getFlags().isDenyExit()) {
+        if (fromRegion != null && !fromRegion.getFlags().getBoolean("exit")) {
             if (!fromRegion.contains(event.getTo())) {
-                knockBack(event.getPlayer(), event.getTo().toVector(), event.getFrom().toVector());
+                knockBack(event.getPlayer(), event.getTo().toVector(), event.getFrom().toVector(), 1.1f);
                 warnPlayer(event.getPlayer(), "You cannot go there.");
             }
         }
@@ -77,12 +77,12 @@ public class PlayerMovementListener implements Listener {
      */
     private void handleTeamRestricted(PlayerMoveEvent event, CuboidRegion toRegion) {
         if (toRegion != null) {
-            String teamID = toRegion.getFlags().getTeamRestricted();
+            String teamID = toRegion.getFlags().getString("team_restricted");
             if (teamID != null && !teamID.equals("")) {
                 if (!toRegion.contains(event.getFrom())) {
                     Team playerTeam = PlayerUtil.getTeamForPlayer(plugin.getArenaHandler(), event.getPlayer());
                     if (playerTeam != null && !playerTeam.getId().equals(teamID) && !playerTeam.isSpectator()) {
-                        knockBack(event.getPlayer(), event.getTo().toVector(), event.getFrom().toVector());
+                        knockBack(event.getPlayer(), event.getTo().toVector(), event.getFrom().toVector(), 1.1f);
                         Team regionTeam = playerTeam.getMatch().getTeams().get(teamID);
                         warnPlayer(event.getPlayer(), String.format("Only %s%s team can go there.", regionTeam.getColoredName(), ChatColor.RED));
                     }
@@ -98,7 +98,7 @@ public class PlayerMovementListener implements Listener {
      */
     private void handleEntryHail(PlayerMoveEvent event, CuboidRegion toRegion) {
         if (toRegion != null) {
-            String entryHail = toRegion.getFlags().getEntryHail();
+            String entryHail = toRegion.getFlags().getString("entry_hail");
             if (entryHail != null && !entryHail.equals("")) {
                 if (!toRegion.contains(event.getFrom())) {
                     event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "\u25B6 " + entryHail));
@@ -114,7 +114,7 @@ public class PlayerMovementListener implements Listener {
      */
     private void handleExitHail(PlayerMoveEvent event, CuboidRegion fromRegion) {
         if (fromRegion != null) {
-            String exitHail = fromRegion.getFlags().getExitHail();
+            String exitHail = fromRegion.getFlags().getString("exit_hail");
             if (exitHail != null && !exitHail.equals("")) {
                 if (!fromRegion.contains(event.getTo())) {
                     event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "\u25B6 " + exitHail));
@@ -132,9 +132,9 @@ public class PlayerMovementListener implements Listener {
      * @param to The block the player was moving to
      * @param from The block the player was moving from
      */
-    private void knockBack(Player player, Vector to, Vector from) {
+    private void knockBack(Player player, Vector to, Vector from, float multiplier) {
         Vector dir = from.subtract(to).normalize();
-        player.setVelocity(dir.multiply(1.1));
+        player.setVelocity(dir.multiply(multiplier));
     }
 
 

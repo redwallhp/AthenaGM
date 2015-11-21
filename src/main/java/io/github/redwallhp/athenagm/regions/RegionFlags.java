@@ -1,190 +1,76 @@
 package io.github.redwallhp.athenagm.regions;
 
 
-import org.bukkit.Bukkit;
+import java.util.HashMap;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Handles the storage and retrieval of region flags
+ */
 public class RegionFlags {
 
 
-    private boolean blockPlace;
-    private boolean blockDestroy;
-    private boolean interact;
-    private boolean denyEntry;
-    private boolean denyExit;
-    private String teamRestricted;
-    private String entryHail;
-    private String exitHail;
-    private List<String> tags;
+    private HashMap<String, Boolean> bFlags;
+    private HashMap<String, String> sFlags;
 
 
     public RegionFlags() {
-        blockPlace = true;
-        blockDestroy = true;
-        interact = true;
-        denyEntry = false;
-        denyExit = false;
-        teamRestricted = null;
-        entryHail = null;
-        exitHail = null;
-        tags = new ArrayList<String>();
+        bFlags = new HashMap<String, Boolean>();
+        sFlags = new HashMap<String, String>();
     }
 
 
     /**
-     * Whether players can place blocks in this region
+     * Get a boolean flag
      */
-    public boolean isBlockPlace() {
-        return blockPlace;
+    public boolean getBoolean(String flag) {
+        if (bFlags.get(flag) == null) return true;
+        return bFlags.get(flag);
     }
 
 
     /**
-     * Set whether players can place blocks in this region
+     * Get a string flag
      */
-    public void setBlockPlace(boolean blockPlace) {
-        this.blockPlace = blockPlace;
+    public String getString(String flag) {
+        if (sFlags.get(flag) == null || sFlags.get(flag).equals("")) {
+            return null;
+        } else {
+            return sFlags.get(flag);
+        }
     }
 
 
     /**
-     * Whether players can destroy blocks in this region
+     * Set a boolean flag
      */
-    public boolean isBlockDestroy() {
-        return blockDestroy;
+    public void setBoolean(String flag, boolean value) {
+        bFlags.put(flag, value);
     }
 
 
     /**
-     * Set whether playesr can destroy blocks in this region
+     * Set a string flag
      */
-    public void setBlockDestroy(boolean blockDestroy) {
-        this.blockDestroy = blockDestroy;
+    public void setString(String flag, String value) {
+        sFlags.put(flag, value);
     }
 
 
     /**
-     * Whether players can interact/use objects in this region
+     * Used so getApplicableRegion() can iterate boolean flags and merge
+     * flags over applicable regions.
      */
-    public boolean isInteract() {
-        return interact;
+    public HashMap<String, Boolean> getAllBooleanFlags() {
+        return bFlags;
     }
 
 
     /**
-     * Set whether players can interact/use objects in this region
+     * Used so getApplicableRegion() can iterate boolean flags and merge
+     * flags over applicable regions.
      */
-    public void setInteract(boolean interact) {
-        this.interact = interact;
-    }
-
-
-    /**
-     * Whether this region denies entry to players
-     */
-    public boolean isDenyEntry() {
-        return denyEntry;
-    }
-
-
-    /**
-     * Set whether this region denies entry to players
-     */
-    public void setDenyEntry(boolean denyEntry) {
-        this.denyEntry = denyEntry;
-    }
-
-
-    /**
-     * Whether this region prevents players from leaving
-     */
-    public boolean isDenyExit() {
-        return denyExit;
-    }
-
-
-    /**
-     * Set whether this region prevents players from leaving
-     */
-    public void setDenyExit(boolean denyExit) {
-        this.denyExit = denyExit;
-    }
-
-
-    /**
-     * If not null and is a valid team ID string, this region should disallow entry to
-     * teams other than the one specified.
-     * @return team ID string or null
-     */
-    public String getTeamRestricted() {
-        return teamRestricted;
-    }
-
-
-    /**
-     * Set the team that is allowed to enter this region, or null to disable this behavior
-     * @param teamRestricted The ID string of a team
-     */
-    public void setTeamRestricted(String teamRestricted) {
-        this.teamRestricted = teamRestricted;
-    }
-
-
-    /**
-     * This region should print a message when a player enters it, if not null
-     * @return null or message string
-     */
-    public String getEntryHail() {
-        return entryHail;
-    }
-
-
-    /**
-     * Sets the message that should be displayed when a player enters it,
-     * or null to disable this behavior.
-     * @param entryHail Message string or null
-     */
-    public void setEntryHail(String entryHail) {
-        this.entryHail = entryHail;
-    }
-
-
-    /**
-     * This region should print a message when a player exits it, if not null
-     * @return null or message string
-     */
-    public String getExitHail() {
-        return exitHail;
-    }
-
-
-    /**
-     * Sets the message that should be displayed when a player exits it,
-     * or null to disable this behavior.
-     * @param exitHail Message string or null
-     */
-    public void setExitHail(String exitHail) {
-        this.exitHail = exitHail;
-    }
-
-
-    /**
-     * Get a String List of "tags" for this region. This can be used so
-     * plugins can listen for events and take action if a tag is present.
-     */
-    public List<String> getTags() {
-        return tags;
-    }
-
-
-    /**
-     * Sets the region's tag list
-     * @param tags New List to replace the existing tag List
-     */
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public HashMap<String, String> getAllStringFlags() {
+        return sFlags;
     }
 
 

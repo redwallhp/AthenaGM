@@ -7,14 +7,12 @@ import io.github.redwallhp.athenagm.maps.MapInfoRegion;
 import io.github.redwallhp.athenagm.regions.listeners.BlockBreakListener;
 import io.github.redwallhp.athenagm.regions.listeners.BlockPlaceListener;
 import io.github.redwallhp.athenagm.regions.listeners.PlayerMovementListener;
+import io.github.redwallhp.athenagm.utilities.StringUtil;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 public class RegionHandler {
 
@@ -89,19 +87,41 @@ public class RegionHandler {
 
     /**
      * Returns the region with the highest priority that intersects a given vector point.
-     * If the regions have equal priority, their ordinal index will be used instead, with
-     * later regions superseding previous ones.
+     * Priority is determined by the priority value in the YAML. If a priority is not specified,
+     * it will try to fall back to the configured order, but this isn't entirely reliable.
+     * Regions with a positive priority will take priority over all that don't specify one.
      * @param world The world the vector is in
      * @param vector The point to check for an applicable region
      * @return A region object, or null if one does not exist at the vector's location
      */
     public CuboidRegion getApplicableRegion(World world, Vector vector) {
+
+        // Get the highest priority region
         TreeMap<Integer, CuboidRegion> regionMap = new TreeMap<Integer, CuboidRegion>();
+        int i = 0;
         for (CuboidRegion rg : getAllApplicableRegions(world, vector)) {
-            regionMap.put(rg.getPriority(), rg);
+            if (rg.getPriority() > 0) {
+                regionMap.put(rg.getPriority()+regionMap.size()+1, rg);
+            } else {
+                regionMap.put(i, rg);
+            }
+            i++;
         }
         if (regionMap.size() < 1) return null;
-        return regionMap.lastEntry().getValue();
+        CuboidRegion r = regionMap.lastEntry().getValue();
+
+        // Create and return a compound region that inherits flags from lower regions
+        CuboidRegion compound = new CuboidRegion(r.getName(), r.getWorld(), r.getStart(), r.getEnd());
+        for (CuboidRegion rg : regionMap.values()) {
+            for (Map.Entry<String, Boolean> flag : rg.getFlags().getAllBooleanFlags().entrySet()) {
+                compound.getFlags().setBoolean(flag.getKey(), flag.getValue());
+            }
+            for (Map.Entry<String, String> flag : rg.getFlags().getAllStringFlags().entrySet()) {
+                compound.getFlags().setString(flag.getKey(), flag.getValue());
+            }
+        }
+        return compound;
+
     }
 
 
@@ -125,6 +145,7 @@ public class RegionHandler {
         for (MapInfoRegion mir : map.getRegions().values()) {
             CuboidRegion region = new CuboidRegion(mir.getName(), world, mir.getStart(), mir.getEnd());
             region.setFlags(mir.getFlags());
+            region.setPriority(mir.getPriority());
             addRegion(region);
         }
     }

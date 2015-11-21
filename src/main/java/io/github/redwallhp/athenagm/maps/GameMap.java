@@ -241,15 +241,29 @@ public class GameMap {
      */
     private RegionFlags loadRegionFlags(String name, FileConfiguration yaml) {
         RegionFlags rf = new RegionFlags();
-        rf.setBlockPlace(yaml.getBoolean(String.format("regions.%s.flags.block_place", name), true));
-        rf.setBlockDestroy(yaml.getBoolean(String.format("regions.%s.flags.block_destroy", name), true));
-        rf.setInteract(yaml.getBoolean(String.format("regions.%s.flags.interact", name), true));
-        rf.setDenyEntry(yaml.getBoolean(String.format("regions.%s.flags.deny_entry", name), false));
-        rf.setDenyExit(yaml.getBoolean(String.format("regions.%s.flags.deny_exit", name), false));
-        rf.setTeamRestricted(yaml.getString(String.format("regions.%s.flags.team_restricted", name), null));
-        rf.setEntryHail(yaml.getString(String.format("regions.%s.flags.entry_hail", name), null));
-        rf.setExitHail(yaml.getString(String.format("regions.%s.flags.exit_hail", name), null));
-        rf.setTags(yaml.getStringList(String.format("regions.%s.flags.tags", name)));
+        String[] booleanKeys = {
+                "build",
+                "destroy",
+                "entry",
+                "exit"
+        };
+        String[] stringKeys = {
+                "team_restricted",
+                "entry_hail",
+                "exit_hail"
+        };
+        for (String key : booleanKeys) {
+            String path = String.format("regions.%s.flags.%s", name, key);
+            if (yaml.isSet(path)) {
+                rf.setBoolean(key, yaml.getBoolean(path));
+            }
+        }
+        for (String key : stringKeys) {
+            String path = String.format("regions.%s.flags.%s", name, key);
+            if (yaml.isSet(path)) {
+                rf.setString(key, yaml.getString(path));
+            }
+        }
         return rf;
     }
 
