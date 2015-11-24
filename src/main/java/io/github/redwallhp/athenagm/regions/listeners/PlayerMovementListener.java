@@ -134,7 +134,7 @@ public class PlayerMovementListener implements Listener {
             if (!toRegion.contains(event.getFrom())) {
                 Vector from = event.getFrom().toVector();
                 Vector to = event.getTo().toVector();
-                from.setY(from.getY()-0.5);
+                from.setY(from.getY()-0.25);
                 Vector dir = to.subtract(from).normalize();
                 Double multiplier = toRegion.getFlags().getDouble("velocity");
                 event.getPlayer().setVelocity(dir.multiply(multiplier));

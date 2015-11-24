@@ -132,9 +132,11 @@ public class CuboidRegion {
      * @param vector The point to check
      */
     public boolean contains(World world, Vector vector) {
-        boolean isInVector = vector.isInAABB(getMin(), getMax());
+        boolean x = vector.getX() >= getMin().getBlockX() && vector.getX() < getMax().getBlockX()+1;
+        boolean y = vector.getY() >= getMin().getBlockY() && vector.getY() < getMax().getBlockY()+1;
+        boolean z = vector.getZ() >= getMin().getBlockZ() && vector.getZ() < getMax().getBlockZ()+1;
         boolean isWorld = (Bukkit.getWorld(worldID) != null && world.equals(Bukkit.getWorld(worldID)));
-        return (isInVector && isWorld);
+        return (isWorld && x && y && z);
     }
 
 
