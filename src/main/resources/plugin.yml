@@ -70,3 +70,9 @@ commands:
     description: Show the players in the current match, ranked by score.
     permission: athenagm.player
     permission-message: You don't have permission to do that.
+  region:
+    usage: /region <subcommand>
+    aliases: [rg]
+    description: Region management commands
+    permission: athenagm.admin
+    permission-message: You don't have permission to do that.

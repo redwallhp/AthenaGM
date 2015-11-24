@@ -40,6 +40,7 @@ public class PlayerMovementListener implements Listener {
             handleTeamRestricted(event, toRegion);
             handleEntryHail(event, toRegion);
             handleExitHail(event, fromRegion);
+            handleVelocity(event, toRegion);
         }
     }
 
@@ -119,6 +120,24 @@ public class PlayerMovementListener implements Listener {
                 if (!fromRegion.contains(event.getTo())) {
                     event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "\u25B6 " + exitHail));
                 }
+            }
+        }
+    }
+
+
+    /**
+     * Accelerate the player with a given velocity multiplier, if one is set in the
+     * velocity flag.
+     */
+    private void handleVelocity(PlayerMoveEvent event, CuboidRegion toRegion) {
+        if (toRegion != null && toRegion.getFlags().getDouble("velocity") != null) {
+            if (!toRegion.contains(event.getFrom())) {
+                Vector from = event.getFrom().toVector();
+                Vector to = event.getTo().toVector();
+                from.setY(from.getY()-0.5);
+                Vector dir = to.subtract(from).normalize();
+                Double multiplier = toRegion.getFlags().getDouble("velocity");
+                event.getPlayer().setVelocity(dir.multiply(multiplier));
             }
         }
     }

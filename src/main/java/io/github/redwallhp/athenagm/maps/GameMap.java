@@ -250,6 +250,8 @@ public class GameMap {
             rg.setFlags(loadRegionFlags(name, yaml));
             if (rg.isValid()) {
                 this.regions.put(name, rg);
+            } else {
+                Bukkit.getLogger().info(String.format("Could not create Region '%s', skipping.", name));
             }
         }
     }
@@ -273,6 +275,9 @@ public class GameMap {
                 "entry_hail",
                 "exit_hail"
         };
+        String[] doubleKeys = {
+                "velocity"
+        };
         for (String key : booleanKeys) {
             String path = String.format("regions.%s.flags.%s", name, key);
             if (yaml.isSet(path)) {
@@ -283,6 +288,12 @@ public class GameMap {
             String path = String.format("regions.%s.flags.%s", name, key);
             if (yaml.isSet(path)) {
                 rf.setString(key, yaml.getString(path));
+            }
+        }
+        for (String key : doubleKeys) {
+            String path = String.format("regions.%s.flags.%s", name, key);
+            if (yaml.isSet(path)) {
+                rf.setDouble(key, yaml.getDouble(path));
             }
         }
         return rf;

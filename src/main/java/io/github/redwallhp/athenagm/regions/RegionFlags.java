@@ -11,11 +11,13 @@ public class RegionFlags {
 
     private HashMap<String, Boolean> bFlags;
     private HashMap<String, String> sFlags;
+    private HashMap<String, Double> dFlags;
 
 
     public RegionFlags() {
         bFlags = new HashMap<String, Boolean>();
         sFlags = new HashMap<String, String>();
+        dFlags = new HashMap<String, Double>();
     }
 
 
@@ -41,6 +43,18 @@ public class RegionFlags {
 
 
     /**
+     * Get a double flag
+     */
+    public Double getDouble(String flag) {
+        if (dFlags.get(flag) == null) {
+            return null;
+        } else {
+            return dFlags.get(flag);
+        }
+    }
+
+
+    /**
      * Set a boolean flag
      */
     public void setBoolean(String flag, boolean value) {
@@ -53,6 +67,14 @@ public class RegionFlags {
      */
     public void setString(String flag, String value) {
         sFlags.put(flag, value);
+    }
+
+
+    /**
+     * Set a double flag
+     */
+    public void setDouble(String flag, Double value) {
+        dFlags.put(flag, value);
     }
 
 
@@ -71,6 +93,15 @@ public class RegionFlags {
      */
     public HashMap<String, String> getAllStringFlags() {
         return sFlags;
+    }
+
+
+    /**
+     * Used so getApplicableRegion() can iterate double flags and merge
+     * flags over applicable regions.
+     */
+    public HashMap<String, Double> getAllDoubleFlags() {
+        return dFlags;
     }
 
 

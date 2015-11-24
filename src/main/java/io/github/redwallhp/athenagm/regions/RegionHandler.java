@@ -119,6 +119,9 @@ public class RegionHandler {
             for (Map.Entry<String, String> flag : rg.getFlags().getAllStringFlags().entrySet()) {
                 compound.getFlags().setString(flag.getKey(), flag.getValue());
             }
+            for (Map.Entry<String, Double> flag : rg.getFlags().getAllDoubleFlags().entrySet()) {
+                compound.getFlags().setDouble(flag.getKey(), flag.getValue());
+            }
         }
         return compound;
 
