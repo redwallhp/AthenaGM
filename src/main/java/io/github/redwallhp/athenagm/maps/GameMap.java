@@ -268,7 +268,8 @@ public class GameMap {
                 "build",
                 "destroy",
                 "entry",
-                "exit"
+                "exit",
+                "interact"
         };
         String[] stringKeys = {
                 "team_restricted",

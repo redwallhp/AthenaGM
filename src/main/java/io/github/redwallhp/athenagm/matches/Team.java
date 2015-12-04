@@ -118,8 +118,6 @@ public class Team {
 
         player.teleport(event.getRespawnLocation());
 
-        //todo: apply kit (possibly in a Kits module using an event?)
-
     }
 
 
