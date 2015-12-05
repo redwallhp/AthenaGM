@@ -15,8 +15,6 @@ public class TitleBuilder {
 
     private String title;
     private String subtitle;
-    private ChatColor titleColor;
-    private ChatColor subtitleColor;
     private int fadeInTicks;
     private int fadeOutTicks;
     private int displayTicks;
@@ -25,7 +23,6 @@ public class TitleBuilder {
 
     /**
      * Create a new TitleBuilder object.
-     * Default text color: white
      * Default target: all players
      * Default fade in and fade out: 10 ticks (0.5 seconds)
      * Default display length: 60 ticks (3 seconds)
@@ -34,8 +31,6 @@ public class TitleBuilder {
     public TitleBuilder(String title) {
         this.title = title;
         this.subtitle = null;
-        this.titleColor = ChatColor.WHITE;
-        this.subtitleColor = ChatColor.WHITE;
         this.fadeInTicks = 10; // 0.5 seconds
         this.fadeOutTicks = 10; // 0.5 seconds
         this.displayTicks = 60; // 3 seconds
@@ -49,26 +44,6 @@ public class TitleBuilder {
      */
     public TitleBuilder setSubtitle(String subtitle) {
         this.subtitle = subtitle;
-        return this;
-    }
-
-
-    /**
-     * Set the color of the main title
-     * @param titleColor The color of the main title
-     */
-    public TitleBuilder setTitleColor(ChatColor titleColor) {
-        this.titleColor = titleColor;
-        return this;
-    }
-
-
-    /**
-     * Set the color of the subtitle
-     * @param subtitleColor The color of the subtitle
-     */
-    public TitleBuilder setSubtitleColor(ChatColor subtitleColor) {
-        this.subtitleColor = subtitleColor;
         return this;
     }
 
@@ -152,10 +127,10 @@ public class TitleBuilder {
         String cmdTime = String.format("title %s times %d %d %d", target, fadeInTicks, displayTicks, fadeOutTicks);
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), cmdTime);
         if (subtitle != null) {
-            String cmdSub = String.format("title %s subtitle {text:\"%s\",color:\"%s\"}", target, subtitle, subtitleColor.toString());
+            String cmdSub = String.format("title %s subtitle {text:\"%s\"}", target, ChatColor.translateAlternateColorCodes('&', subtitle));
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), cmdSub);
         }
-        String cmdTitle = String.format("title %s title {text:\"%s\",color:\"%s\"}", target, title, titleColor.toString());
+        String cmdTitle = String.format("title %s title {text:\"%s\"}", target, ChatColor.translateAlternateColorCodes('&', title));
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), cmdTitle);
     }
 

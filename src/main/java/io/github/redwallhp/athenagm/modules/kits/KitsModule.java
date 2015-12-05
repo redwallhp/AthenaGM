@@ -8,6 +8,8 @@ import io.github.redwallhp.athenagm.matches.Match;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.modules.Module;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
+import io.github.redwallhp.athenagm.utilities.TitleBuilder;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
