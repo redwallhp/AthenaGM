@@ -2,10 +2,8 @@ package io.github.redwallhp.athenagm.maps;
 
 import io.github.redwallhp.athenagm.regions.RegionFlags;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.io.File;
