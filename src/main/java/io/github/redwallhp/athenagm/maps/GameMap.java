@@ -269,7 +269,11 @@ public class GameMap {
                 "destroy",
                 "entry",
                 "exit",
-                "interact"
+                "interact",
+                "melt",
+                "vine_spread",
+                "leaf_decay",
+                "fire_spread"
         };
         String[] stringKeys = {
                 "team_restricted",

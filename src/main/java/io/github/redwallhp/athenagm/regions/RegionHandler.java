@@ -4,10 +4,7 @@ package io.github.redwallhp.athenagm.regions;
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.maps.GameMap;
 import io.github.redwallhp.athenagm.maps.MapInfoRegion;
-import io.github.redwallhp.athenagm.regions.listeners.BlockBreakListener;
-import io.github.redwallhp.athenagm.regions.listeners.BlockPlaceListener;
-import io.github.redwallhp.athenagm.regions.listeners.PlayerInteractListener;
-import io.github.redwallhp.athenagm.regions.listeners.PlayerMovementListener;
+import io.github.redwallhp.athenagm.regions.listeners.*;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -33,6 +30,7 @@ public class RegionHandler {
         BlockBreakListener blockBreakListener = new BlockBreakListener(this);
         PlayerMovementListener playerMovementListener = new PlayerMovementListener(this);
         PlayerInteractListener playerInteractListener = new PlayerInteractListener(this);
+        EnvironmentalListener environmentalListener = new EnvironmentalListener(this);
     }
 
 
