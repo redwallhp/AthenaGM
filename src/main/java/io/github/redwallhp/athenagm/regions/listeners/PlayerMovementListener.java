@@ -143,6 +143,14 @@ public class PlayerMovementListener implements Listener {
     }
 
 
+    private void handleTeleport(PlayerMoveEvent event, CuboidRegion toRegion) {
+        /*if (toRegion != null && !toRegion.getFlags().getString("teleport")) {
+        }*/
+        // this would be easier with better multi-type flag support
+        // e.g. a LocationFlag (inheriting Flag) would parse a YAML string and have a Location object ready
+    }
+
+
     /**
      * Knock the player back, based on a multiple of their previous forward velocity.
      * Calculates a backward trajectory by subtracting the "to" vector from the "from vector,
