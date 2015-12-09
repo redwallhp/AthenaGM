@@ -49,7 +49,7 @@ public class PlayerMovementListener implements Listener {
      * If the deny_entry flag is set to true, knock players back when they try to enter the region.
      */
     private void handleEntryDeny(PlayerMoveEvent event, CuboidRegion toRegion) {
-        if (toRegion != null && toRegion.getFlagValue("entry").equals(false)) {
+        if (toRegion != null && !toRegion.allows("entry")) {
             if (!toRegion.contains(event.getFrom())) {
                 knockBack(event.getPlayer(), event.getTo().toVector(), event.getFrom().toVector(), 1.1f);
                 warnPlayer(event.getPlayer(), "You cannot go there.");
@@ -62,7 +62,7 @@ public class PlayerMovementListener implements Listener {
      * If the deny_exit flag is set to true, prevent players from exiting the region.
      */
     private void handleExitDeny(PlayerMoveEvent event, CuboidRegion fromRegion) {
-        if (fromRegion != null && fromRegion.getFlagValue("exit").equals(false)) {
+        if (fromRegion != null && !fromRegion.allows("exit")) {
             if (!fromRegion.contains(event.getTo())) {
                 knockBack(event.getPlayer(), event.getTo().toVector(), event.getFrom().toVector(), 1.1f);
                 warnPlayer(event.getPlayer(), "You cannot go there.");

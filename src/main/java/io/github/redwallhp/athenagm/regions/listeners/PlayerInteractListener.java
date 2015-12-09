@@ -42,7 +42,7 @@ public class PlayerInteractListener implements Listener {
         if (event.getItem() != null && event.getItem().getType().isBlock()) return; // Is placing a block
 
         CuboidRegion region = regionHandler.getApplicableRegion(event.getClickedBlock().getLocation());
-        if (region == null || region.getFlagValue("interact").equals(true)) return; // Interact is allowed
+        if (region == null || region.allows("interact")) return; // Interact is allowed
 
         // Cancel the event and warn the player if it's an interactive block being clicked
         if (ItemUtil.getInteractiveBlocks().contains(event.getClickedBlock().getType())) {
@@ -57,7 +57,7 @@ public class PlayerInteractListener implements Listener {
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 
         CuboidRegion region = regionHandler.getApplicableRegion(event.getRightClicked().getLocation());
-        if (region == null || region.getFlagValue("interact").equals(true)) return; // Interact is allowed
+        if (region == null || region.allows("interact")) return; // Interact is allowed
 
         event.setCancelled(true);
         warnPlayer(event.getPlayer());

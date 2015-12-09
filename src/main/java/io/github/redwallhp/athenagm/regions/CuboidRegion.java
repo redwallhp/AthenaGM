@@ -1,6 +1,7 @@
 package io.github.redwallhp.athenagm.regions;
 
 
+import io.github.redwallhp.athenagm.regions.Flags.BooleanFlag;
 import io.github.redwallhp.athenagm.regions.Flags.Flag;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -222,6 +223,20 @@ public class CuboidRegion {
             return (V) flags.get(name).getValue();
         } else {
             return null;
+        }
+    }
+
+
+    /**
+     * Get the value of a boolean flag, defaulting to "true" if not set.
+     * This makes it syntactically nicer to avoid NullPointerExceptions.
+     * @return The value of a BooleanFlag
+     */
+    public boolean allows(String name) {
+        if (flags.containsKey(name) && flags.get(name) instanceof BooleanFlag) {
+            return (Boolean) flags.get(name).getValue();
+        } else {
+            return true;
         }
     }
 
