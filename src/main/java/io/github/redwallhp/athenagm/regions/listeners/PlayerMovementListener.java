@@ -6,6 +6,7 @@ import io.github.redwallhp.athenagm.regions.CuboidRegion;
 import io.github.redwallhp.athenagm.regions.RegionHandler;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,6 +42,7 @@ public class PlayerMovementListener implements Listener {
             handleEntryHail(event, toRegion);
             handleExitHail(event, fromRegion);
             handleVelocity(event, toRegion);
+            handleTeleport(event, toRegion);
         }
     }
 
@@ -144,10 +146,12 @@ public class PlayerMovementListener implements Listener {
 
 
     private void handleTeleport(PlayerMoveEvent event, CuboidRegion toRegion) {
-        /*if (toRegion != null && !toRegion.getFlags().getString("teleport")) {
-        }*/
-        // this would be easier with better multi-type flag support
-        // e.g. a LocationFlag (inheriting Flag) would parse a YAML string and have a Location object ready
+        if (toRegion != null && toRegion.getFlagValue("teleport") != null) {
+            Player player = event.getPlayer();
+            Vector vec = toRegion.getFlagValue("teleport");
+            Location loc = vec.toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
+            player.teleport(loc);
+        }
     }
 
 
