@@ -145,6 +145,10 @@ public class PlayerMovementListener implements Listener {
     }
 
 
+    /**
+     * Teleport the player to given coordinates (supplied in Vector form).
+     * The player's camera yaw and pitch are preserved.
+     */
     private void handleTeleport(PlayerMoveEvent event, CuboidRegion toRegion) {
         if (toRegion != null && toRegion.getFlagValue("teleport") != null) {
             Player player = event.getPlayer();
