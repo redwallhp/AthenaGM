@@ -1,8 +1,10 @@
 package io.github.redwallhp.athenagm.maps;
 
 
-import io.github.redwallhp.athenagm.regions.RegionFlags;
+import io.github.redwallhp.athenagm.regions.Flags.Flag;
 import org.bukkit.util.Vector;
+
+import java.util.HashMap;
 
 
 /**
@@ -15,7 +17,7 @@ public class MapInfoRegion {
     private Vector start;
     private Vector end;
     private int priority;
-    private RegionFlags flags;
+    private HashMap<String, Flag<?>> flags;
 
 
     /**
@@ -29,7 +31,7 @@ public class MapInfoRegion {
         this.start = parseVectorString(start);
         this.end = parseVectorString(end);
         this.priority = priority;
-        this.flags = new RegionFlags();
+        this.flags = new HashMap<String, Flag<?>>();
     }
 
 
@@ -37,7 +39,7 @@ public class MapInfoRegion {
      * Set the RegionFlags object.
      * This is used verbatim in the final CuboidRegion.
      */
-    public void setFlags(RegionFlags flags) {
+    public void setFlags(HashMap<String, Flag<?>> flags) {
         this.flags = flags;
     }
 
@@ -46,7 +48,7 @@ public class MapInfoRegion {
      * The RegionFlags object, which represents the keys and values
      * that determine region listener behaviors.
      */
-    public RegionFlags getFlags() {
+    public HashMap<String, Flag<?>> getFlags() {
         return flags;
     }
 

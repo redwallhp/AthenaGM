@@ -1,6 +1,7 @@
 package io.github.redwallhp.athenagm.maps;
 
-import io.github.redwallhp.athenagm.regions.RegionFlags;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import io.github.redwallhp.athenagm.regions.Flags.*;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -260,46 +261,39 @@ public class GameMap {
      * @param name The region name in the YAML
      * @param yaml The FileConfiguration reference from the constructor
      */
-    private RegionFlags loadRegionFlags(String name, FileConfiguration yaml) {
-        RegionFlags rf = new RegionFlags();
-        String[] booleanKeys = {
-                "build",
-                "destroy",
-                "entry",
-                "exit",
-                "interact",
-                "melt",
-                "vine_spread",
-                "leaf_decay",
-                "fire_spread"
-        };
-        String[] stringKeys = {
-                "team_restricted",
-                "entry_hail",
-                "exit_hail"
-        };
-        String[] doubleKeys = {
-                "velocity"
-        };
-        for (String key : booleanKeys) {
-            String path = String.format("regions.%s.flags.%s", name, key);
+    private HashMap<String, Flag<?>> loadRegionFlags(String name, FileConfiguration yaml) {
+
+        HashMap<String, Flag<?>> regionFlags = new HashMap<String, Flag<?>>();
+        List<Flag<?>> flags = new ArrayList<Flag<?>>();
+
+        flags.add(new BooleanFlag("build"));
+        flags.add(new BooleanFlag("destroy"));
+        flags.add(new BooleanFlag("entry"));
+        flags.add(new BooleanFlag("exit"));
+        flags.add(new BooleanFlag("interact"));
+        flags.add(new BooleanFlag("melt"));
+        flags.add(new BooleanFlag("vine_spread"));
+        flags.add(new BooleanFlag("leaf_decay"));
+        flags.add(new BooleanFlag("fire_spread"));
+        flags.add(new StringFlag("team_restricted"));
+        flags.add(new StringFlag("entry_hail"));
+        flags.add(new StringFlag("exit_hail"));
+        flags.add(new DoubleFlag("velocity"));
+
+        for (Flag<?> flag : flags) {
+            String path = String.format("regions.%s.flags.%s", name, flag.getName());
             if (yaml.isSet(path)) {
-                rf.setBoolean(key, yaml.getBoolean(path));
+                try {
+                    flag.parseYamlValue(yaml.getString(path));
+                    regionFlags.put(flag.getName(), flag);
+                } catch (Exception ex) {
+                    Bukkit.getLogger().info(String.format("Error parsing flag '%s': %s", flag.getName(), ex.getMessage()));
+                }
             }
         }
-        for (String key : stringKeys) {
-            String path = String.format("regions.%s.flags.%s", name, key);
-            if (yaml.isSet(path)) {
-                rf.setString(key, yaml.getString(path));
-            }
-        }
-        for (String key : doubleKeys) {
-            String path = String.format("regions.%s.flags.%s", name, key);
-            if (yaml.isSet(path)) {
-                rf.setDouble(key, yaml.getDouble(path));
-            }
-        }
-        return rf;
+
+        return regionFlags;
+
     }
 
 

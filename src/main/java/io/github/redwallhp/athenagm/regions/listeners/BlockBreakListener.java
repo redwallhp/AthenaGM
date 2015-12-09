@@ -44,7 +44,7 @@ public class BlockBreakListener implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         CuboidRegion region = regionHandler.getApplicableRegion(event.getBlock().getLocation());
-        if (!event.isCancelled() && region != null && !region.getFlags().getBoolean("destroy")) {
+        if (!event.isCancelled() && region != null && region.getFlagValue("destroy").equals(false)) {
             event.setCancelled(true);
             warnPlayer(event.getPlayer());
         }
@@ -57,7 +57,7 @@ public class BlockBreakListener implements Listener {
     @EventHandler
     public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
         CuboidRegion region = regionHandler.getApplicableRegion(event.getEntity().getLocation());
-        if (!event.isCancelled() && region != null && !region.getFlags().getBoolean("destroy")) {
+        if (!event.isCancelled() && region != null && region.getFlagValue("destroy").equals(false)) {
             event.setCancelled(true);
             if (event.getRemover() instanceof Player) {
                 warnPlayer((Player) event.getRemover());
@@ -75,7 +75,7 @@ public class BlockBreakListener implements Listener {
         protectedEnts.add(EntityType.ITEM_FRAME);
         protectedEnts.add(EntityType.ARMOR_STAND);
         CuboidRegion region = regionHandler.getApplicableRegion(event.getEntity().getLocation());
-        if (!event.isCancelled() && region != null && !region.getFlags().getBoolean("destroy")) {
+        if (!event.isCancelled() && region != null && region.getFlagValue("destroy").equals(false)) {
             if (protectedEnts.contains(event.getEntityType())) {
                 if (event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
                     event.setCancelled(true);
@@ -94,7 +94,7 @@ public class BlockBreakListener implements Listener {
     @EventHandler
     public void onBucketFill(PlayerBucketFillEvent event) {
         CuboidRegion region = regionHandler.getApplicableRegion(event.getBlockClicked().getLocation());
-        if (!event.isCancelled() && region != null && !region.getFlags().getBoolean("destroy")) {
+        if (!event.isCancelled() && region != null && region.getFlagValue("destroy").equals(false)) {
             event.setCancelled(true);
             warnPlayer(event.getPlayer());
         }
@@ -109,7 +109,7 @@ public class BlockBreakListener implements Listener {
         List<Block> removalQueue = new ArrayList<Block>();
         for (Block block : event.blockList()) {
             CuboidRegion region = regionHandler.getApplicableRegion(block.getLocation());
-            if (!event.isCancelled() && region != null && !region.getFlags().getBoolean("destroy")) {
+            if (!event.isCancelled() && region != null && region.getFlagValue("destroy").equals(false)) {
                 removalQueue.add(block);
             }
         }
@@ -124,7 +124,7 @@ public class BlockBreakListener implements Listener {
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
         for (Block block : event.getBlocks()) {
             CuboidRegion region = regionHandler.getApplicableRegion(block.getRelative(event.getDirection()).getLocation());
-            if (region != null && !region.getFlags().getBoolean("destroy")) {
+            if (region != null && region.getFlagValue("destroy").equals(false)) {
                 event.setCancelled(true);
                 break;
             }
@@ -139,7 +139,7 @@ public class BlockBreakListener implements Listener {
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         for (Block block : event.getBlocks()) {
             CuboidRegion region = regionHandler.getApplicableRegion(block.getRelative(event.getDirection()).getLocation());
-            if (region != null && !region.getFlags().getBoolean("destroy")) {
+            if (region != null && region.getFlagValue("destroy").equals(false)) {
                 event.setCancelled(true);
                 break;
             }

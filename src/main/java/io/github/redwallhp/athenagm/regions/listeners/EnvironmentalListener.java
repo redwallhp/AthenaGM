@@ -32,7 +32,7 @@ public class EnvironmentalListener implements Listener {
     public void onBlockFade(BlockFadeEvent event) {
 
         CuboidRegion region = regionHandler.getApplicableRegion(event.getBlock().getLocation());
-        if (region == null || region.getFlags().getBoolean("melt")) return; // snow/ice melting is allowed
+        if (region == null || region.getFlagValue("melt").equals(true)) return; // snow/ice melting is allowed
 
         if (event.getBlock().getType().equals(Material.ICE) || event.getBlock().getType().equals(Material.SNOW)) {
             event.setCancelled(true);
@@ -48,7 +48,7 @@ public class EnvironmentalListener implements Listener {
     public void onBlockSpread(BlockSpreadEvent event) {
 
         CuboidRegion region = regionHandler.getApplicableRegion(event.getBlock().getLocation());
-        if (region == null || region.getFlags().getBoolean("vine_spread")) return; // vines are allowed to spread
+        if (region == null || region.getFlagValue("vine_spread").equals(true)) return; // vines are allowed to spread
 
         if (event.getBlock().getType().equals(Material.VINE)) {
             event.setCancelled(true);
@@ -63,7 +63,7 @@ public class EnvironmentalListener implements Listener {
     @EventHandler
     public void onLeavesDecay(LeavesDecayEvent event) {
         CuboidRegion region = regionHandler.getApplicableRegion(event.getBlock().getLocation());
-        if (region == null || region.getFlags().getBoolean("leaf_decay")) return; // leaves are allowed to decay
+        if (region == null || region.getFlagValue("leaf_decay").equals(true)) return; // leaves are allowed to decay
         event.setCancelled(true);
     }
 
@@ -80,14 +80,14 @@ public class EnvironmentalListener implements Listener {
         if (region == null) return;
 
         // block fire from spreading
-        if (!region.getFlags().getBoolean("fire_spread")) {
+        if (region.getFlagValue("fire_spread").equals(false)) {
             if (event.getCause() == BlockIgniteEvent.IgniteCause.SPREAD || event.getCause() == BlockIgniteEvent.IgniteCause.LAVA) {
                 event.setCancelled(true);
             }
         }
 
-        // block ignition via lighter or fireball if a player doesn't have build rights
-        if (!region.getFlags().getBoolean("build")) {
+        // block ignition via lighter or fireball if a region doesn't allow building
+        if (region.getFlagValue("build").equals(false)) {
             if (event.getPlayer() != null) {
                 if (event.getCause() == BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL || event.getCause() == BlockIgniteEvent.IgniteCause.FIREBALL) {
                     event.setCancelled(true);
@@ -104,7 +104,7 @@ public class EnvironmentalListener implements Listener {
     @EventHandler
     public void onBlockBurn(BlockBurnEvent event) {
         CuboidRegion region = regionHandler.getApplicableRegion(event.getBlock().getLocation());
-        if (region == null || region.getFlags().getBoolean("fire_spread")) return; // fire spread is allowed
+        if (region == null || region.getFlagValue("fire_spread").equals(true)) return; // fire spread is allowed
         event.setCancelled(true);
     }
 

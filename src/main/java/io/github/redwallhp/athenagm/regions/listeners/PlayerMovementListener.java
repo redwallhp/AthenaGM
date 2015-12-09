@@ -49,7 +49,7 @@ public class PlayerMovementListener implements Listener {
      * If the deny_entry flag is set to true, knock players back when they try to enter the region.
      */
     private void handleEntryDeny(PlayerMoveEvent event, CuboidRegion toRegion) {
-        if (toRegion != null && !toRegion.getFlags().getBoolean("entry")) {
+        if (toRegion != null && toRegion.getFlagValue("entry").equals(false)) {
             if (!toRegion.contains(event.getFrom())) {
                 knockBack(event.getPlayer(), event.getTo().toVector(), event.getFrom().toVector(), 1.1f);
                 warnPlayer(event.getPlayer(), "You cannot go there.");
@@ -62,7 +62,7 @@ public class PlayerMovementListener implements Listener {
      * If the deny_exit flag is set to true, prevent players from exiting the region.
      */
     private void handleExitDeny(PlayerMoveEvent event, CuboidRegion fromRegion) {
-        if (fromRegion != null && !fromRegion.getFlags().getBoolean("exit")) {
+        if (fromRegion != null && fromRegion.getFlagValue("exit").equals(false)) {
             if (!fromRegion.contains(event.getTo())) {
                 knockBack(event.getPlayer(), event.getTo().toVector(), event.getFrom().toVector(), 1.1f);
                 warnPlayer(event.getPlayer(), "You cannot go there.");
@@ -78,7 +78,7 @@ public class PlayerMovementListener implements Listener {
      */
     private void handleTeamRestricted(PlayerMoveEvent event, CuboidRegion toRegion) {
         if (toRegion != null) {
-            String teamID = toRegion.getFlags().getString("team_restricted");
+            String teamID = toRegion.getFlagValue("team_restricted");
             if (teamID != null && !teamID.equals("")) {
                 if (!toRegion.contains(event.getFrom())) {
                     Team playerTeam = PlayerUtil.getTeamForPlayer(plugin.getArenaHandler(), event.getPlayer());
@@ -99,7 +99,7 @@ public class PlayerMovementListener implements Listener {
      */
     private void handleEntryHail(PlayerMoveEvent event, CuboidRegion toRegion) {
         if (toRegion != null) {
-            String entryHail = toRegion.getFlags().getString("entry_hail");
+            String entryHail = toRegion.getFlagValue("entry_hail");
             if (entryHail != null && !entryHail.equals("")) {
                 if (!toRegion.contains(event.getFrom())) {
                     event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "\u25B6 " + entryHail));
@@ -115,7 +115,7 @@ public class PlayerMovementListener implements Listener {
      */
     private void handleExitHail(PlayerMoveEvent event, CuboidRegion fromRegion) {
         if (fromRegion != null) {
-            String exitHail = fromRegion.getFlags().getString("exit_hail");
+            String exitHail = fromRegion.getFlagValue("exit_hail");
             if (exitHail != null && !exitHail.equals("")) {
                 if (!fromRegion.contains(event.getTo())) {
                     event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "\u25B6 " + exitHail));
@@ -130,13 +130,13 @@ public class PlayerMovementListener implements Listener {
      * velocity flag.
      */
     private void handleVelocity(PlayerMoveEvent event, CuboidRegion toRegion) {
-        if (toRegion != null && toRegion.getFlags().getDouble("velocity") != null) {
+        if (toRegion != null && toRegion.getFlagValue("velocity") != null) {
             if (!toRegion.contains(event.getFrom())) {
                 Vector from = event.getFrom().toVector();
                 Vector to = event.getTo().toVector();
                 from.setY(from.getY()-0.25);
                 Vector dir = to.subtract(from).normalize();
-                Double multiplier = toRegion.getFlags().getDouble("velocity");
+                Double multiplier = toRegion.getFlagValue("velocity");
                 event.getPlayer().setVelocity(dir.multiply(multiplier));
             }
         }

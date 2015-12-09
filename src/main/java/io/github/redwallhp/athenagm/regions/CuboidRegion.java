@@ -1,16 +1,14 @@
 package io.github.redwallhp.athenagm.regions;
 
 
+import io.github.redwallhp.athenagm.regions.Flags.Flag;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
@@ -24,7 +22,7 @@ public class CuboidRegion {
     private Vector start;
     private Vector end;
     private int priority;
-    private RegionFlags flags;
+    private HashMap<String, Flag<?>> flags;
 
 
     /**
@@ -40,7 +38,7 @@ public class CuboidRegion {
         this.start = start;
         this.end = end;
         this.priority = 0;
-        this.flags = new RegionFlags();
+        this.flags = new HashMap<String, Flag<?>>();
     }
 
 
@@ -192,17 +190,54 @@ public class CuboidRegion {
 
 
     /**
-     * Get the region's RegionFlags object
+     * Get the region's flags
      */
-    public RegionFlags getFlags() {
+    public HashMap<String, Flag<?>> getFlags() {
         return flags;
     }
 
 
     /**
-     * Replace the entire RegionFlags object
+     * Get an individual flag by name
      */
-    public void setFlags(RegionFlags flags) {
+    @SuppressWarnings("unchecked")
+    public <T extends Flag> T getFlag(String name) {
+        if (flags.containsKey(name)) {
+            return (T) flags.get(name);
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
+     * Get an individual flag value by name
+     * @return The value of the flag, in its proper type
+     * @param <T> the flag's type
+     * @param <V> the flag value's type
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Flag<V>, V> V getFlagValue(String name) {
+        if (flags.containsKey(name)) {
+            return (V) flags.get(name).getValue();
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
+     * Set a flag
+     */
+    public <T extends Flag<?>> void setFlag(T flag) {
+        flags.put(flag.getName(), flag);
+    }
+
+
+    /**
+     * Replace the entire set of flags
+     */
+    public void setFlags(HashMap<String, Flag<?>> flags) {
         this.flags = flags;
     }
 

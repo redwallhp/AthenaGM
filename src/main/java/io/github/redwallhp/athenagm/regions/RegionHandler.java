@@ -4,6 +4,7 @@ package io.github.redwallhp.athenagm.regions;
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.maps.GameMap;
 import io.github.redwallhp.athenagm.maps.MapInfoRegion;
+import io.github.redwallhp.athenagm.regions.Flags.Flag;
 import io.github.redwallhp.athenagm.regions.listeners.*;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -113,14 +114,8 @@ public class RegionHandler {
         // Create and return a compound region that inherits flags from lower regions
         CuboidRegion compound = new CuboidRegion(r.getName(), r.getWorld(), r.getStart(), r.getEnd());
         for (CuboidRegion rg : regionMap.values()) {
-            for (Map.Entry<String, Boolean> flag : rg.getFlags().getAllBooleanFlags().entrySet()) {
-                compound.getFlags().setBoolean(flag.getKey(), flag.getValue());
-            }
-            for (Map.Entry<String, String> flag : rg.getFlags().getAllStringFlags().entrySet()) {
-                compound.getFlags().setString(flag.getKey(), flag.getValue());
-            }
-            for (Map.Entry<String, Double> flag : rg.getFlags().getAllDoubleFlags().entrySet()) {
-                compound.getFlags().setDouble(flag.getKey(), flag.getValue());
+            for (Map.Entry<String, Flag<?>> flag : rg.getFlags().entrySet()) {
+                compound.setFlag(flag.getValue());
             }
         }
         return compound;

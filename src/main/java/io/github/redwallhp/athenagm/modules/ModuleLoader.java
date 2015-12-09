@@ -47,6 +47,7 @@ public class ModuleLoader {
      * Modules are cast to their Module interface to make this sorcery work, but can be
      * recast to their original class later in order to access methods.
      */
+    @SuppressWarnings("unchecked")
     public void load() {
         for (Class c : moduleClasses) {
             try {

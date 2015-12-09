@@ -37,7 +37,7 @@ public class BlockPlaceListener implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         CuboidRegion region = regionHandler.getApplicableRegion(event.getBlockPlaced().getLocation());
-        if (!event.isCancelled() && region != null && !region.getFlags().getBoolean("build")) {
+        if (!event.isCancelled() && region != null && region.getFlagValue("build").equals(false)) {
             event.setCancelled(true);
             event.getPlayer().updateInventory();
             warnPlayer(event.getPlayer());
@@ -51,7 +51,7 @@ public class BlockPlaceListener implements Listener {
     @EventHandler
     public void onBucketEmpty(PlayerBucketEmptyEvent event) {
         CuboidRegion region = regionHandler.getApplicableRegion(event.getBlockClicked().getLocation());
-        if (!event.isCancelled() && region != null && !region.getFlags().getBoolean("build")) {
+        if (!event.isCancelled() && region != null && region.getFlagValue("build").equals(false)) {
             event.setCancelled(true);
             warnPlayer(event.getPlayer());
         }
@@ -65,7 +65,7 @@ public class BlockPlaceListener implements Listener {
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
         for (Block block : event.getBlocks()) {
             CuboidRegion region = regionHandler.getApplicableRegion(block.getRelative(event.getDirection()).getLocation());
-            if (region != null && !region.getFlags().getBoolean("build")) {
+            if (region != null && region.getFlagValue("build").equals(false)) {
                 event.setCancelled(true);
                 break;
             }
@@ -80,7 +80,7 @@ public class BlockPlaceListener implements Listener {
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         for (Block block : event.getBlocks()) {
             CuboidRegion region = regionHandler.getApplicableRegion(block.getRelative(event.getDirection()).getLocation());
-            if (region != null && !region.getFlags().getBoolean("build")) {
+            if (region != null && region.getFlagValue("build").equals(false)) {
                 event.setCancelled(true);
                 break;
             }
@@ -97,7 +97,7 @@ public class BlockPlaceListener implements Listener {
         Block targetBlock = event.getBlock().getRelative(dispenser.getFacing());
         if (event.getItem().getType() == Material.LAVA_BUCKET || event.getItem().getType() == Material.WATER_BUCKET) {
             CuboidRegion region = regionHandler.getApplicableRegion(targetBlock.getLocation());
-            if (region != null && !region.getFlags().getBoolean("build")) {
+            if (region != null && region.getFlagValue("build").equals(false)) {
                 event.setCancelled(true);
             }
         }
@@ -112,7 +112,7 @@ public class BlockPlaceListener implements Listener {
         CuboidRegion toRegion = regionHandler.getApplicableRegion(event.getToBlock().getLocation());
         CuboidRegion fromRegion = regionHandler.getApplicableRegion(event.getBlock().getLocation());
         if (!event.isCancelled() && toRegion != null) {
-            if (!toRegion.getFlags().getBoolean("build") && (fromRegion == null || fromRegion.getFlags().getBoolean("build"))) {
+            if (toRegion.getFlagValue("build").equals(false) && (fromRegion == null || fromRegion.getFlagValue("build").equals(false))) {
                 event.setCancelled(true);
             }
         }
