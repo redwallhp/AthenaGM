@@ -53,7 +53,7 @@ public class PlayerMovementListener implements Listener {
      */
     private void handleEntryDeny(PlayerMoveEvent event, CuboidRegion toRegion) {
         if (toRegion != null && !toRegion.allows("entry")) {
-            if (!toRegion.contains(event.getFrom())) {
+            if (!toRegion.contains(event.getFrom()) && !isSpectator(event.getPlayer())) {
                 knockBack(event.getPlayer(), event.getTo().toVector(), event.getFrom().toVector(), 1.1f);
                 warnPlayer(event.getPlayer(), "You cannot go there.");
             }
@@ -66,7 +66,7 @@ public class PlayerMovementListener implements Listener {
      */
     private void handleExitDeny(PlayerMoveEvent event, CuboidRegion fromRegion) {
         if (fromRegion != null && !fromRegion.allows("exit")) {
-            if (!fromRegion.contains(event.getTo())) {
+            if (!fromRegion.contains(event.getTo()) && !isSpectator(event.getPlayer())) {
                 knockBack(event.getPlayer(), event.getTo().toVector(), event.getFrom().toVector(), 1.1f);
                 warnPlayer(event.getPlayer(), "You cannot go there.");
             }
@@ -82,7 +82,7 @@ public class PlayerMovementListener implements Listener {
     private void handleTeamRestricted(PlayerMoveEvent event, CuboidRegion toRegion) {
         if (toRegion != null) {
             String teamID = toRegion.getFlagValue("team_restricted");
-            if (teamID != null && !teamID.equals("")) {
+            if (teamID != null && !teamID.equals("") && !isSpectator(event.getPlayer())) {
                 if (!toRegion.contains(event.getFrom())) {
                     Team playerTeam = PlayerUtil.getTeamForPlayer(plugin.getArenaHandler(), event.getPlayer());
                     if (playerTeam != null && !playerTeam.getId().equals(teamID) && !playerTeam.isSpectator()) {
@@ -180,6 +180,18 @@ public class PlayerMovementListener implements Listener {
      */
     private void warnPlayer(Player player, String msg) {
         player.sendMessage(String.format("%s\u26A0%s %s", ChatColor.YELLOW, ChatColor.RED, msg));
+    }
+
+
+    /**
+     * Check if the player is a spectator, so we don't block spectating players from
+     * having free access to explore the world.
+     */
+    private boolean isSpectator(Player player) {
+        boolean val = false;
+        Team team = PlayerUtil.getTeamForPlayer(plugin.getArenaHandler(), player);
+        if (team != null) val = team.isSpectator();
+        return val;
     }
 
 
