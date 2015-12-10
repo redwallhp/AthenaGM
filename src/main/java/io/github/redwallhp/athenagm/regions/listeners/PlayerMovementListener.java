@@ -7,6 +7,7 @@ import io.github.redwallhp.athenagm.regions.RegionHandler;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -155,6 +156,7 @@ public class PlayerMovementListener implements Listener {
             Vector vec = toRegion.getFlagValue("teleport");
             Location loc = vec.toLocation(player.getWorld(), player.getLocation().getYaw(), player.getLocation().getPitch());
             player.teleport(loc);
+            player.playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 1f, 1f);
         }
     }
 
