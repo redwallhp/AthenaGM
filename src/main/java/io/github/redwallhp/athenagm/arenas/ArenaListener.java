@@ -4,6 +4,8 @@ package io.github.redwallhp.athenagm.arenas;
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.events.*;
 import io.github.redwallhp.athenagm.maps.GameMap;
+import io.github.redwallhp.athenagm.matches.Match;
+import io.github.redwallhp.athenagm.matches.MatchState;
 import io.github.redwallhp.athenagm.matches.PlayerScore;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
@@ -234,6 +236,18 @@ public class ArenaListener implements Listener {
     public void onPlayerScorePointEvent(PlayerScorePointEvent event) {
         PlayerScore score = event.getTeam().getPlayerScore(event.getPlayer());
         score.incrementPointsBy(event.getPointsScored());
+    }
+
+
+    /**
+     * Start the match when there are enough players
+     */
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerChangeTeamEvent(PlayerChangeTeamEvent event) {
+        Match match = event.getTeam().getMatch();
+        if (match.getState() == MatchState.WAITING && match.isReadyToStart()) {
+            match.startCountdown();
+        }
     }
 
 

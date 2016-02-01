@@ -20,7 +20,7 @@ public class ConfiguredArena {
      * @param name Long name of the arena
      * @param gameMode Currently unused (?)
      * @param maxPlayers Maximum number of players that can join the arena. Currently unused (?)
-     * @param timeLimit Time limit of rounds in this arena. To Be Implemented.
+     * @param timeLimit Time limit of rounds in this arena.
      * @param mapList String List of map filenames that will go in this arena's map rotation.
      */
     public ConfiguredArena(String id, String name, String gameMode, Integer maxPlayers, Integer timeLimit, List<String> mapList) {

@@ -1,6 +1,7 @@
 package io.github.redwallhp.athenagm.matches;
 
 
+import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.arenas.Arena;
 import io.github.redwallhp.athenagm.events.MatchStateChangedEvent;
 import io.github.redwallhp.athenagm.maps.GameMap;
@@ -24,6 +25,7 @@ public class Match {
     private GameMap map;
     private MatchState state;
     private HashMap<String, Team> teams;
+    private MatchTimer timer;
 
 
     /**
@@ -59,26 +61,41 @@ public class Match {
     /**
      * Changes the MatchState from WAITING (waiting for teams to be ready) to PLAYING, with
      * a specified time limit for the match, starting the gameplay.
-     * @param timeLimit
+     * @param timeLimit Match time in seconds
      * @see MatchState
      */
     public void start(int timeLimit) {
         if (this.state == MatchState.WAITING) {
             setState(MatchState.PLAYING);
-            // Start MatchTimer, which will end the round, or a gamemode plugin will call the end() method
-            // when an objective is met.
-            // todo: start MatchTimer
+            timer = new MatchTimer(this, timeLimit);
         }
     }
 
 
     /**
-     * Ends the current Match.
+     * Start with the default time limit from the arena configuration.
+     */
+    public void start() {
+        start(arena.getTimeLimit());
+    }
+
+
+    /**
+     * Ends the current Match. Either called by MatchTimer or by
+     * a gamemode plugin when an objective is completed.
      */
     public void end() {
         if (this.state == MatchState.PLAYING) {
             setState(MatchState.ENDED);
         }
+    }
+
+
+    /**
+     * Initiate a countdown until the Match starts, beginning the match at the end.
+     */
+    public void startCountdown() {
+        MatchStartCountdown countdown = new MatchStartCountdown(this);
     }
 
 
@@ -114,7 +131,7 @@ public class Match {
      * detect state changes, such as match start.
      * @see MatchStateChangedEvent
      */
-    public void setState(MatchState state) {
+    private void setState(MatchState state) {
         MatchState previousState = this.state;
         this.state = state;
         MatchStateChangedEvent event = new MatchStateChangedEvent(this, previousState);
@@ -210,6 +227,38 @@ public class Match {
         }
         MapInfoSpawnPoint point = teamPoints.get(new Random().nextInt(teamPoints.size()));
         return new Location(this.arena.getWorld(), point.getX(), point.getY(), point.getZ(), point.getYaw(), 0);
+    }
+
+
+    /**
+     * Get the plugin instance
+     */
+    public AthenaGM getPlugin() {
+        return arena.getPlugin();
+    }
+
+
+    /**
+     * Signals whether there are enough players for the match to start
+     */
+    public boolean isReadyToStart() {
+        for (Team team : teams.values()) {
+            if (team.isSpectator()) continue;
+            if (team.getPlayers().size() < 1) return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * Broadcast a message to all players in this Match
+     */
+    public void broadcast(String message) {
+        for (Team team : teams.values()) {
+            for (Player player : team.getPlayers()) {
+                player.sendMessage(message);
+            }
+        }
     }
 
 
