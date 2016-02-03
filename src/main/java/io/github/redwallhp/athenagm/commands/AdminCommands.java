@@ -2,10 +2,10 @@ package io.github.redwallhp.athenagm.commands;
 
 
 import io.github.redwallhp.athenagm.AthenaGM;
+import io.github.redwallhp.athenagm.arenas.Arena;
 import io.github.redwallhp.athenagm.modules.permissions.PermissionsModule;
 import io.github.redwallhp.athenagm.modules.spectator.SpectatorModule;
 import io.github.redwallhp.athenagm.regions.CuboidRegion;
-import io.github.redwallhp.athenagm.utilities.StringUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -32,10 +32,13 @@ public class AdminCommands implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("athena")) {
             if (args.length == 0) {
-                sender.sendMessage(ChatColor.RED + "Valid subcommands: reload");
+                sender.sendMessage(ChatColor.RED + "Valid subcommands: reload, forcestart");
             }
             else if (args[0].equalsIgnoreCase("reload")) {
                 reloadCommand(sender, args);
+            }
+            else if (args[0].equalsIgnoreCase("forcestart")) {
+                forceStartCommand(sender, args);
             }
             return true;
         }
@@ -75,6 +78,24 @@ public class AdminCommands implements CommandExecutor {
             SpectatorModule module = (SpectatorModule) plugin.getModule("spectator");
             module.getHelpBookItem();
             sender.sendMessage(ChatColor.LIGHT_PURPLE + "Spectator help book reloaded.");
+        }
+
+    }
+
+
+    private void forceStartCommand(CommandSender sender, String[] args) {
+
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "Usage: /athena forcestart <arena>");
+            return;
+        }
+
+        for (Arena arena : plugin.getArenaHandler().getArenas()) {
+            if (arena.getId().equalsIgnoreCase(args[1])) {
+                sender.sendMessage(ChatColor.DARK_AQUA + "Forcing match start.");
+                arena.getMatch().startCountdown();
+                break;
+            }
         }
 
     }

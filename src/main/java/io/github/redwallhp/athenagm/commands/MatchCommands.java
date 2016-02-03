@@ -29,6 +29,7 @@ public class MatchCommands implements CommandExecutor {
         plugin.getCommand("spectate").setExecutor(this);
         plugin.getCommand("score").setExecutor(this);
         plugin.getCommand("players").setExecutor(this);
+        plugin.getCommand("timeleft").setExecutor(this);
     }
 
 
@@ -62,6 +63,11 @@ public class MatchCommands implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("players")) {
             printPlayersList(sender);
+            return true;
+        }
+
+        if (cmd.getName().equalsIgnoreCase("timeleft")) {
+            timeLeft(sender, args);
             return true;
         }
 
@@ -234,6 +240,45 @@ public class MatchCommands implements CommandExecutor {
             }
             sender.sendMessage(sb.toString());
 
+        }
+
+    }
+
+
+    private void timeLeft(CommandSender sender, String[] args) {
+
+        Arena arena = null;
+
+        if (!(sender instanceof Player) && args.length < 1) {
+            sender.sendMessage(ChatColor.RED + "Specify an arena name to see the time left in the match. (/timeleft <arena>)");
+            return;
+        }
+
+        if (args.length == 1) {
+            for (Arena a : plugin.getArenaHandler().getArenas()) {
+                if (a.getId().equalsIgnoreCase(args[0])) {
+                    arena = a;
+                    break;
+                }
+            }
+        } else {
+            Player player = (Player) sender;
+            arena = plugin.getArenaHandler().getArenaForPlayer(player);
+        }
+
+        if (arena != null) {
+            String secString = "00";
+            String minString = "00";
+            if (arena.getMatch().getTimer() != null) {
+                long secondsLeft = arena.getMatch().getTimer().timeLeftInSeconds();
+                long sec = secondsLeft % 60;
+                long min = (secondsLeft / 60) % 60;
+                secString = String.format("%02d", sec);
+                minString = String.format("%02d", min);
+            }
+            sender.sendMessage(String.format("%s%s:%s", ChatColor.DARK_AQUA, minString, secString));
+        } else {
+            sender.sendMessage(ChatColor.RED + "You must join an arena first, or use /timeleft <arena>");
         }
 
     }

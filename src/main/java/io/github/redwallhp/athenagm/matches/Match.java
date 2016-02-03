@@ -252,6 +252,14 @@ public class Match {
 
 
     /**
+     * Get the MatchTimer for this Match
+     */
+    public MatchTimer getTimer() {
+        return timer;
+    }
+
+
+    /**
      * Broadcast a message to all players in this Match
      */
     public void broadcast(String message) {
