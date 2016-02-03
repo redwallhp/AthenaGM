@@ -5,6 +5,7 @@ public enum MatchState {
 
 
     WAITING(),
+    COUNTDOWN(),
     PLAYING(),
     ENDED();
 

@@ -65,7 +65,7 @@ public class Match {
      * @see MatchState
      */
     public void start(int timeLimit) {
-        if (this.state == MatchState.WAITING) {
+        if (this.state == MatchState.COUNTDOWN || this.state == MatchState.WAITING) {
             setState(MatchState.PLAYING);
             timer = new MatchTimer(this, timeLimit);
         }
@@ -95,6 +95,7 @@ public class Match {
      * Initiate a countdown until the Match starts, beginning the match at the end.
      */
     public void startCountdown() {
+        setState(MatchState.COUNTDOWN);
         MatchStartCountdown countdown = new MatchStartCountdown(this);
     }
 
