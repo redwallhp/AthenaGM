@@ -2,10 +2,7 @@ package io.github.redwallhp.athenagm.modules.scoreboard;
 
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.arenas.Arena;
-import io.github.redwallhp.athenagm.events.MatchCreateEvent;
-import io.github.redwallhp.athenagm.events.PlayerChangedTeamEvent;
-import io.github.redwallhp.athenagm.events.PlayerEnterMatchWorldEvent;
-import io.github.redwallhp.athenagm.events.PlayerScorePointEvent;
+import io.github.redwallhp.athenagm.events.*;
 import io.github.redwallhp.athenagm.matches.Match;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.modules.Module;
@@ -92,6 +89,12 @@ public class ScoreboardModule implements Module {
         Objective objective = boards.get(event.getTeam().getMatch()).getObjective("matchscore");
         Score score = objective.getScore(event.getTeam().getChatColor() + event.getTeam().getName());
         score.setScore(score.getScore() + event.getPointsScored());
+    }
+
+
+    @EventHandler
+    public void onMatchTimerTickEvent(MatchTimerTickEvent event) {
+        updateMatchTimeDisplay(event.getMatchTimer().getMatch(), event.getMatchTimer().timeLeftInSeconds());
     }
 
 
@@ -184,9 +187,9 @@ public class ScoreboardModule implements Module {
     /**
      * Update the match time display in the sidebar
      */
-    public void updateMatchTimeDisplay(Match match, int secondsLeft) {
-        int sec = secondsLeft % 60;
-        int min = (secondsLeft / 60) % 60;
+    public void updateMatchTimeDisplay(Match match, long secondsLeft) {
+        long sec = secondsLeft % 60;
+        long min = (secondsLeft / 60) % 60;
         String secString = String.format("%02d", sec);
         String minString = String.format("%02d", min);
         Objective objective = boards.get(match).getObjective("matchscore");
