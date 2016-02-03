@@ -12,8 +12,8 @@ public class MatchStartCountdown extends BukkitRunnable {
 
     public MatchStartCountdown(Match match) {
         this.match = match;
-        match.broadcast(ChatColor.DARK_AQUA + "The match will begin in 10 seconds...");
-        Bukkit.getScheduler().runTaskTimer(match.getPlugin(), this, 0L, 20L);
+        match.broadcast(ChatColor.RED + "The match will begin in 10 seconds...");
+        this.runTaskTimer(match.getPlugin(), 0L, 20L);
     }
 
     public void run() {

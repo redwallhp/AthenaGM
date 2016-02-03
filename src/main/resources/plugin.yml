@@ -1,6 +1,7 @@
 name: AthenaGM
 main: io.github.redwallhp.athenagm.AthenaGM
 description: Athena Game Manager
+author: redwall_hp
 version: ${project.version}
 load: startup
 

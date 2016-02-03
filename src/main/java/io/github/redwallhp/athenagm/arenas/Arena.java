@@ -104,7 +104,7 @@ public class Arena {
     }
 
     public Integer getTimeLimit() {
-        return this.getTimeLimit();
+        return this.timeLimit;
     }
 
     public List<String> getMapList() {
