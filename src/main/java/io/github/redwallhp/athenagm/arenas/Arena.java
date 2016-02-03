@@ -8,7 +8,9 @@ import io.github.redwallhp.athenagm.maps.MapLoader;
 import io.github.redwallhp.athenagm.maps.Rotation;
 import io.github.redwallhp.athenagm.matches.Match;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -71,11 +73,20 @@ public class Arena {
         mapLoader = new MapLoader(rotation.getNextMap(), this);
 
         if (oldWorld != null) {
+            bringPlayers(oldWorld, world.get());
             plugin.getRegionHandler().unloadRegions(oldWorld);
             Bukkit.unloadWorld(oldWorld, false);
             mapLoader.destroyWorldInstanceCopy(oldFile);
         }
 
+    }
+
+
+    private void bringPlayers(World oldWorld, World newWorld) {
+        Location loc = new Location(newWorld, 0, 70, 0);
+        for (Player player : oldWorld.getPlayers()) {
+            player.teleport(loc);
+        }
     }
 
 

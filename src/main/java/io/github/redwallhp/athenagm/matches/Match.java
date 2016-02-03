@@ -87,6 +87,7 @@ public class Match {
     public void end() {
         if (this.state == MatchState.PLAYING) {
             setState(MatchState.ENDED);
+            NextMatchCountdown countdown = new NextMatchCountdown(arena);
         }
     }
 

@@ -29,8 +29,8 @@ public class MatchTimer implements Runnable {
         if (isOver()) {
             clear();
             if (match.getState() == MatchState.PLAYING) {
+                match.broadcast(ChatColor.RED + "Match ended!");
                 match.end();
-                match.broadcast(ChatColor.DARK_AQUA + "Match ended!");
             }
         }
         MatchTimerTickEvent event = new MatchTimerTickEvent(this);
