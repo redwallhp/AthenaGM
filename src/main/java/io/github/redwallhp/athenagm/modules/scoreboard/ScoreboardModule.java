@@ -3,7 +3,7 @@ package io.github.redwallhp.athenagm.modules.scoreboard;
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.arenas.Arena;
 import io.github.redwallhp.athenagm.events.MatchCreateEvent;
-import io.github.redwallhp.athenagm.events.PlayerChangeTeamEvent;
+import io.github.redwallhp.athenagm.events.PlayerChangedTeamEvent;
 import io.github.redwallhp.athenagm.events.PlayerEnterMatchWorldEvent;
 import io.github.redwallhp.athenagm.events.PlayerScorePointEvent;
 import io.github.redwallhp.athenagm.matches.Match;
@@ -68,7 +68,7 @@ public class ScoreboardModule implements Module {
      * When a player changes team, make sure the scoreboard reflects it
      */
     @EventHandler
-    public void onPlayerChangeTeam(PlayerChangeTeamEvent event) {
+    public void onPlayerChangedTeam(PlayerChangedTeamEvent event) {
         Scoreboard board = boards.get(event.getTeam().getMatch());
         org.bukkit.scoreboard.Team sbTeam = board.getTeam(event.getTeam().getId());
         sbTeam.addPlayer(event.getPlayer());

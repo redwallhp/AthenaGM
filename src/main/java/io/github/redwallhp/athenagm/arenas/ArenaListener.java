@@ -14,7 +14,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -23,13 +22,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ArenaListener implements Listener {
 
@@ -243,7 +236,7 @@ public class ArenaListener implements Listener {
      * Start the match when there are enough players
      */
     @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerChangeTeamEvent(PlayerChangeTeamEvent event) {
+    public void onPlayerChangedTeamEvent(PlayerChangedTeamEvent event) {
         Match match = event.getTeam().getMatch();
         if (match.getState() == MatchState.WAITING && match.isReadyToStart()) {
             match.startCountdown();

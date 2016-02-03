@@ -1,13 +1,13 @@
 package io.github.redwallhp.athenagm.matches;
 
-import io.github.redwallhp.athenagm.events.PlayerChangeTeamEvent;
+import io.github.redwallhp.athenagm.events.PlayerChangedTeamEvent;
+import io.github.redwallhp.athenagm.events.PlayerChangingTeamEvent;
 import io.github.redwallhp.athenagm.events.PlayerMatchRespawnEvent;
 import io.github.redwallhp.athenagm.maps.MapInfoKitItem;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import io.github.redwallhp.athenagm.utilities.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -61,7 +61,8 @@ public class Team {
      * the previous team if there was one.
      * Also calls playerSetup() on the player to clear their inventory and attributes,
      * teleport them to an appropriate respawn location, and emit a PlayerMatchRespawnEvent.
-     * @see PlayerChangeTeamEvent
+     * @see PlayerChangingTeamEvent
+     * @see PlayerChangedTeamEvent
      * @see PlayerMatchRespawnEvent
      * @param player The player to add to this team
      * @param force Override team size quotas
@@ -73,15 +74,17 @@ public class Team {
             return false;
         }
         Team oldTeam = PlayerUtil.getTeamForPlayer(match, player);
-        PlayerChangeTeamEvent event = new PlayerChangeTeamEvent(player, this, oldTeam);
-        Bukkit.getPluginManager().callEvent(event);
-        if (!event.isCancelled() || force) {
+        PlayerChangingTeamEvent eventPre = new PlayerChangingTeamEvent(player, this, oldTeam);
+        Bukkit.getPluginManager().callEvent(eventPre);
+        if (!eventPre.isCancelled() || force) {
             this.players.add(player);
             if (oldTeam != null) {
                 oldTeam.remove(player);
             }
             playerSetup(player);
             player.sendMessage(String.format("%sYou have joined team %s.", ChatColor.DARK_AQUA, getColoredName()));
+            PlayerChangedTeamEvent eventDone = new PlayerChangedTeamEvent(player, this, oldTeam);
+            Bukkit.getPluginManager().callEvent(eventDone);
             return true;
         } else {
             return false;

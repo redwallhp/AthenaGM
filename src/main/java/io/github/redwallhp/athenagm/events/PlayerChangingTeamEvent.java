@@ -8,11 +8,12 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 /**
- * Called when a player joins a team. If they are a part of a team already, a previous team
+ * Called when a player is joining team, offering an opportunity to cancel the action.
+ * If they are a part of a team already, a previous team
  * will be included. This should be most cases, save for when a player is assigned to
  * Spectator when they first join an Arena.
  */
-public class PlayerChangeTeamEvent extends Event implements Cancellable {
+public class PlayerChangingTeamEvent extends Event implements Cancellable {
 
 
     private static final HandlerList handlers = new HandlerList();
@@ -22,7 +23,7 @@ public class PlayerChangeTeamEvent extends Event implements Cancellable {
     private Team previousTeam;
 
 
-    public PlayerChangeTeamEvent(Player player, Team team, Team previousTeam) {
+    public PlayerChangingTeamEvent(Player player, Team team, Team previousTeam) {
         this.player = player;
         this.team = team;
         if (previousTeam != null) {
@@ -31,7 +32,7 @@ public class PlayerChangeTeamEvent extends Event implements Cancellable {
     }
 
 
-    public PlayerChangeTeamEvent(Player player, Team team) {
+    public PlayerChangingTeamEvent(Player player, Team team) {
         this(player, team, null);
     }
 
