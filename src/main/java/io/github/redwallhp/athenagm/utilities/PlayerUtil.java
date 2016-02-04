@@ -21,6 +21,7 @@ public class PlayerUtil {
         player.setTotalExperience(0);
         player.spigot().setCollidesWithEntities(true);
         player.setCanPickupItems(true);
+        player.setWalkSpeed(0.2f);
         ItemStack[] noArmor = new ItemStack[] {
                 new ItemStack(Material.AIR),
                 new ItemStack(Material.AIR),
