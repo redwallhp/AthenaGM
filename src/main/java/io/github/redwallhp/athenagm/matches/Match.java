@@ -68,6 +68,7 @@ public class Match {
         if (this.state == MatchState.COUNTDOWN || this.state == MatchState.WAITING) {
             setState(MatchState.PLAYING);
             timer = new MatchTimer(this, timeLimit);
+            arena.getPlugin().getLogger().info(String.format("Started match \"%s\" for arena \"%s\"", getUUID(), arena.getName()));
         }
     }
 
@@ -88,6 +89,7 @@ public class Match {
         if (this.state == MatchState.PLAYING) {
             setState(MatchState.ENDED);
             NextMatchCountdown countdown = new NextMatchCountdown(arena);
+            arena.getPlugin().getLogger().info(String.format("Ended match \"%s\" for arena \"%s\"", getUUID(), arena.getName()));
         }
     }
 
