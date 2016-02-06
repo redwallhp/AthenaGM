@@ -25,6 +25,7 @@ public class MapInfoKitItem {
     private String kit;
     private int inventorySlot;
     private boolean dropOnDeath;
+    private int chance;
 
 
     /**
@@ -38,6 +39,7 @@ public class MapInfoKitItem {
         this.kit = kit;
         this.inventorySlot = inventorySlot;
         this.item = new ItemStack(Material.matchMaterial(material), quantity);
+        this.chance = 100;
     }
 
 
@@ -140,6 +142,24 @@ public class MapInfoKitItem {
      */
     public void setDropOnDeath(boolean drop) {
         dropOnDeath = drop;
+    }
+
+
+    /**
+     * How often this item should be given to a player, expressed as a percentage of respawns.
+     * e.g. a value of 100 means it will be given every time, while a value of 1 would be 1 in 100 times.
+     */
+    public int getChance() {
+        return chance;
+    }
+
+
+    /**
+     * Set how often this item should be added to the player's inventory on respawn, expressed as a percentage.
+     * @param chance Percentage of respawns that this item should be given
+     */
+    public void setChance(int chance) {
+        this.chance = chance;
     }
 
 

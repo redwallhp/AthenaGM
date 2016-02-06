@@ -51,12 +51,14 @@ public class KitsModule implements Module {
         Player player = event.getPlayer();
         Match match = plugin.getArenaHandler().getArenaForPlayer(player).getMatch();
         Team playerTeam = PlayerUtil.getTeamForPlayer(match, player);
+        int roll = (int) (Math.random() * 100);
 
         if (playerTeam == null || playerTeam.isSpectator()) return; //skip spectators and nonexistant teams
 
         Inventory inventory = player.getInventory();
         for (MapInfoKitItem item : playerTeam.getKitItems()) {
             if (item.getInventorySlot() < 40 && item.getInventorySlot() >= 0) {
+                if (roll > item.getChance()) continue; //handle random chance items
                 inventory.setItem(item.getInventorySlot(), item.getItem());
             }
         }

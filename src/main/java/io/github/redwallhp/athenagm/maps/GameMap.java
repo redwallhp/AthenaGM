@@ -223,6 +223,14 @@ public class GameMap {
                 item.setLore(map.get("lore").toString());
             }
 
+            // Set a chance so an item can be given only occasionally
+            if (map.get("chance") != null) {
+                int chance = Integer.parseInt(map.get("chance").toString());
+                item.setChance(chance);
+            } else {
+                item.setChance(100);
+            }
+
             //Get the ItemStack and continue
             items.add(item);
             i++;
