@@ -10,6 +10,7 @@ import io.github.redwallhp.athenagm.maps.MapInfoTeam;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -89,7 +90,8 @@ public class Match {
         if (this.state == MatchState.PLAYING) {
             setState(MatchState.ENDED);
             NextMatchCountdown countdown = new NextMatchCountdown(arena);
-            arena.getPlugin().getLogger().info(String.format("Ended match \"%s\" for arena \"%s\"", getUUID(), arena.getName()));
+            getPlugin().getLogger().info(String.format("Ended match \"%s\" for arena \"%s\"", getUUID(), arena.getName()));
+            playSound(Sound.ENDERDRAGON_DEATH);
         }
     }
 
@@ -271,6 +273,25 @@ public class Match {
                 player.sendMessage(message);
             }
         }
+    }
+
+
+    /**
+     * Play a sound to everyone in the match
+     * @param sound The sound to play
+     */
+    public void playSound(Sound sound, float pitch) {
+        Location loc = new Location(arena.getWorld(), 0, 70, 0);
+        arena.getWorld().playSound(loc, sound, 100.0f, pitch);
+    }
+
+
+    /**
+     * Play a sound to everyone in the match
+     * @param sound The sound to play
+     */
+    public void playSound(Sound sound) {
+        playSound(sound, 1.0f);
     }
 
 
