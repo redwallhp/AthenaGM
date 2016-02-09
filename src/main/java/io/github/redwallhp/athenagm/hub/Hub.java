@@ -130,7 +130,7 @@ public class Hub {
      * @param player Player to check
      * @return True if the player is in the Hub world
      */
-    public boolean playerIsInHub(Player player) {
+    public boolean hasPlayer(Player player) {
         return getWorld() != null && player.getWorld().equals(getWorld());
     }
 
