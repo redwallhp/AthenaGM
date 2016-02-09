@@ -3,6 +3,7 @@ package io.github.redwallhp.athenagm.modules;
 
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.modules.broadcasts.BroadcastsModule;
+import io.github.redwallhp.athenagm.modules.deathMessage.DeathMessageModule;
 import io.github.redwallhp.athenagm.modules.friendlyFire.FriendlyFireModule;
 import io.github.redwallhp.athenagm.modules.kits.KitsModule;
 import io.github.redwallhp.athenagm.modules.permissions.PermissionsModule;
@@ -29,7 +30,8 @@ public class ModuleLoader {
             ScoreboardModule.class,
             FriendlyFireModule.class,
             BroadcastsModule.class,
-            PlayerFreezeModule.class
+            PlayerFreezeModule.class,
+            DeathMessageModule.class
     };
 
 
