@@ -37,26 +37,6 @@ public class ArenaListener implements Listener {
     }
 
 
-    @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerJoin(PlayerJoinEvent event) {
-
-        // temporary measure to ensure player is kicked back to the hub if they rejoin later
-        // Will rework after the minigames hub world system is fleshed out more
-        // Hub will need to set player visibility to counter spectator mode stuff
-        Player player = event.getPlayer();
-        PlayerUtil.resetPlayer(player);
-        player.setGameMode(GameMode.SURVIVAL);
-        player.teleport(new Location(Bukkit.getWorld("world"), 0, 65, 0));
-
-        // Reset player visibility
-        for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            p.showPlayer(player);
-            player.showPlayer(p);
-        }
-
-    }
-
-
     /**
      * Do player setup and emit PlayerEnterMatchWorldEvent when a player
      * joins a match world. Otherwise, they're moving to a non-match world,

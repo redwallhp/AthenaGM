@@ -5,6 +5,7 @@ import io.github.redwallhp.athenagm.commands.AdminCommands;
 import io.github.redwallhp.athenagm.commands.ArenaCommands;
 import io.github.redwallhp.athenagm.commands.MatchCommands;
 import io.github.redwallhp.athenagm.configuration.Configuration;
+import io.github.redwallhp.athenagm.hub.Hub;
 import io.github.redwallhp.athenagm.maps.VoidGenerator;
 import io.github.redwallhp.athenagm.modules.Module;
 import io.github.redwallhp.athenagm.modules.ModuleLoader;
@@ -28,6 +29,7 @@ public class AthenaGM extends JavaPlugin {
     private ArenaHandler arenaHandler;
     private ModuleLoader moduleLoader;
     private RegionHandler regionHandler;
+    private Hub hub;
 
 
     @Override
@@ -37,6 +39,7 @@ public class AthenaGM extends JavaPlugin {
         this.moduleLoader = new ModuleLoader(this);
         this.regionHandler = new RegionHandler(this);
         this.arenaHandler = new ArenaHandler(this);
+        this.hub = new Hub(this);
         registerCommands();
     }
 
@@ -117,6 +120,14 @@ public class AthenaGM extends JavaPlugin {
      */
     public Module getModule(String name) {
         return this.moduleLoader.getModule(name);
+    }
+
+
+    /**
+     * Get a reference to the Hub
+     */
+    public Hub getHub() {
+        return hub;
     }
 
 
