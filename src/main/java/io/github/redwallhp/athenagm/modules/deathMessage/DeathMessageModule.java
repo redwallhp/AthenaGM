@@ -31,8 +31,10 @@ public class DeathMessageModule implements Module {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Arena arena = plugin.getArenaHandler().getArenaForPlayer(event.getEntity());
-        if (arena.getMatch() != null) arena.getMatch().broadcast(event.getDeathMessage());
-        event.setDeathMessage(null);
+        if (arena != null) {
+            arena.getMatch().broadcast(event.getDeathMessage());
+            event.setDeathMessage(null);
+        }
     }
 
 

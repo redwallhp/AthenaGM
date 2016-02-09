@@ -24,15 +24,19 @@ public class Hub {
 
         this.plugin = plugin;
         this.world = null;
+        this.listener = new HubListener(plugin, this);
 
         try {
             config = new HubConfiguration(new File(plugin.getDataFolder(), "hub.yml"));
-            loadWorld();
         } catch (IOException ex) {
             plugin.getLogger().warning(ex.getMessage());
         }
 
-        this.listener = new HubListener(plugin, this);
+        Bukkit.getScheduler().runTask(this.plugin, new Runnable() {
+            public void run() {
+                loadWorld();
+            }
+        });
 
     }
 
@@ -44,12 +48,22 @@ public class Hub {
         if (config.getWorldName() == null || config.getWorldName().equalsIgnoreCase("")) return;
         File file = new File(Bukkit.getWorldContainer(), config.getWorldName());
         if (file.exists()) {
-            World world = new WorldCreator(file.getPath()).generator(new VoidGenerator()).createWorld();
-            world.setPVP(false);
-            world.setSpawnFlags(false, false); //no mobs
-            world.setAutoSave(false);
-            world.setKeepSpawnInMemory(false);
-            this.world = new WeakReference<World>(world);
+            try {
+                WorldCreator creator = new WorldCreator(config.getWorldName());
+                creator.generator(new VoidGenerator());
+                creator.environment(World.Environment.NORMAL);
+                creator.generateStructures(false);
+                World world = creator.createWorld();
+                world.setPVP(false);
+                world.setSpawnFlags(false, false); //no mobs
+                world.setKeepSpawnInMemory(false);
+                this.world = new WeakReference<World>(world);
+            } catch (Exception ex) {
+                plugin.getLogger().warning("Error loading hub world: " + ex.getMessage());
+                if (plugin.config.DEBUG) {
+                    ex.printStackTrace();
+                }
+            }
         }
     }
 
@@ -58,7 +72,11 @@ public class Hub {
      * Get an instance of the Hub world
      */
     public World getWorld() {
-        return world.get();
+        if (world != null) {
+            return world.get();
+        } else {
+            return null;
+        }
     }
 
 
