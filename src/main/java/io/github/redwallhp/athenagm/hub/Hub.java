@@ -105,7 +105,8 @@ public class Hub {
      */
     public void playerSetUp(Player player) {
         PlayerUtil.resetPlayer(player);
-        player.setGameMode(GameMode.SURVIVAL);
+        player.setGameMode(GameMode.ADVENTURE);
+        player.spigot().setCollidesWithEntities(false);
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
             p.showPlayer(player);
             player.showPlayer(p);
