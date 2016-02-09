@@ -27,7 +27,9 @@ public class ArenaCommands implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
         if (cmd.getName().equalsIgnoreCase("hub")) {
-            // return to hub world
+            if (sender instanceof Player) {
+                plugin.getHub().spawnPlayer((Player) sender);
+            }
             return true;
         }
 
