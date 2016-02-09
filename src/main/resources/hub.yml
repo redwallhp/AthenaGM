@@ -1,0 +1,7 @@
+world: hub
+
+portals:
+  default:
+    start: ""
+    end: ""
+    sign: ""
