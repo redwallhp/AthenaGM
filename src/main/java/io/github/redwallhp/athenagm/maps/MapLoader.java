@@ -145,6 +145,8 @@ public class MapLoader {
         world.setPVP(true);
         world.setSpawnLocation(0, 65, 0);
         world.setSpawnFlags(false, false); //no mobs
+        world.setAutoSave(false);
+        world.setKeepSpawnInMemory(false);
         arena.setWorld(world);
         arena.setWorldFile(instanceLocation);
         plugin.getLogger().info(String.format("Loaded map \"%s\" for arena \"%s\"", getMap().getName(), arena.getName()));
