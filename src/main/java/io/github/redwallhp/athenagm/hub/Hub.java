@@ -107,6 +107,7 @@ public class Hub {
         PlayerUtil.resetPlayer(player);
         player.setGameMode(GameMode.ADVENTURE);
         player.spigot().setCollidesWithEntities(false);
+        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
             p.showPlayer(player);
             player.showPlayer(p);

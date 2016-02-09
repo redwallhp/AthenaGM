@@ -142,7 +142,7 @@ public class SpectatorModule implements Module {
         // Player is using the exit door
         if (event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.WOOD_DOOR) {
             event.setCancelled(true);
-            Bukkit.dispatchCommand(event.getPlayer(), "hub");
+            plugin.getHub().spawnPlayer(event.getPlayer());
             return;
         }
 
