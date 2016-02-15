@@ -4,6 +4,8 @@ package io.github.redwallhp.athenagm.hub;
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.arenas.Arena;
 import io.github.redwallhp.athenagm.maps.VoidGenerator;
+import io.github.redwallhp.athenagm.regions.CuboidRegion;
+import io.github.redwallhp.athenagm.regions.Flags.StringFlag;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -31,7 +33,7 @@ public class Hub {
         this.listener = new HubListener(plugin, this);
 
         try {
-            config = new HubConfiguration(new File(plugin.getDataFolder(), "hub.yml"));
+            config = new HubConfiguration(plugin, new File(plugin.getDataFolder(), "hub.yml"));
         } catch (IOException ex) {
             plugin.getLogger().warning(ex.getMessage());
         }
@@ -39,6 +41,7 @@ public class Hub {
         Bukkit.getScheduler().runTask(this.plugin, new Runnable() {
             public void run() {
                 loadWorld();
+                loadPortalRegions();
             }
         });
 
@@ -68,6 +71,23 @@ public class Hub {
                     ex.printStackTrace();
                 }
             }
+        }
+    }
+
+
+    /**
+     * Set up the Hub portals.
+     * Creates new Regions for the Hub world, and applies a StringFlag with the value of the arena ID, which
+     * the Region system's PlayerMovementListener can watch for.
+     */
+    private void loadPortalRegions() {
+        if (getWorld() == null) return;
+        for (HubPortalDefinition portal : config.getPortals()) {
+            CuboidRegion region = new CuboidRegion(portal.getArena().getId(), getWorld(), portal.getStart(), portal.getEnd());
+            StringFlag portalFlag = new StringFlag("join_arena");
+            portalFlag.setValue(portal.getArena().getId());
+            region.setFlag(portalFlag);
+            plugin.getRegionHandler().addRegion(region);
         }
     }
 

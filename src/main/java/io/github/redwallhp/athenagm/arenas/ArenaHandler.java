@@ -52,4 +52,14 @@ public class ArenaHandler {
     }
 
 
+    public Arena getArenaById(String id) {
+        for (Arena arena : this.arenas) {
+            if (arena.getId().equalsIgnoreCase(id)) {
+                return arena;
+            }
+        }
+        return null;
+    }
+
+
 }
