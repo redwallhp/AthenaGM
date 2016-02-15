@@ -2,6 +2,7 @@ world: hub
 
 portals:
   default:
+    arena: ""
     start: ""
     end: ""
     sign: ""

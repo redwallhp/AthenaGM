@@ -117,6 +117,7 @@ public class Hub {
 
     /**
      * Get an instance of the Hub world
+     * @return Returns the World if applicable or null if a World is not loaded
      */
     public World getWorld() {
         if (world != null) {

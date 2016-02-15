@@ -16,12 +16,12 @@ public class RegionHandler {
 
 
     private AthenaGM plugin;
-    private LinkedHashMap<String, CuboidRegion> regions;
+    private HashMap<UUID, LinkedHashMap<String, CuboidRegion>> regions;
 
 
     public RegionHandler(AthenaGM plugin) {
         this.plugin = plugin;
-        this.regions = new LinkedHashMap<String, CuboidRegion>();
+        this.regions = new HashMap<UUID, LinkedHashMap<String, CuboidRegion>>();
         listen();
     }
 
@@ -39,7 +39,9 @@ public class RegionHandler {
      * Add a region to the map of currently loaded regions
      */
     public void addRegion(CuboidRegion region) {
-        regions.put(region.getName(), region);
+        UUID worldId = region.getWorld().getUID();
+        if (!regions.containsKey(worldId)) regions.put(worldId, new LinkedHashMap<String, CuboidRegion>());
+        regions.get(worldId).put(region.getName(), region);
     }
 
 
@@ -47,15 +49,23 @@ public class RegionHandler {
      * Remove a region from the map of currently loaded regions
      */
     public void removeRegion(CuboidRegion region) {
-        regions.remove(region.getName());
+        UUID worldId = region.getWorld().getUID();
+        if (regions.containsKey(worldId)) {
+            regions.get(worldId).remove(region.getName());
+            if (regions.get(worldId).size() < 1) regions.remove(worldId);
+        }
     }
 
 
     /**
      * Get a region by its name
      */
-    public CuboidRegion getRegion(String name) {
-        return regions.get(name);
+    public CuboidRegion getRegion(World world, String name) {
+        if (regions.containsKey(world.getUID())) {
+            return regions.get(world.getUID()).get(name);
+        } else {
+            return null;
+        }
     }
 
 
@@ -67,8 +77,10 @@ public class RegionHandler {
      */
     public List<CuboidRegion> getAllApplicableRegions(World world, Vector vector) {
         List<CuboidRegion> inRegions = new ArrayList<CuboidRegion>();
-        for (CuboidRegion region : regions.values()) {
-            if (region.contains(world, vector)) inRegions.add(region);
+        if (regions.containsKey(world.getUID())) {
+            for (CuboidRegion region : regions.get(world.getUID()).values()) {
+                if (region.contains(world, vector)) inRegions.add(region);
+            }
         }
         return inRegions;
     }
@@ -153,9 +165,11 @@ public class RegionHandler {
      * Unload regions belonging to a world. Called when a match world is destructed.
      */
     public void unloadRegions(World world) {
-        for (CuboidRegion region : regions.values()) {
-            if (region.getWorld().getUID() == world.getUID()) {
-                removeRegion(region);
+        if (regions.containsKey(world.getUID())) {
+            for (CuboidRegion region : regions.get(world.getUID()).values()) {
+                if (region.getWorld().getUID() == world.getUID()) {
+                    removeRegion(region);
+                }
             }
         }
     }
