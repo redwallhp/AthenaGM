@@ -99,13 +99,14 @@ public class Hub {
                 for (HubPortalDefinition portal : config.getPortals()) {
                     String name = portal.getArena().getName();
                     int players = portal.getArena().getMatch().getAllPlayers().size();
+                    String map = portal.getArena().getMatch().getMap().getName();
                     Block block = portal.getSign().toLocation(getWorld()).getBlock();
                     if (block.getState() instanceof Sign) {
                         Sign sign = (Sign) block.getState();
-                        sign.setLine(0, "");
-                        sign.setLine(1, name);
-                        sign.setLine(2, String.format("%d players", players));
-                        sign.setLine(3, "");
+                        sign.setLine(0, String.format("%s%s", ChatColor.BOLD, name));
+                        sign.setLine(1, String.format("%s%d players", ChatColor.DARK_GRAY, players));
+                        sign.setLine(2, "");
+                        sign.setLine(3, map);
                         sign.update();
                     }
                 }
