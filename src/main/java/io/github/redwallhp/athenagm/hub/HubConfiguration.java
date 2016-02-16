@@ -9,6 +9,7 @@ import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -33,6 +34,7 @@ public class HubConfiguration {
     public HubConfiguration(AthenaGM plugin, File file) throws IOException {
         this.plugin = plugin;
         this.file = file;
+        this.portals = new ArrayList<HubPortalDefinition>();
         if (!file.exists()) throw new IOException("Could not find hub.yml file!");
         this.yaml = YamlConfiguration.loadConfiguration(file);
         loadBasicSettings();
@@ -46,13 +48,14 @@ public class HubConfiguration {
 
 
     private void loadPortals() {
+        if (yaml.getConfigurationSection("portals") == null) return;
         Set<String> keys = yaml.getConfigurationSection("portals").getKeys(false);
         for (String key : keys) {
             Arena arena = plugin.getArenaHandler().getArenaById(key);
             Vector start = getYamlVectorString(String.format("portals.%s.start", key));
             Vector end = getYamlVectorString(String.format("portals.%s.end", key));
             Vector sign = getYamlVectorString(String.format("portals.%s.sign", key));
-            if (arena != null && start != null && end != null) {
+            if (arena != null && start != null && end != null && sign != null) {
                 portals.add(new HubPortalDefinition(arena, start, end, sign));
             }
         }

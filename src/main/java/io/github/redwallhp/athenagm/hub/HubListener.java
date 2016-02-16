@@ -2,14 +2,12 @@ package io.github.redwallhp.athenagm.hub;
 
 
 import io.github.redwallhp.athenagm.AthenaGM;
+import io.github.redwallhp.athenagm.regions.CuboidRegion;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 
 public class HubListener implements Listener {
 
@@ -79,6 +77,18 @@ public class HubListener implements Listener {
                 event.getPlayer().setItemInHand(event.getItemDrop().getItemStack());
                 event.getItemDrop().remove();
             }
+        }
+    }
+
+
+    /**
+     * Block portal events for Hub portals
+     */
+    @EventHandler
+    public void onPlayerPortal(PlayerPortalEvent event) {
+        CuboidRegion fromRegion = plugin.getRegionHandler().getApplicableRegion(event.getFrom());
+        if (fromRegion != null && fromRegion.getFlagValue("join_arena") != null) {
+            event.setCancelled(true);
         }
     }
 

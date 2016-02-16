@@ -1,6 +1,7 @@
 package io.github.redwallhp.athenagm.regions.listeners;
 
 import io.github.redwallhp.athenagm.AthenaGM;
+import io.github.redwallhp.athenagm.arenas.Arena;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.regions.CuboidRegion;
 import io.github.redwallhp.athenagm.regions.RegionHandler;
@@ -44,6 +45,7 @@ public class PlayerMovementListener implements Listener {
             handleExitHail(event, fromRegion);
             handleVelocity(event, toRegion);
             handleTeleport(event, toRegion);
+            handleHubPortal(event, toRegion);
         }
     }
 
@@ -172,6 +174,22 @@ public class PlayerMovementListener implements Listener {
     private void knockBack(Player player, Vector to, Vector from, float multiplier) {
         Vector dir = from.subtract(to).normalize();
         player.setVelocity(dir.multiply(multiplier));
+    }
+
+
+    /**
+     * Handle arena join portals on the Hub
+     */
+    private void handleHubPortal(PlayerMoveEvent event, CuboidRegion toRegion) {
+        if (toRegion != null && toRegion.getFlagValue("join_arena") != null) {
+            String arenaID = toRegion.getFlagValue("join_arena");
+            Arena arena = plugin.getArenaHandler().getArenaById(arenaID);
+            if (arena != null) {
+                Location loc = arena.getMatch().getSpawnPoint(event.getPlayer());
+                event.getPlayer().teleport(loc);
+                event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENDERMAN_TELEPORT, 1f, 1f);
+            }
+        }
     }
 
 

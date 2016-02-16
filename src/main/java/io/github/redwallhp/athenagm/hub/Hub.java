@@ -7,10 +7,9 @@ import io.github.redwallhp.athenagm.maps.VoidGenerator;
 import io.github.redwallhp.athenagm.regions.CuboidRegion;
 import io.github.redwallhp.athenagm.regions.Flags.StringFlag;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -42,6 +41,7 @@ public class Hub {
             public void run() {
                 loadWorld();
                 loadPortalRegions();
+                updatePortalSigns();
             }
         });
 
@@ -81,7 +81,7 @@ public class Hub {
      * the Region system's PlayerMovementListener can watch for.
      */
     private void loadPortalRegions() {
-        if (getWorld() == null) return;
+        if (getWorld() == null || config.getPortals() == null) return;
         for (HubPortalDefinition portal : config.getPortals()) {
             CuboidRegion region = new CuboidRegion(portal.getArena().getId(), getWorld(), portal.getStart(), portal.getEnd());
             StringFlag portalFlag = new StringFlag("join_arena");
@@ -89,6 +89,28 @@ public class Hub {
             region.setFlag(portalFlag);
             plugin.getRegionHandler().addRegion(region);
         }
+    }
+
+
+    private void updatePortalSigns() {
+        if (config.getPortals() == null || config.getPortals().size() < 1 || getWorld() == null) return;
+        Bukkit.getScheduler().runTaskTimer(this.plugin, new Runnable() {
+            public void run() {
+                for (HubPortalDefinition portal : config.getPortals()) {
+                    String name = portal.getArena().getName();
+                    int players = portal.getArena().getMatch().getAllPlayers().size();
+                    Block block = portal.getSign().toLocation(getWorld()).getBlock();
+                    if (block.getState() instanceof Sign) {
+                        Sign sign = (Sign) block.getState();
+                        sign.setLine(0, "");
+                        sign.setLine(1, name);
+                        sign.setLine(2, String.format("%d players", players));
+                        sign.setLine(3, "");
+                        sign.update();
+                    }
+                }
+            }
+        }, 40L, 40L);
     }
 
 

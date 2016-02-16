@@ -20,7 +20,7 @@ public class HubPortalDefinition {
         this.arena = arena;
         this.start = start;
         this.end = end;
-        this.sign = end;
+        this.sign = sign;
     }
 
 
