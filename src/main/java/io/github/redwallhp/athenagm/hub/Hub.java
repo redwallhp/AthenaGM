@@ -8,8 +8,6 @@ import io.github.redwallhp.athenagm.regions.CuboidRegion;
 import io.github.redwallhp.athenagm.regions.Flags.StringFlag;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -32,7 +30,7 @@ public class Hub {
         this.listener = new HubListener(plugin, this);
 
         try {
-            config = new HubConfiguration(plugin, new File(plugin.getDataFolder(), "hub.yml"));
+            config = new HubConfiguration(this, new File(plugin.getDataFolder(), "hub.yml"));
         } catch (IOException ex) {
             plugin.getLogger().warning(ex.getMessage());
         }
@@ -82,7 +80,7 @@ public class Hub {
      */
     private void loadPortalRegions() {
         if (getWorld() == null || config.getPortals() == null) return;
-        for (HubPortalDefinition portal : config.getPortals()) {
+        for (HubPortal portal : config.getPortals()) {
             CuboidRegion region = new CuboidRegion(portal.getArena().getId(), getWorld(), portal.getStart(), portal.getEnd());
             StringFlag portalFlag = new StringFlag("join_arena");
             portalFlag.setValue(portal.getArena().getId());
@@ -92,23 +90,15 @@ public class Hub {
     }
 
 
+    /**
+     * Update the arena information on Hub signs every couple of seconds
+     */
     private void updatePortalSigns() {
-        if (config.getPortals() == null || config.getPortals().size() < 1 || getWorld() == null) return;
+        if (config.getSigns() == null || config.getSigns().size() < 1 || getWorld() == null) return;
         Bukkit.getScheduler().runTaskTimer(this.plugin, new Runnable() {
             public void run() {
-                for (HubPortalDefinition portal : config.getPortals()) {
-                    String name = portal.getArena().getName();
-                    int players = portal.getArena().getMatch().getAllPlayers().size();
-                    String map = portal.getArena().getMatch().getMap().getName();
-                    Block block = portal.getSign().toLocation(getWorld()).getBlock();
-                    if (block.getState() instanceof Sign) {
-                        Sign sign = (Sign) block.getState();
-                        sign.setLine(0, String.format("%s%s", ChatColor.BOLD, name));
-                        sign.setLine(1, String.format("%s%d players", ChatColor.DARK_GRAY, players));
-                        sign.setLine(2, "");
-                        sign.setLine(3, map);
-                        sign.update();
-                    }
+                for (HubSign sign : config.getSigns()) {
+                    sign.update();
                 }
             }
         }, 40L, 40L);
@@ -178,6 +168,14 @@ public class Hub {
      */
     public boolean hasPlayer(Player player) {
         return getWorld() != null && player.getWorld().equals(getWorld());
+    }
+
+
+    /**
+     * Get the plugin instance
+     */
+    public AthenaGM getPlugin() {
+        return this.plugin;
     }
 
 

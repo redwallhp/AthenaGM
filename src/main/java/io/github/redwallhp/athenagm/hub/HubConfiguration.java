@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -19,11 +20,13 @@ import java.util.Set;
 public class HubConfiguration {
 
 
+    private Hub hub;
     private AthenaGM plugin;
     private File file;
     private FileConfiguration yaml;
     private String world;
-    private List<HubPortalDefinition> portals;
+    private List<HubPortal> portals;
+    private List<HubSign> signs;
 
 
     /**
@@ -31,14 +34,17 @@ public class HubConfiguration {
      * @param file File object representing the hub.yml file
      * @throws IOException
      */
-    public HubConfiguration(AthenaGM plugin, File file) throws IOException {
-        this.plugin = plugin;
+    public HubConfiguration(Hub hub, File file) throws IOException {
+        this.hub = hub;;
+        this.plugin = hub.getPlugin();
         this.file = file;
-        this.portals = new ArrayList<HubPortalDefinition>();
+        this.portals = new ArrayList<HubPortal>();
+        this.signs = new ArrayList<HubSign>();
         if (!file.exists()) throw new IOException("Could not find hub.yml file!");
         this.yaml = YamlConfiguration.loadConfiguration(file);
         loadBasicSettings();
         loadPortals();
+        loadSigns();
     }
 
 
@@ -54,10 +60,24 @@ public class HubConfiguration {
             Arena arena = plugin.getArenaHandler().getArenaById(key);
             Vector start = getYamlVectorString(String.format("portals.%s.start", key));
             Vector end = getYamlVectorString(String.format("portals.%s.end", key));
-            Vector sign = getYamlVectorString(String.format("portals.%s.sign", key));
-            if (arena != null && start != null && end != null && sign != null) {
-                portals.add(new HubPortalDefinition(arena, start, end, sign));
+            if (arena != null && start != null && end != null) {
+                portals.add(new HubPortal(arena, start, end));
             }
+        }
+    }
+
+
+    private void loadSigns() {
+        List yamlSigns = yaml.getList("signs");
+        int i = 0;
+        while (i < yamlSigns.size()) {
+            Map map = (Map) yamlSigns.get(i);
+            Arena arena = plugin.getArenaHandler().getArenaById(map.get("arena").toString());
+            Vector vector = parseVectorString(map.get("block").toString());
+            if (arena != null && vector != null) {
+                signs.add(new HubSign(hub, vector, arena));
+            }
+            i++;
         }
     }
 
@@ -73,16 +93,33 @@ public class HubConfiguration {
     /**
      * The List of portals for the Hub
      */
-    public List<HubPortalDefinition> getPortals() {
+    public List<HubPortal> getPortals() {
         return portals;
+    }
+
+
+    /**
+     * The List of signs for the Hub
+     */
+    public List<HubSign> getSigns() {
+        return signs;
+    }
+
+
+    /**
+     * Convert a "0,0,0" (x,y,z) string at a given YAML path into a vector object
+     */
+    private Vector getYamlVectorString(String yamlPath) {
+        String vectorString = yaml.getString(yamlPath, null);
+        return parseVectorString(vectorString);
     }
 
 
     /**
      * Convert a "0,0,0" (x,y,z) string into a vector object
      */
-    private Vector getYamlVectorString(String yamlPath) {
-        String vectorString = yaml.getString(yamlPath, null);
+    private Vector parseVectorString(String vectorString) {
+        if (vectorString == null) return null;
         vectorString = vectorString.replaceAll("\\s+",""); //strip spaces
         String[] components = vectorString.split(",");
         try {

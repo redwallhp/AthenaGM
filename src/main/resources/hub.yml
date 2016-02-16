@@ -4,4 +4,8 @@ portals:
   default:
     start: ""
     end: ""
-    sign: ""
+
+
+signs:
+  - block: ""
+    arena: ""

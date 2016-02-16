@@ -7,20 +7,18 @@ import org.bukkit.util.Vector;
 /**
  * Defines the properties of a Hub portal, such as its region dimensions
  */
-public class HubPortalDefinition {
+public class HubPortal {
 
 
     private Arena arena;
     private Vector start;
     private Vector end;
-    private Vector sign;
 
 
-    public HubPortalDefinition(Arena arena, Vector start, Vector end, Vector sign) {
+    public HubPortal(Arena arena, Vector start, Vector end) {
         this.arena = arena;
         this.start = start;
         this.end = end;
-        this.sign = sign;
     }
 
 
@@ -36,11 +34,6 @@ public class HubPortalDefinition {
 
     public Vector getEnd() {
         return end;
-    }
-
-
-    public Vector getSign() {
-        return sign;
     }
 
 }
