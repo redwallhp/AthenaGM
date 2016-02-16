@@ -86,9 +86,11 @@ public class HubListener implements Listener {
      */
     @EventHandler
     public void onPlayerPortal(PlayerPortalEvent event) {
-        CuboidRegion fromRegion = plugin.getRegionHandler().getApplicableRegion(event.getFrom());
-        if (fromRegion != null && fromRegion.getFlagValue("join_arena") != null) {
-            event.setCancelled(true);
+        if (hub.hasPlayer(event.getPlayer())) {
+            CuboidRegion fromRegion = plugin.getRegionHandler().getApplicableRegion(event.getFrom());
+            if (fromRegion != null && fromRegion.getFlagValue("join_arena") != null) {
+                event.setCancelled(true);
+            }
         }
     }
 
