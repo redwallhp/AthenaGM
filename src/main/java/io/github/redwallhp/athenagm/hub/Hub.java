@@ -4,6 +4,7 @@ package io.github.redwallhp.athenagm.hub;
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.arenas.Arena;
 import io.github.redwallhp.athenagm.maps.VoidGenerator;
+import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.regions.CuboidRegion;
 import io.github.redwallhp.athenagm.regions.Flags.StringFlag;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
@@ -176,6 +177,14 @@ public class Hub {
      */
     public AthenaGM getPlugin() {
         return this.plugin;
+    }
+
+
+    /**
+     * Get the HubConfiguration instance
+     */
+    public HubConfiguration getConfig() {
+        return config;
     }
 
 

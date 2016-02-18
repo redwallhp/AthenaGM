@@ -143,6 +143,7 @@ public class SpectatorModule implements Module {
         if (event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.WOOD_DOOR) {
             event.setCancelled(true);
             plugin.getHub().spawnPlayer(event.getPlayer());
+            event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENDERMAN_TELEPORT, 1f, 1f);
             return;
         }
 

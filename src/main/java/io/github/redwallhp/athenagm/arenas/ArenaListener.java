@@ -45,10 +45,9 @@ public class ArenaListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
         Arena arena = arenaHandler.getArenaForPlayer(event.getPlayer());
+        removePlayer(event.getPlayer());
         if (arena != null) {
             playerEnterMatchWorld(event.getPlayer());
-        } else {
-            removePlayer(event.getPlayer());
         }
     }
 
@@ -228,8 +227,7 @@ public class ArenaListener implements Listener {
      * Ensure a player is removed from teams when they quit
      */
     public void removePlayer(Player player) {
-        Arena arena = arenaHandler.getArenaForPlayer(player);
-        if (arena != null) {
+        for (Arena arena : arenaHandler.getArenas()) {
             for (Team team : arena.getMatch().getTeams().values()) {
                 team.remove(player);
             }
