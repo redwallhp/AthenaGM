@@ -52,10 +52,9 @@ public class Configuration {
             for (String id : ids) {
                 String name = plugin.getConfig().getString(String.format("arenas.%s.name", id), "Default Arena");
                 String gameMode = plugin.getConfig().getString(String.format("arenas.%s.gamemode", id), "deathmatch");
-                Integer maxPlayers = plugin.getConfig().getInt(String.format("arenas.%s.maxplayers", id), 20);
                 Integer timeLimit = plugin.getConfig().getInt(String.format("arenas.%s.time_limit", id), 600);
                 List<String> mapList = plugin.getConfig().getStringList(String.format("arenas.%s.maps", id));
-                ConfiguredArena arena = new ConfiguredArena(id, name, gameMode, maxPlayers, timeLimit, mapList);
+                ConfiguredArena arena = new ConfiguredArena(id, name, gameMode, timeLimit, mapList);
                 this.ARENAS.put(id, arena);
             }
         }

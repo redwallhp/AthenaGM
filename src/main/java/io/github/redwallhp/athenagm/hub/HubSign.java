@@ -47,6 +47,7 @@ public class HubSign {
 
 
     public void warp(final Player player) {
+        // This only works if it doesn't run on the same tick as a PlayerInteractEvent for some reason
         Bukkit.getScheduler().runTask(hub.getPlugin(), new Runnable() {
             public void run() {
                 Location loc = arena.getMatch().getSpawnPoint(player);

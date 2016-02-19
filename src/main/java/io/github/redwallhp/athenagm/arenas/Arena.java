@@ -7,6 +7,7 @@ import io.github.redwallhp.athenagm.events.MatchCreateEvent;
 import io.github.redwallhp.athenagm.maps.MapLoader;
 import io.github.redwallhp.athenagm.maps.Rotation;
 import io.github.redwallhp.athenagm.matches.Match;
+import io.github.redwallhp.athenagm.matches.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -23,7 +24,6 @@ public class Arena {
     private String id;
     private String name;
     private String gameMode;
-    private Integer maxPlayers;
     private Integer timeLimit;
     private List<String> mapList;
     private Rotation rotation;
@@ -40,7 +40,6 @@ public class Arena {
         this.id = configuredArena.getId();
         this.name = configuredArena.getName();
         this.gameMode = configuredArena.getGameMode();
-        this.maxPlayers = configuredArena.getMaxPlayers();
         this.timeLimit = configuredArena.getTimeLimit();
         this.mapList = configuredArena.getMapList();
 
@@ -111,7 +110,16 @@ public class Arena {
     }
 
     public Integer getMaxPlayers() {
-        return this.maxPlayers;
+        int maxPlayers = 0;
+        for (Team team : getMatch().getTeams().values()) {
+            if (team.isSpectator()) continue;
+            maxPlayers = maxPlayers + team.getSize();
+        }
+        return maxPlayers;
+    }
+
+    public Integer getPlayerCount() {
+        return getMatch().getTotalPlayers();
     }
 
     public Integer getTimeLimit() {
