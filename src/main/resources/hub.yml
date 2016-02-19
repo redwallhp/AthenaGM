@@ -9,3 +9,4 @@ portals:
 signs:
   - block: ""
     arena: ""
+    text: ""

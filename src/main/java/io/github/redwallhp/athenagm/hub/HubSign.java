@@ -20,12 +20,14 @@ public class HubSign {
     private Hub hub;
     private Vector vector;
     private Arena arena;
+    private String text;
 
 
     public HubSign(Hub hub, Vector vector, Arena arena) {
         this.hub = hub;
         this.vector = vector;
         this.arena = arena;
+        this.text = null;
     }
 
 
@@ -34,13 +36,17 @@ public class HubSign {
         Block block = vector.toLocation(hub.getWorld()).getBlock();
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            String name = getArena().getName();
-            int players = getArena().getMatch().getTotalPlayers();
-            String map = getArena().getMatch().getMap().getName();
-            sign.setLine(0, String.format("%s%s", ChatColor.BOLD, name));
-            sign.setLine(1, String.format("%s%d players", ChatColor.DARK_GRAY, players));
-            sign.setLine(2, "");
-            sign.setLine(3, map);
+            if (text != null) {
+                applyCustomSignText(sign);
+            } else {
+                String name = getArena().getName();
+                int players = getArena().getMatch().getTotalPlayers();
+                String map = getArena().getMatch().getMap().getName();
+                sign.setLine(0, String.format("%s%s", ChatColor.BOLD, name));
+                sign.setLine(1, String.format("%s%d players", ChatColor.DARK_GRAY, players));
+                sign.setLine(2, "");
+                sign.setLine(3, map);
+            }
             sign.update();
         }
     }
@@ -58,6 +64,44 @@ public class HubSign {
     }
 
 
+    /**
+     * Set custom text for this sign.
+     * Allows color codes with the & token.
+     * Lines will be split on the "|" pipe character.
+     * The following substitutions can be used:
+     * %name% - The Arena name
+     * %id% - The Arena ID
+     * %players% - The number of current players
+     * %max% - The maximum number of players the Map supports
+     * %map% - The current map
+     * @param text The String to apply to the sign
+     */
+    public void setText(String text) {
+        this.text = text;
+    }
+
+
+    /**
+     * Apply custom lines of text to the HubSign
+     */
+    private void applyCustomSignText(Sign sign) {
+        String text = ChatColor.translateAlternateColorCodes('&', this.text);
+        text = text.replaceAll("%name%", arena.getName());
+        text = text.replaceAll("%id%", arena.getId());
+        text = text.replaceAll("%players%", arena.getPlayerCount().toString());
+        text = text.replaceAll("%max%", arena.getMaxPlayers().toString());
+        text = text.replaceAll("%map%", arena.getMatch().getMap().getName());
+        String[] lines = text.split("\\|");
+        for (int i=0; i<4; i++) {
+            if (i < lines.length) {
+                sign.setLine(i, lines[i]);
+            } else {
+                sign.setLine(i, "");
+            }
+        }
+    }
+
+
     public Vector getVector() {
         return vector;
     }
@@ -65,6 +109,11 @@ public class HubSign {
 
     public Arena getArena() {
         return arena;
+    }
+
+
+    public String getText() {
+        return text;
     }
 
 

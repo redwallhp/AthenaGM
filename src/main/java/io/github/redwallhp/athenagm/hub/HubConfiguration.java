@@ -72,10 +72,15 @@ public class HubConfiguration {
         int i = 0;
         while (i < yamlSigns.size()) {
             Map map = (Map) yamlSigns.get(i);
+            if (map.get("arena") == null || map.get("block") == null) continue;
             Arena arena = plugin.getArenaHandler().getArenaById(map.get("arena").toString());
             Vector vector = parseVectorString(map.get("block").toString());
-            if (arena != null && vector != null) {
-                signs.add(new HubSign(hub, vector, arena));
+            if (map.get("arena") != null && map.get("block") != null) {
+                HubSign sign = new HubSign(hub, vector, arena);
+                if (map.get("text") != null && !map.get("text").toString().equals("")) {
+                    sign.setText(map.get("text").toString());
+                }
+                signs.add(sign);
             }
             i++;
         }
