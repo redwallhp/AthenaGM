@@ -11,6 +11,7 @@ import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -292,6 +293,15 @@ public class Match {
      */
     public void playSound(Sound sound) {
         playSound(sound, 1.0f);
+    }
+
+
+    /**
+     * Get the World object from the Match's Arena
+     * @return The World associated with this Match
+     */
+    public World getWorld() {
+        return arena.getWorld();
     }
 
 

@@ -1,6 +1,5 @@
 package io.github.redwallhp.athenagm.maps;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.github.redwallhp.athenagm.regions.Flags.*;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -28,6 +27,7 @@ public class GameMap {
     private List<MapInfoSpawnPoint> spawnPoints;
     private HashMap<String, List<MapInfoKitItem>> kits;
     private LinkedHashMap<String, MapInfoRegion> regions;
+    private MapInfoWorldBorder worldBorder;
 
 
     /**
@@ -48,6 +48,7 @@ public class GameMap {
         loadSpawnPoints(metaYaml);
         loadKits(metaYaml);
         loadRegions(metaYaml);
+        loadWorldBorder(metaYaml);
 
     }
 
@@ -307,6 +308,18 @@ public class GameMap {
 
 
     /**
+     * Parse the world border
+     * @param yaml The FileConfiguration reference from the constructor
+     */
+    private void loadWorldBorder(FileConfiguration yaml) {
+        double radius = yaml.getDouble("world_border.radius", 0);
+        double x = yaml.getDouble("world_border.center_x", 0);
+        double y = yaml.getDouble("world_border.center_y", 0);
+        this.worldBorder = new MapInfoWorldBorder(x, y, radius);
+    }
+
+
+    /**
      * Get the File object of the the specific map's directory
      */
     public File getPath() {
@@ -398,6 +411,14 @@ public class GameMap {
      */
     public HashMap<String, MapInfoRegion> getRegions() {
         return this.regions;
+    }
+
+
+    /**
+     * Get the world border definition
+     */
+    public MapInfoWorldBorder getWorldBorder() {
+        return this.worldBorder;
     }
 
 }
