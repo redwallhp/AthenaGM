@@ -80,8 +80,26 @@ public class ItemUtil {
         else if (color.equalsIgnoreCase("aqua")) {
             return Color.AQUA;
         }
+        else if (color.equalsIgnoreCase("dark_aqua")) {
+            return Color.fromRGB(0, 42, 42);
+        }
+        else if (color.equalsIgnoreCase("dark_blue")) {
+            return Color.fromRGB(0, 0, 42);
+        }
+        else if (color.equalsIgnoreCase("dark_gray")) {
+            return Color.fromRGB(21, 21, 21);
+        }
+        else if (color.equalsIgnoreCase("dark_green")) {
+            return Color.fromRGB(0, 42, 0);
+        }
         else if (color.equalsIgnoreCase("dark_purple")) {
             return Color.PURPLE;
+        }
+        else if (color.equalsIgnoreCase("dark_red")) {
+            return Color.fromRGB(42, 0, 0);
+        }
+        else if (color.equalsIgnoreCase("light_purple")) {
+            return Color.fromRGB(63, 21, 63);
         }
         else if (color.equalsIgnoreCase("gold")) {
             return Color.ORANGE;
