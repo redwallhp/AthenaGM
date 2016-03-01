@@ -119,4 +119,62 @@ public class ItemUtil {
     }
 
 
+    /**
+     * Returns a color byte for setData(), because the Bukkit API still doesn't handle
+     * stained glass colors well...
+     * @param color String representation of a ChatColor object (as returned from Team object)
+     * @return Stained glass color representation
+     */
+    public static byte getDyeColorByte(String color) {
+        if (color.equalsIgnoreCase("red")) {
+            return 14;
+        }
+        else if (color.equalsIgnoreCase("blue")) {
+            return 11;
+        }
+        else if (color.equalsIgnoreCase("green")) {
+            return 5;
+        }
+        else if (color.equalsIgnoreCase("aqua")) {
+            return 9;
+        }
+        else if (color.equalsIgnoreCase("dark_aqua")) {
+            return 9;
+        }
+        else if (color.equalsIgnoreCase("dark_blue")) {
+            return 11;
+        }
+        else if (color.equalsIgnoreCase("dark_gray")) {
+            return 7;
+        }
+        else if (color.equalsIgnoreCase("dark_green")) {
+            return 13;
+        }
+        else if (color.equalsIgnoreCase("dark_purple")) {
+            return 10;
+        }
+        else if (color.equalsIgnoreCase("dark_red")) {
+            return 14;
+        }
+        else if (color.equalsIgnoreCase("light_purple")) {
+            return 2;
+        }
+        else if (color.equalsIgnoreCase("gold")) {
+            return 1;
+        }
+        else if (color.equalsIgnoreCase("black")) {
+            return 15;
+        }
+        else if (color.equalsIgnoreCase("white")) {
+            return 0;
+        }
+        else if (color.equalsIgnoreCase("yellow")) {
+            return 4;
+        }
+        else {
+            return 8;
+        }
+    }
+
+
 }
