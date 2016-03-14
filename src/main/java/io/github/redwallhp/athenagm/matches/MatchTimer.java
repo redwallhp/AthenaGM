@@ -4,7 +4,6 @@ package io.github.redwallhp.athenagm.matches;
 import io.github.redwallhp.athenagm.events.MatchTimerTickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitTask;
 
 public class MatchTimer implements Runnable {

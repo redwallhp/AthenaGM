@@ -22,11 +22,11 @@ public class MatchStartCountdown extends BukkitRunnable {
             this.cancel();
             match.start();
             match.broadcast(ChatColor.GREEN + ">> GO! <<");
-            match.playSound(Sound.NOTE_PIANO, 0.67f);
+            match.playSound(Sound.BLOCK_NOTE_HARP, 0.67f);
             return;
         }
         match.broadcast(String.format("%s>> %d <<", ChatColor.RED, ticks));
-        match.playSound(Sound.NOTE_PIANO, 0.53f);
+        match.playSound(Sound.BLOCK_NOTE_HARP, 0.53f);
     }
 
 }

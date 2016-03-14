@@ -92,7 +92,7 @@ public class Match {
             setState(MatchState.ENDED);
             NextMatchCountdown countdown = new NextMatchCountdown(arena);
             getPlugin().getLogger().info(String.format("Ended match \"%s\" for arena \"%s\"", getUUID(), arena.getName()));
-            playSound(Sound.ENDERDRAGON_DEATH);
+            playSound(Sound.ENTITY_ENDERDRAGON_DEATH);
         }
     }
 

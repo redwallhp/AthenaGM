@@ -58,7 +58,7 @@ public class HubSign {
             public void run() {
                 Location loc = arena.getMatch().getSpawnPoint(player);
                 player.teleport(loc);
-                player.playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 1f, 1f);
+                player.playSound(player.getLocation(), Sound.ENTITY_ENDERMEN_TELEPORT, 1f, 1f);
             }
         });
     }

@@ -143,7 +143,7 @@ public class SpectatorModule implements Module {
         if (event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.WOOD_DOOR) {
             event.setCancelled(true);
             plugin.getHub().spawnPlayer(event.getPlayer());
-            event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENDERMAN_TELEPORT, 1f, 1f);
+            event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_ENDERMEN_TELEPORT, 1f, 1f);
             return;
         }
 
@@ -164,14 +164,14 @@ public class SpectatorModule implements Module {
                     String teamName = ChatColor.stripColor(item.getItemMeta().getDisplayName()).toLowerCase();
                     event.setCancelled(true);
                     player.closeInventory();
-                    player.playSound(player.getLocation(), Sound.CLICK, 1, 2);
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 2);
                     Bukkit.dispatchCommand(player, String.format("team %s", teamName));
                     return;
                 }
                 if (item.getType().equals(Material.STONE_BUTTON)) {
                     event.setCancelled(true);
                     player.closeInventory();
-                    player.playSound(player.getLocation(), Sound.CLICK, 1, 2);
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 2);
                     Bukkit.dispatchCommand(player, "autojoin");
                     return;
                 }
