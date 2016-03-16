@@ -123,8 +123,9 @@ public class BlockBreakListener implements Listener {
     @EventHandler
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
         for (Block block : event.getBlocks()) {
-            CuboidRegion region = regionHandler.getApplicableRegion(block.getRelative(event.getDirection()).getLocation());
-            if (region != null && !region.allows("destroy")) {
+            CuboidRegion oldRegion = regionHandler.getApplicableRegion(block.getLocation());
+            CuboidRegion newRegion = regionHandler.getApplicableRegion(block.getRelative(event.getDirection()).getLocation());
+            if ( (newRegion != null && !newRegion.allows("destroy")) && !newRegion.equals(oldRegion) ) {
                 event.setCancelled(true);
                 break;
             }
@@ -138,8 +139,9 @@ public class BlockBreakListener implements Listener {
     @EventHandler
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         for (Block block : event.getBlocks()) {
-            CuboidRegion region = regionHandler.getApplicableRegion(block.getRelative(event.getDirection()).getLocation());
-            if (region != null && !region.allows("destroy")) {
+            CuboidRegion oldRegion = regionHandler.getApplicableRegion(block.getLocation());
+            CuboidRegion newRegion = regionHandler.getApplicableRegion(block.getRelative(event.getDirection()).getLocation());
+            if ( (oldRegion != null && !oldRegion.allows("destroy")) && !oldRegion.equals(newRegion) ) {
                 event.setCancelled(true);
                 break;
             }
