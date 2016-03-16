@@ -1,6 +1,7 @@
 package io.github.redwallhp.athenagm.maps;
 
 import io.github.redwallhp.athenagm.utilities.ItemUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -8,7 +9,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
@@ -75,20 +78,20 @@ public class MapInfoKitItem {
     /**
      * Turn an ItemStack with a Material of POTION into a functional potion
      * @param typeName PotionType string representing the potion type. (Matches Bukkit PotionType enum.)
-     * @param level Integer representing the level of the potion
-     * @param splash Is this a splash potion?
+     * @param upgraded Boolean specifying a level two potion if true
      * @param extended Is this an extended duration potion?
      */
-    public void addPotion(String typeName, int level, boolean splash, boolean extended) {
-        if (!this.item.getType().equals(Material.POTION)) return;
+    public void addPotion(String typeName, boolean upgraded, boolean extended) {
+        Material mat = this.item.getType();
+        if (!mat.equals(Material.POTION) && !mat.equals(Material.SPLASH_POTION) && !mat.equals(Material.LINGERING_POTION)) return;
         try {
             PotionType type = PotionType.valueOf(typeName.toUpperCase());
-            Potion potion = new Potion(type, level);
-            if (splash) potion.splash();
-            if (extended) potion.extend();
-            potion.apply(this.item);
+            PotionData pd = new PotionData(type, extended, upgraded);
+            PotionMeta meta = (PotionMeta) this.item.getItemMeta();
+            meta.setBasePotionData(pd);
+            this.item.setItemMeta(meta);
         } catch (Exception ex) {
-            return;
+            Bukkit.getLogger().warning(String.format("Kit configuration error: %s", ex.getMessage()));
         }
     }
 

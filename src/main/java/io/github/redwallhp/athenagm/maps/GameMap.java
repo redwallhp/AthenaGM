@@ -197,14 +197,13 @@ public class GameMap {
             }
 
             // Handle potions
-            if (material.equalsIgnoreCase("potion")) {
+            if (material.toLowerCase().matches("potion|splash_potion|lingering_potion")) {
                 Map potion = (Map) map.get("potion");
                 String type = (potion.get("type") != null) ? (String)potion.get("type") : null;
-                Integer level = (potion.get("level") != null) ? Integer.parseInt(potion.get("level").toString()) : 1;
-                Boolean splash = (potion.get("splash") != null) ? (Boolean)potion.get("splash") : false;
+                Boolean upgraded = (potion.get("upgraded") != null) ? (Boolean)potion.get("upgraded") : false;
                 Boolean extended = (potion.get("extended") != null) ? (Boolean)potion.get("extended") : false;
                 if (type != null) {
-                    item.addPotion(type, level, splash, extended);
+                    item.addPotion(type, upgraded, extended);
                 }
             }
 
