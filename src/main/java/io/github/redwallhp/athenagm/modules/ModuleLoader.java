@@ -3,6 +3,7 @@ package io.github.redwallhp.athenagm.modules;
 
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.modules.broadcasts.BroadcastsModule;
+import io.github.redwallhp.athenagm.modules.chat.ChatModule;
 import io.github.redwallhp.athenagm.modules.deathMessage.DeathMessageModule;
 import io.github.redwallhp.athenagm.modules.friendlyFire.FriendlyFireModule;
 import io.github.redwallhp.athenagm.modules.kits.KitsModule;
@@ -33,7 +34,8 @@ public class ModuleLoader {
             BroadcastsModule.class,
             PlayerFreezeModule.class,
             DeathMessageModule.class,
-            WorldBorderModule.class
+            WorldBorderModule.class,
+            ChatModule.class
     };
 
 

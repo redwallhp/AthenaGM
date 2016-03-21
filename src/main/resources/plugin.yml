@@ -76,6 +76,12 @@ commands:
     description: Show the players in the current match, ranked by score.
     permission: athenagm.player
     permission-message: You don't have permission to do that.
+  tmsg:
+    aliases: [t]
+    usage: /tmsg <msg>
+    description: Send a message to your team
+    permission: athenagm.player
+    permission-message: You don't have permission to do that.
   region:
     usage: /region <subcommand>
     aliases: [rg]

@@ -4,6 +4,7 @@ import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.arenas.Arena;
 import io.github.redwallhp.athenagm.matches.PlayerScore;
 import io.github.redwallhp.athenagm.matches.Team;
+import io.github.redwallhp.athenagm.modules.chat.ChatModule;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import io.github.redwallhp.athenagm.utilities.StringUtil;
 import org.bukkit.ChatColor;
@@ -30,6 +31,7 @@ public class MatchCommands implements CommandExecutor {
         plugin.getCommand("score").setExecutor(this);
         plugin.getCommand("players").setExecutor(this);
         plugin.getCommand("timeleft").setExecutor(this);
+        plugin.getCommand("tmsg").setExecutor(this);
     }
 
 
@@ -68,6 +70,11 @@ public class MatchCommands implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("timeleft")) {
             timeLeft(sender, args);
+            return true;
+        }
+
+        if (cmd.getName().equalsIgnoreCase("tmsg")) {
+            teamChat(sender, args);
             return true;
         }
 
@@ -279,6 +286,22 @@ public class MatchCommands implements CommandExecutor {
             sender.sendMessage(String.format("%s%s:%s", ChatColor.DARK_AQUA, minString, secString));
         } else {
             sender.sendMessage(ChatColor.RED + "You must join an arena first, or use /timeleft <arena>");
+        }
+
+    }
+
+
+    private void teamChat(CommandSender sender, String[] args) {
+
+        if (!(sender instanceof Player) || args.length < 1) {
+            sender.sendMessage(ChatColor.RED + "Send a message to your team: /t <msg>");
+            return;
+        } else {
+            ChatModule cm = (ChatModule) plugin.getModule("chat");
+            boolean success = cm.sendTeamMessage((Player) sender, StringUtil.joinArray(" ", args));
+            if (!success) {
+                sender.sendMessage(ChatColor.RED + "You must be on a team to do that.");
+            }
         }
 
     }
