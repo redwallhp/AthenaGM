@@ -83,7 +83,12 @@ public class MapInfoKitItem {
      */
     public void addPotion(String typeName, boolean upgraded, boolean extended) {
         Material mat = this.item.getType();
-        if (!mat.equals(Material.POTION) && !mat.equals(Material.SPLASH_POTION) && !mat.equals(Material.LINGERING_POTION)) return;
+        List<Material> types = new ArrayList<Material>();
+        types.add(Material.POTION);
+        types.add(Material.SPLASH_POTION);
+        types.add(Material.LINGERING_POTION);
+        types.add(Material.TIPPED_ARROW);
+        if (!types.contains(mat)) return;
         try {
             PotionType type = PotionType.valueOf(typeName.toUpperCase());
             PotionData pd = new PotionData(type, extended, upgraded);

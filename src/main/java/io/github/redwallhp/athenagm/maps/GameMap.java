@@ -197,7 +197,7 @@ public class GameMap {
             }
 
             // Handle potions
-            if (material.toLowerCase().matches("potion|splash_potion|lingering_potion")) {
+            if (material.toLowerCase().matches("potion|splash_potion|lingering_potion|tipped_arrow")) {
                 Map potion = (Map) map.get("potion");
                 String type = (potion.get("type") != null) ? (String)potion.get("type") : null;
                 Boolean upgraded = (potion.get("upgraded") != null) ? (Boolean)potion.get("upgraded") : false;
