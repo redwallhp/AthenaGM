@@ -8,10 +8,8 @@ import io.github.redwallhp.athenagm.matches.Match;
 import io.github.redwallhp.athenagm.matches.MatchState;
 import io.github.redwallhp.athenagm.matches.PlayerScore;
 import io.github.redwallhp.athenagm.matches.Team;
-import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -22,7 +20,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.*;
+
 
 public class ArenaListener implements Listener {
 
@@ -97,6 +97,7 @@ public class ArenaListener implements Listener {
 
         Player victim = null;
         Player attacker = null;
+        boolean ranged = false;
 
         // Melee
         if (event.getEntityType().equals(EntityType.PLAYER) && event.getDamager().getType().equals(EntityType.PLAYER)) {
@@ -110,6 +111,7 @@ public class ArenaListener implements Listener {
             if (a.getShooter() instanceof Player) {
                 victim = (Player) event.getEntity();
                 attacker = (Player) a.getShooter();
+                ranged = true;
             }
         }
 
@@ -117,7 +119,7 @@ public class ArenaListener implements Listener {
         Arena arena = arenaHandler.getArenaForPlayer(victim);
         if (arena == null) return;
 
-        PlayerDamagePlayerEvent e = new PlayerDamagePlayerEvent(arena.getMatch(), attacker, victim, event);
+        PlayerDamagePlayerEvent e = new PlayerDamagePlayerEvent(arena.getMatch(), attacker, victim, ranged, event);
         Bukkit.getPluginManager().callEvent(e);
         if (e.isCancelled()) {
             event.setCancelled(true);
@@ -133,24 +135,27 @@ public class ArenaListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void triggerPlayerMurderEvent(EntityDeathEvent event) {
 
+        if (!(event.getEntity() instanceof Player)) return;
         if (!(event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)) return;
 
         Player victim = null;
         Player killer = null;
+        boolean ranged = false;
         EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
 
         // Melee kills
-        if (e.getEntityType().equals(EntityType.PLAYER) && e.getDamager().getType().equals(EntityType.PLAYER)) {
+        if (e.getDamager().getType().equals(EntityType.PLAYER)) {
             victim = (Player) e.getEntity();
             killer = (Player) e.getDamager();
         }
 
         // Projectile kills
-        if (e.getEntityType().equals(EntityType.PLAYER) && e.getCause().equals(EntityDamageEvent.DamageCause.PROJECTILE)) {
+        if (e.getCause().equals(DamageCause.PROJECTILE)) {
             Projectile a = (Projectile) e.getDamager();
             if (a.getShooter() instanceof Player) {
                 victim = (Player) e.getEntity();
                 killer = (Player) a.getShooter();
+                ranged = true;
             }
         }
 
@@ -158,7 +163,7 @@ public class ArenaListener implements Listener {
         Arena arena = arenaHandler.getArenaForPlayer(victim);
         if (arena == null) return;
 
-        PlayerMurderPlayerEvent murderEvent = new PlayerMurderPlayerEvent(arena.getMatch(), killer, victim, e);
+        PlayerMurderPlayerEvent murderEvent = new PlayerMurderPlayerEvent(arena.getMatch(), killer, victim, ranged, e);
         Bukkit.getPluginManager().callEvent(murderEvent);
 
     }

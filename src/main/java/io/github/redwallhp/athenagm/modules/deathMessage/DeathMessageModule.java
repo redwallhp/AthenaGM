@@ -6,6 +6,7 @@ import io.github.redwallhp.athenagm.modules.Module;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+
 public class DeathMessageModule implements Module {
 
 

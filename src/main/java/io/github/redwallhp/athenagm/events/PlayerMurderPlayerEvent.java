@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.inventory.ItemStack;
 
 
 /**
@@ -19,14 +20,22 @@ public class PlayerMurderPlayerEvent extends Event {
     private Match match;
     private Player killer;
     private Player victim;
+    private boolean ranged;
     private EntityDamageByEntityEvent entityEvent;
+    private long time;
+    private int distance;
+    private ItemStack item;
 
 
-    public PlayerMurderPlayerEvent(Match match, Player killer, Player victim, EntityDamageByEntityEvent entityEvent) {
+    public PlayerMurderPlayerEvent(Match match, Player killer, Player victim, boolean ranged, EntityDamageByEntityEvent entityEvent) {
         this.match = match;
         this.killer = killer;
         this.victim = victim;
+        this.ranged = ranged;
         this.entityEvent = entityEvent;
+        this.time = System.currentTimeMillis();
+        this.distance = (int) Math.round(victim.getLocation().distance(killer.getLocation()));
+        this.item = killer.getInventory().getItemInMainHand();
     }
 
 
@@ -86,6 +95,38 @@ public class PlayerMurderPlayerEvent extends Event {
      */
     public EntityDamageByEntityEvent getEntityEvent() {
         return entityEvent;
+    }
+
+
+    /**
+     * Get the time, in milliseconds, that the kill happened
+     */
+    public long getTime() {
+        return time;
+    }
+
+
+    /**
+     * Get the distance, in meters/blocks, between the killer and victim
+     */
+    public int getDistance() {
+        return distance;
+    }
+
+
+    /**
+     * Get the murder weapon
+     */
+    public ItemStack getItem() {
+        return item;
+    }
+
+
+    /**
+     * Get whether this is a ranged or melee attack
+     */
+    public boolean isRanged() {
+        return ranged;
     }
 
 
