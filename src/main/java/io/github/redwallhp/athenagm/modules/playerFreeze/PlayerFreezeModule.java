@@ -7,11 +7,14 @@ import io.github.redwallhp.athenagm.matches.MatchState;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.modules.Module;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -112,7 +115,19 @@ public class PlayerFreezeModule implements Module {
 
 
     /**
-     * Stop frozen players from throwing splash potions
+     * Stop frozen players from throwing splash potions, eating, or otherwise using items
+     */
+    @EventHandler
+    public void onPlayerInteractEvent(PlayerInteractEvent event) {
+        if (shouldFreeze(event.getPlayer()) &&event.getItem() != null) {
+            event.setCancelled(true);
+            event.getPlayer().updateInventory();
+        }
+    }
+
+
+    /**
+     * Stop splash potions from splashing
      */
     @EventHandler
     public void onPotionsSplash(PotionSplashEvent event){
@@ -121,6 +136,18 @@ public class PlayerFreezeModule implements Module {
             if (shouldFreeze(player)) {
                 event.setCancelled(true);
             }
+        }
+    }
+
+
+    /**
+     * Block dropping items
+     */
+    @EventHandler
+    public void onPlayerDropitem(PlayerDropItemEvent event) {
+        if (shouldFreeze(event.getPlayer())) {
+            event.setCancelled(true);
+            event.getPlayer().updateInventory();
         }
     }
 
