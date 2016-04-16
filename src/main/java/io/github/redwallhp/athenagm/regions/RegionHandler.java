@@ -166,11 +166,14 @@ public class RegionHandler {
      */
     public void unloadRegions(World world) {
         if (regions.containsKey(world.getUID())) {
-            for (CuboidRegion region : regions.get(world.getUID()).values()) {
+            Iterator<CuboidRegion> iterator = regions.get(world.getUID()).values().iterator();
+            while (iterator.hasNext()) {
+                CuboidRegion region = iterator.next();
                 if (region.getWorld().getUID() == world.getUID()) {
-                    removeRegion(region);
+                    iterator.remove();
                 }
             }
+            if (regions.get(world.getUID()).size() < 1) regions.remove(world.getUID());
         }
     }
 

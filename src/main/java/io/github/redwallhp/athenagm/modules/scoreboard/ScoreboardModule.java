@@ -15,10 +15,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -136,9 +133,11 @@ public class ScoreboardModule implements Module {
         for (Arena arena : plugin.getArenaHandler().getArenas()) {
             activeMatches.add(arena.getMatch());
         }
-        for (Map.Entry<Match, Scoreboard> entry : boards.entrySet()) {
+        Iterator<Map.Entry<Match, Scoreboard>> iterator = boards.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Match, Scoreboard> entry = iterator.next();
             if (!activeMatches.contains(entry.getKey())) {
-                boards.remove(entry.getKey());
+                iterator.remove();
             }
         }
     }
