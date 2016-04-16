@@ -121,6 +121,7 @@ public class ScoreboardModule implements Module {
             org.bukkit.scoreboard.Team sbTeam = board.getTeam(team.getId());
             for (Player player : team.getPlayers()) {
                 sbTeam.addPlayer(player);
+                player.setScoreboard(board);
             }
         }
 
@@ -188,6 +189,7 @@ public class ScoreboardModule implements Module {
      * Update the match time display in the sidebar
      */
     public void updateMatchTimeDisplay(Match match, long secondsLeft) {
+        if (!boards.containsKey(match)) return;
         long sec = secondsLeft % 60;
         long min = (secondsLeft / 60) % 60;
         String secString = String.format("%02d", sec);
