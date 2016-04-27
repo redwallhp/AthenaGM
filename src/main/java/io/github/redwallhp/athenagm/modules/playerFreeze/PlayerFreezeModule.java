@@ -48,7 +48,7 @@ public class PlayerFreezeModule implements Module {
      */
     private boolean shouldFreeze(Player player) {
         Team team = PlayerUtil.getTeamForPlayer(plugin.getArenaHandler(), player);
-        return team == null || (!team.isSpectator() && team.getMatch().getState() != MatchState.PLAYING);
+        return team != null && (!team.isSpectator() && team.getMatch().getState() != MatchState.PLAYING);
     }
 
 
