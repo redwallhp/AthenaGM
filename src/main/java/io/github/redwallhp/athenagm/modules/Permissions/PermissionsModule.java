@@ -239,4 +239,20 @@ public class PermissionsModule implements Module {
     }
 
 
+    /**
+     * Get the group map
+     */
+    public HashMap<String, Group> getGroups() {
+        return groups;
+    }
+
+
+    /**
+     * Get the user map
+     */
+    public HashMap<UUID, User> getUsers() {
+        return users;
+    }
+
+
 }

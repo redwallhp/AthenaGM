@@ -12,6 +12,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.util.List;
 
@@ -32,13 +33,16 @@ public class AdminCommands implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("athena")) {
             if (args.length == 0) {
-                sender.sendMessage(ChatColor.RED + "Valid subcommands: reload, forcestart");
+                sender.sendMessage(ChatColor.RED + "Valid subcommands: reload, forcestart, checkperms");
             }
             else if (args[0].equalsIgnoreCase("reload")) {
                 reloadCommand(sender, args);
             }
             else if (args[0].equalsIgnoreCase("forcestart")) {
                 forceStartCommand(sender, args);
+            }
+            else if (args[0].equalsIgnoreCase("checkperms")) {
+                checkPerms(sender, args);
             }
             return true;
         }
@@ -96,6 +100,33 @@ public class AdminCommands implements CommandExecutor {
                 arena.getMatch().startCountdown();
                 break;
             }
+        }
+
+    }
+
+
+    private void checkPerms(CommandSender sender, String[] args) {
+
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "Usage: /athena checkperms <player>");
+        }
+
+        Player player = plugin.getServer().getPlayer(args[1]);
+        if (player != null) {
+            PermissionsModule module = (PermissionsModule) plugin.getModule("permissions");
+            sender.sendMessage("Results printed to console.");
+            plugin.getServer().getLogger().info(String.format("--- Permission Check for %s ---", player.getName()));
+            plugin.getServer().getLogger().info("UUID: " + player.getUniqueId());
+            if (module.getUsers().containsKey(player.getUniqueId())) {
+                String group = module.getUsers().get(player.getUniqueId()).getGroup();
+                plugin.getServer().getLogger().info("Group: " + group);
+            }
+            for (PermissionAttachmentInfo info : player.getEffectivePermissions()) {
+                plugin.getServer().getLogger().info("* " + info.getPermission());
+            }
+            plugin.getServer().getLogger().info("--- End Permission Check ---");
+        } else {
+            sender.sendMessage(ChatColor.RED + "Could not find online player.");
         }
 
     }
