@@ -103,6 +103,7 @@ public class HubListener implements Listener {
      */
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if (!hub.hasPlayer(event.getPlayer())) return;
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (!(event.getClickedBlock().getState() instanceof Sign)) return;
         Vector vector = event.getClickedBlock().getLocation().toVector();
