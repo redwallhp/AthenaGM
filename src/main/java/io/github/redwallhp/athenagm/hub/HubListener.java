@@ -9,14 +9,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.util.Vector;
 
 public class HubListener implements Listener {
 
 
-    AthenaGM plugin;
-    Hub hub;
+    private AthenaGM plugin;
+    private Hub hub;
 
 
     public HubListener(AthenaGM plugin, Hub hub) {
@@ -54,6 +55,17 @@ public class HubListener implements Listener {
         if (hub.hasPlayer(event.getPlayer())) {
             event.setRespawnLocation(hub.getWorld().getSpawnLocation());
             hub.playerSetUp(event.getPlayer());
+        }
+    }
+
+
+    /**
+     * Handle player death in the Hub
+     */
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        if (hub.hasPlayer(event.getEntity())) {
+            event.getDrops().clear();
         }
     }
 

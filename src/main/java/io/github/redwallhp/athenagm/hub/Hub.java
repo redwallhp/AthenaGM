@@ -7,9 +7,11 @@ import io.github.redwallhp.athenagm.maps.VoidGenerator;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.regions.CuboidRegion;
 import io.github.redwallhp.athenagm.regions.Flags.StringFlag;
+import io.github.redwallhp.athenagm.utilities.BookBuilder;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +24,7 @@ public class Hub {
     private HubListener listener;
     private HubConfiguration config;
     private WeakReference<World> world;
+    private ItemStack helpBookItem;
 
 
     public Hub(AthenaGM plugin) {
@@ -29,6 +32,7 @@ public class Hub {
         this.plugin = plugin;
         this.world = null;
         this.listener = new HubListener(plugin, this);
+        this.helpBookItem = loadHelpBookItem();
 
         try {
             config = new HubConfiguration(this, new File(plugin.getDataFolder(), "hub.yml"));
@@ -144,6 +148,20 @@ public class Hub {
         player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         for (Player p : Bukkit.getServer().getOnlinePlayers()) p.showPlayer(player);
         for (Player p : Bukkit.getServer().getOnlinePlayers()) player.showPlayer(p);
+        player.getInventory().addItem(helpBookItem);
+    }
+
+
+    /**
+     * Load the help book for the Hub
+     */
+    private ItemStack loadHelpBookItem() {
+        File file = new File(plugin.getDataFolder(), "helpbook.txt");
+        BookBuilder bookBuilder = new BookBuilder("Help");
+        bookBuilder.setDefaultContents("This book will be populated with the contents of a &lhelpbook.txt&0 file in the plugin directory.");
+        bookBuilder.setPagesFromFile(file);
+        this.helpBookItem = bookBuilder.getBook(); //cache to avoid hitting the disk all the time
+        return bookBuilder.getBook();
     }
 
 
