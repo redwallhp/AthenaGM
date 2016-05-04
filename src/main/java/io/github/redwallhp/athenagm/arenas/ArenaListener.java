@@ -289,7 +289,9 @@ public class ArenaListener implements Listener {
             player.sendMessage(line.toString());
         }
 
-        player.sendMessage(ChatColor.STRIKETHROUGH + "----------------------");
+        int length = 8 + map.getName().length();
+        String rule = new String(new char[length]).replace("\0", "-");
+        player.sendMessage(ChatColor.STRIKETHROUGH + rule);
 
     }
 
