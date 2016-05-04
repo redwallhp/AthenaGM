@@ -148,7 +148,9 @@ public class Hub {
         player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         for (Player p : Bukkit.getServer().getOnlinePlayers()) p.showPlayer(player);
         for (Player p : Bukkit.getServer().getOnlinePlayers()) player.showPlayer(p);
-        player.getInventory().addItem(helpBookItem);
+        if (config.isHelpBook()) {
+            player.getInventory().addItem(helpBookItem);
+        }
     }
 
 

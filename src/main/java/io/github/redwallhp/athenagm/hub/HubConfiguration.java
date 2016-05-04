@@ -25,6 +25,7 @@ public class HubConfiguration {
     private File file;
     private FileConfiguration yaml;
     private String world;
+    private boolean helpBook;
     private List<HubPortal> portals;
     private List<HubSign> signs;
 
@@ -50,6 +51,7 @@ public class HubConfiguration {
 
     private void loadBasicSettings() {
         this.world = yaml.getString("world");
+        this.helpBook = yaml.getBoolean("help_book", true);
     }
 
 
@@ -92,6 +94,14 @@ public class HubConfiguration {
      */
     public String getWorldName() {
         return world;
+    }
+
+
+    /**
+     * Should we give the player the Help Book on the Hub?
+     */
+    public boolean isHelpBook() {
+        return helpBook;
     }
 
 

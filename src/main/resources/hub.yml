@@ -1,4 +1,5 @@
 world: hub
+help_book: true
 
 portals:
   default:
