@@ -114,7 +114,7 @@ public class BlockPlaceListener implements Listener {
         CuboidRegion toRegion = regionHandler.getApplicableRegion(event.getToBlock().getLocation());
         CuboidRegion fromRegion = regionHandler.getApplicableRegion(event.getBlock().getLocation());
         if (!event.isCancelled() && toRegion != null) {
-            if (!toRegion.allows("build") && (fromRegion == null || !fromRegion.allows("build"))) {
+            if (!toRegion.allows("build") && (fromRegion == null || fromRegion.allows("build"))) {\
                 event.setCancelled(true);
             }
         }
