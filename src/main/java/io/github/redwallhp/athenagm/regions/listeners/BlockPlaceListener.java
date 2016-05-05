@@ -59,38 +59,6 @@ public class BlockPlaceListener implements Listener {
 
 
     /**
-     * Prevent pistons from extending blocks into a region that disables placement
-     */
-    @EventHandler
-    public void onBlockPistonExtend(BlockPistonExtendEvent event) {
-        for (Block block : event.getBlocks()) {
-            CuboidRegion oldRegion = regionHandler.getApplicableRegion(block.getLocation());
-            CuboidRegion newRegion = regionHandler.getApplicableRegion(block.getRelative(event.getDirection()).getLocation());
-            if ( (newRegion != null && !newRegion.allows("build")) && !newRegion.equals(oldRegion) ) {
-                event.setCancelled(true);
-                break;
-            }
-        }
-    }
-
-
-    /**
-     * Prevent pistons from pulling blocks out of a region that disables placement
-     */
-    @EventHandler
-    public void onBlockPistonRetract(BlockPistonRetractEvent event) {
-        for (Block block : event.getBlocks()) {
-            CuboidRegion oldRegion = regionHandler.getApplicableRegion(block.getLocation());
-            CuboidRegion newRegion = regionHandler.getApplicableRegion(block.getRelative(event.getDirection()).getLocation());
-            if ( (oldRegion != null && !oldRegion.allows("build")) && !oldRegion.equals(newRegion) ) {
-                event.setCancelled(true);
-                break;
-            }
-        }
-    }
-
-
-    /**
      * Prevent a dispenser from placing liquid in a region that disables placement
      */
     @EventHandler

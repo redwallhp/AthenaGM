@@ -27,11 +27,12 @@ public class RegionHandler {
 
 
     private void listen() {
-        BlockPlaceListener blockPlaceListener = new BlockPlaceListener(this);
-        BlockBreakListener blockBreakListener = new BlockBreakListener(this);
-        PlayerMovementListener playerMovementListener = new PlayerMovementListener(this);
-        PlayerInteractListener playerInteractListener = new PlayerInteractListener(this);
-        EnvironmentalListener environmentalListener = new EnvironmentalListener(this);
+        new BlockPlaceListener(this);
+        new BlockBreakListener(this);
+        new PlayerMovementListener(this);
+        new PlayerInteractListener(this);
+        new EnvironmentalListener(this);
+        new PistonListener(this);
     }
 
 

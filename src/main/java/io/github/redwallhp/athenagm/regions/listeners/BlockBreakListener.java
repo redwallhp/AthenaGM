@@ -118,38 +118,6 @@ public class BlockBreakListener implements Listener {
 
 
     /**
-     * Prevent pistons from extending blocks into a region that disables destruction
-     */
-    @EventHandler
-    public void onBlockPistonExtend(BlockPistonExtendEvent event) {
-        for (Block block : event.getBlocks()) {
-            CuboidRegion oldRegion = regionHandler.getApplicableRegion(block.getLocation());
-            CuboidRegion newRegion = regionHandler.getApplicableRegion(block.getRelative(event.getDirection()).getLocation());
-            if ( (newRegion != null && !newRegion.allows("destroy")) && !newRegion.equals(oldRegion) ) {
-                event.setCancelled(true);
-                break;
-            }
-        }
-    }
-
-
-    /**
-     * Prevent pistons from pulling blocks out of a region that prevents destruction
-     */
-    @EventHandler
-    public void onBlockPistonRetract(BlockPistonRetractEvent event) {
-        for (Block block : event.getBlocks()) {
-            CuboidRegion oldRegion = regionHandler.getApplicableRegion(block.getLocation());
-            CuboidRegion newRegion = regionHandler.getApplicableRegion(block.getRelative(event.getDirection()).getLocation());
-            if ( (oldRegion != null && !oldRegion.allows("destroy")) && !oldRegion.equals(newRegion) ) {
-                event.setCancelled(true);
-                break;
-            }
-        }
-    }
-
-
-    /**
      * Warning message to send when an event is cancelled
      */
     private void warnPlayer(Player player) {
