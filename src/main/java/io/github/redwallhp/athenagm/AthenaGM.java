@@ -1,5 +1,6 @@
 package io.github.redwallhp.athenagm;
 
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import io.github.redwallhp.athenagm.arenas.ArenaHandler;
 import io.github.redwallhp.athenagm.commands.AdminCommands;
 import io.github.redwallhp.athenagm.commands.ArenaCommands;
@@ -10,7 +11,9 @@ import io.github.redwallhp.athenagm.maps.VoidGenerator;
 import io.github.redwallhp.athenagm.modules.Module;
 import io.github.redwallhp.athenagm.modules.ModuleLoader;
 import io.github.redwallhp.athenagm.regions.RegionHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -128,6 +131,19 @@ public class AthenaGM extends JavaPlugin {
      */
     public Hub getHub() {
         return hub;
+    }
+
+
+    /**
+     * Get a reference to WorldEdit if it is present.
+     * Use this to check for the plugin's presence before calling any methods from WorldEditUtil.
+     */
+    public WorldEditPlugin getWE() {
+        Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
+        if (plugin == null || !(plugin instanceof WorldEditPlugin)) {
+            return null;
+        }
+        return (WorldEditPlugin) plugin;
     }
 
 

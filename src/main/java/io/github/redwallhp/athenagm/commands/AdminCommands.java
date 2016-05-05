@@ -6,6 +6,7 @@ import io.github.redwallhp.athenagm.arenas.Arena;
 import io.github.redwallhp.athenagm.modules.permissions.PermissionsModule;
 import io.github.redwallhp.athenagm.modules.spectator.SpectatorModule;
 import io.github.redwallhp.athenagm.regions.CuboidRegion;
+import io.github.redwallhp.athenagm.utilities.WorldEditUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -49,10 +50,13 @@ public class AdminCommands implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("region")) {
             if (args.length == 0) {
-                sender.sendMessage(ChatColor.RED + "Valid subcommands: info");
+                sender.sendMessage(ChatColor.RED + "Valid subcommands: info, select");
             }
             else if (args[0].equalsIgnoreCase("info")) {
-                regionCommand(sender, args);
+                regionInfoCommand(sender, args);
+            }
+            else if (args[0].equalsIgnoreCase("select")) {
+                regionSelectCommand(sender, args);
             }
             return true;
         }
@@ -132,36 +136,57 @@ public class AdminCommands implements CommandExecutor {
     }
 
 
-    private void regionCommand(CommandSender sender, String[] args) {
+    private void regionInfoCommand(CommandSender sender, String[] args) {
 
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Console can't run this command.");
             return;
         }
 
-        if (args.length < 1) {
-            sender.sendMessage(ChatColor.RED + "Usage: /region <subcommand>");
-            sender.sendMessage(ChatColor.RED + "Valid subcommands: info");
+        Player player = (Player) sender;
+
+        Location loc = player.getLocation();
+        CuboidRegion rg = plugin.getRegionHandler().getApplicableRegion(loc.getWorld(), loc.toVector());
+        if (rg != null) {
+            StringBuilder inherited = new StringBuilder();
+            List<CuboidRegion> all = plugin.getRegionHandler().getAllApplicableRegions(loc);
+            for (CuboidRegion ir : all) {
+                inherited.append(ir.getName());
+                if (all.indexOf(ir) < all.size() - 1) inherited.append(", ");
+            }
+            sender.sendMessage(String.format("%sYou are standing in '%s'", ChatColor.DARK_AQUA, rg.getName()));
+            sender.sendMessage(String.format("%sInherits from: %s", ChatColor.DARK_AQUA, inherited.toString()));
+            sender.sendMessage(String.format("%sStart: %s, End: %s", ChatColor.DARK_AQUA, rg.getStart().toString(), rg.getEnd().toString()));
+        }
+
+    }
+
+
+    private void regionSelectCommand(CommandSender sender, String[] args) {
+
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "Console can't run this command.");
             return;
         }
 
-        String subcommand = args[0];
         Player player = (Player) sender;
 
-        if (subcommand.equalsIgnoreCase("info")) {
-            Location loc = player.getLocation();
-            CuboidRegion rg = plugin.getRegionHandler().getApplicableRegion(loc.getWorld(), loc.toVector());
-            if (rg != null) {
-                StringBuilder inherited = new StringBuilder();
-                List<CuboidRegion> all = plugin.getRegionHandler().getAllApplicableRegions(loc);
-                for (CuboidRegion ir : all) {
-                    inherited.append(ir.getName());
-                    if (all.indexOf(ir) < all.size() - 1) inherited.append(", ");
-                }
-                sender.sendMessage(String.format("%sYou are standing in '%s'", ChatColor.DARK_AQUA, rg.getName()));
-                sender.sendMessage(String.format("%sInherits from: %s", ChatColor.DARK_AQUA, inherited.toString()));
-                sender.sendMessage(String.format("%sStart: %s, End: %s", ChatColor.DARK_AQUA, rg.getStart().toString(), rg.getEnd().toString()));
-            }
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "Usage: /region select <name>");
+            return;
+        }
+
+        CuboidRegion rg = plugin.getRegionHandler().getRegion(player.getWorld(), args[1]);
+        if (rg == null) {
+            sender.sendMessage(String.format("%sCould not find region \"%s\"", ChatColor.RED, args[1]));
+            return;
+        }
+
+        if (plugin.getWE() == null) {
+            sender.sendMessage(ChatColor.RED + "WorldEdit does not appear to be installed.");
+        } else {
+            WorldEditUtil.setPlayerSelection(player, rg.getWorld(), rg.getMin(), rg.getMax());
+            sender.sendMessage(String.format("%sSelected region \"%s\"", ChatColor.DARK_AQUA, rg.getName()));
         }
 
     }
