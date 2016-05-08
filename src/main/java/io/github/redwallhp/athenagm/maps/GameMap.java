@@ -74,15 +74,17 @@ public class GameMap {
      */
     private void loadTeams(FileConfiguration yaml) {
         this.teams = new HashMap<String, MapInfoTeam>();
-        Set<String> ids = yaml.getConfigurationSection("teams").getKeys(false);
-        if (ids.size() > 0) {
-            for (String id : ids) {
-                String color = yaml.getString(String.format("teams.%s.color", id), null);
-                String kit = yaml.getString(String.format("teams.%s.kit", id), null);
-                Integer size = yaml.getInt(String.format("teams.%s.size", id), 10);
-                MapInfoTeam team = new MapInfoTeam(id, color, kit, size);
-                if (team.isValidTeam()) {
-                    teams.put(id, team);
+        if (yaml.getConfigurationSection("teams") != null) {
+            Set<String> ids = yaml.getConfigurationSection("teams").getKeys(false);
+            if (ids.size() > 0) {
+                for (String id : ids) {
+                    String color = yaml.getString(String.format("teams.%s.color", id), null);
+                    String kit = yaml.getString(String.format("teams.%s.kit", id), null);
+                    Integer size = yaml.getInt(String.format("teams.%s.size", id), 10);
+                    MapInfoTeam team = new MapInfoTeam(id, color, kit, size);
+                    if (team.isValidTeam()) {
+                        teams.put(id, team);
+                    }
                 }
             }
         }
@@ -137,6 +139,7 @@ public class GameMap {
      */
     private void loadKits(FileConfiguration yaml) {
         this.kits = new HashMap<String, List<MapInfoKitItem>>();
+        if (yaml.getConfigurationSection("kits") == null) return;
         Set<String> ids = yaml.getConfigurationSection("kits").getKeys(false);
         for (String id : ids) {
             String inherit = yaml.getString(String.format("kits.%s.inherit", id), null);
@@ -248,6 +251,7 @@ public class GameMap {
      */
     private void loadRegions(FileConfiguration yaml) {
         this.regions = new LinkedHashMap<String, MapInfoRegion>();
+        if (yaml.getConfigurationSection("regions") == null) return;
         Set<String> names = yaml.getConfigurationSection("regions").getKeys(false);
         for (String name : names) {
             String start = yaml.getString(String.format("regions.%s.start", name), null);

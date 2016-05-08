@@ -55,14 +55,16 @@ public class KitsModule implements Module {
 
         if (playerTeam == null || playerTeam.isSpectator()) return; //skip spectators and nonexistant teams
 
-        Inventory inventory = player.getInventory();
-        for (MapInfoKitItem item : playerTeam.getKitItems()) {
-            if (item.getInventorySlot() < 40 && item.getInventorySlot() >= 0) {
-                if (roll > item.getChance()) continue; //handle random chance items
-                inventory.setItem(item.getInventorySlot(), item.getItem());
+        if (playerTeam.getKitItems() != null) {
+            Inventory inventory = player.getInventory();
+            for (MapInfoKitItem item : playerTeam.getKitItems()) {
+                if (item.getInventorySlot() < 40 && item.getInventorySlot() >= 0) {
+                    if (roll > item.getChance()) continue; //handle random chance items
+                    inventory.setItem(item.getInventorySlot(), item.getItem());
+                }
             }
+            player.updateInventory();
         }
-        player.updateInventory();
 
     }
 
