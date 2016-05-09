@@ -287,4 +287,14 @@ public class Team {
     }
 
 
+    /**
+     * Broadcast a message to all players in this Match
+     */
+    public void broadcast(String message) {
+        for (Player player : getPlayers()) {
+            player.sendMessage(message);
+        }
+    }
+
+
 }
