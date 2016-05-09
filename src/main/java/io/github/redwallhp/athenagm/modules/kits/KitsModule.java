@@ -75,6 +75,8 @@ public class KitsModule implements Module {
     @EventHandler
     public void onPlayerMatchDeathEvent(PlayerMatchDeathEvent event) {
 
+        if (event.getTeam().getKitItems() == null) return;
+
         List<ItemStack> blacklist = new ArrayList<ItemStack>();
         for (MapInfoKitItem kitItem : event.getTeam().getKitItems()) {
             if (!kitItem.dropOnDeath()) blacklist.add(kitItem.getItem());
