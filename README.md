@@ -14,4 +14,4 @@ If you're looking to develop a game type using AthenaGM, have a look at the wiki
 
 ## Mapping
 
-AthenaGM maps are essentially regular Minecraft worlds that have been pruned of extraneous chunks and packaged up with some YAML metadata files. To make a map for an AthenaGM game mode, please refer to the relevant section of the wiki.
+AthenaGM maps are essentially regular Minecraft worlds that have been pruned of extraneous chunks and packaged up with some YAML metadata files. To make a map for an AthenaGM game mode, please refer to the [relevant section of the wiki.](https://github.com/redwallhp/AthenaGM/wiki)
