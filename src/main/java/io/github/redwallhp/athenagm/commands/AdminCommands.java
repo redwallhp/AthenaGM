@@ -34,13 +34,16 @@ public class AdminCommands implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("athena")) {
             if (args.length == 0) {
-                sender.sendMessage(ChatColor.RED + "Valid subcommands: reload, forcestart, checkperms");
+                sender.sendMessage(ChatColor.RED + "Valid subcommands: reload, forcestart, changemap, checkperms");
             }
             else if (args[0].equalsIgnoreCase("reload")) {
                 reloadCommand(sender, args);
             }
             else if (args[0].equalsIgnoreCase("forcestart")) {
                 forceStartCommand(sender, args);
+            }
+            else if (args[0].equalsIgnoreCase("changemap")) {
+                changeMapCommand(sender, args);
             }
             else if (args[0].equalsIgnoreCase("checkperms")) {
                 checkPerms(sender, args);
@@ -102,6 +105,28 @@ public class AdminCommands implements CommandExecutor {
             if (arena.getId().equalsIgnoreCase(args[1])) {
                 sender.sendMessage(ChatColor.DARK_AQUA + "Forcing match start.");
                 arena.getMatch().startCountdown();
+                break;
+            }
+        }
+
+    }
+
+
+    private void changeMapCommand(CommandSender sender, String[] args) {
+
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "Usage: /athena changemap <arena> <map>");
+            return;
+        }
+
+        for (Arena arena : plugin.getArenaHandler().getArenas()) {
+            if (arena.getId().equalsIgnoreCase(args[1])) {
+                boolean success = arena.getRotation().setNextMap(args[2]);
+                if (!success) {
+                    sender.sendMessage(ChatColor.RED + "There is no configured map by that name.");
+                } else {
+                    arena.startNewMatch();
+                }
                 break;
             }
         }

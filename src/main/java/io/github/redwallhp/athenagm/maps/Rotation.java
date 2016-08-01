@@ -95,6 +95,19 @@ public class Rotation {
 
 
     /**
+     * Advance the rotation to a specific named map
+     * @param mapName the map to change to
+     */
+    public boolean setNextMap(String mapName) {
+        if (mapList.contains(mapName)) {
+            mapIndex = mapList.indexOf(mapName);
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
      * Get a configured map by name
      * @param name String representation of the map name
      */
