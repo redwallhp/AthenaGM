@@ -9,6 +9,7 @@ import io.github.redwallhp.athenagm.maps.MapInfoSpawnPoint;
 import io.github.redwallhp.athenagm.maps.MapInfoTeam;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -90,6 +91,7 @@ public class Match {
     public void end() {
         if (this.state == MatchState.PLAYING) {
             setState(MatchState.ENDED);
+            printWinner();
             NextMatchCountdown countdown = new NextMatchCountdown(arena);
             getPlugin().getLogger().info(String.format("Ended match \"%s\" for arena \"%s\"", getUUID(), arena.getName()));
             playSound(Sound.ENTITY_ENDERDRAGON_DEATH);
@@ -284,6 +286,28 @@ public class Match {
     public void playSound(Sound sound, float pitch) {
         Location loc = new Location(arena.getWorld(), 0, 70, 0);
         arena.getWorld().playSound(loc, sound, 100.0f, pitch);
+    }
+
+
+    /**
+     * Output the winning team name to chat
+     */
+    private void printWinner() {
+        Team highest = null;
+        boolean isTied = false;
+        for (Team t : getTeams().values()) {
+            if (highest == null || t.getPoints() > highest.getPoints()) {
+                highest = t;
+            }
+        }
+        for (Team t : getTeams().values()) {
+            if (highest != null && t != highest && t.getPoints() == highest.getPoints()) {
+                isTied = true;
+            }
+        }
+        if (highest != null && highest.getPoints() > 0 && !isTied) {
+            broadcast(String.format("%s%s won the match!", highest.getColoredName(), ChatColor.DARK_AQUA));
+        }
     }
 
 
