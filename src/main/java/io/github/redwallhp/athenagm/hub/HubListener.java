@@ -3,6 +3,7 @@ package io.github.redwallhp.athenagm.hub;
 
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.regions.CuboidRegion;
+import org.bukkit.GameMode;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -86,6 +87,7 @@ public class HubListener implements Listener {
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         if (hub.hasPlayer(event.getPlayer())) {
+            if (event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) return;
             if (event.getPlayer().getOpenInventory() != null) {
                 event.setCancelled(true);
             } else {
