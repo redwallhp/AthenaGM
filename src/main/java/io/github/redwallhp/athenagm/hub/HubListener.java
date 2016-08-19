@@ -5,10 +5,12 @@ import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.regions.CuboidRegion;
 import org.bukkit.GameMode;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
@@ -125,6 +127,34 @@ public class HubListener implements Listener {
             if (sign.getVector().equals(vector)) {
                 sign.warp(event.getPlayer());
                 return;
+            }
+        }
+    }
+
+
+    /**
+     * Stop players from removing items from item frames
+     */
+    @EventHandler
+    public void onPlayerPunchItemFrame(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player)) return;
+        Player player = (Player) event.getDamager();
+        if (!hub.hasPlayer(player)) return;
+        if (event.getEntity().getType().equals(EntityType.ITEM_FRAME) && player.getGameMode() == GameMode.ADVENTURE) {
+            event.setCancelled(true);
+        }
+    }
+
+
+    /**
+     * Stop players from rotating item frames on the hub
+     */
+    @EventHandler
+    public void onPlayerRotateItemFrame(PlayerInteractEntityEvent event) {
+        if (!hub.hasPlayer(event.getPlayer())) return;
+        if (event.getRightClicked().getType().equals(EntityType.ITEM_FRAME)) {
+            if (event.getPlayer().getGameMode() == GameMode.ADVENTURE) {
+                event.setCancelled(true);
             }
         }
     }
