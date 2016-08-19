@@ -58,7 +58,7 @@ public class KitsModule implements Module {
         if (playerTeam.getKitItems() != null) {
             Inventory inventory = player.getInventory();
             for (MapInfoKitItem item : playerTeam.getKitItems()) {
-                if (item.getInventorySlot() < 40 && item.getInventorySlot() >= 0) {
+                if (item.getInventorySlot() < 41 && item.getInventorySlot() >= 0) {
                     if (roll > item.getChance()) continue; //handle random chance items
                     inventory.setItem(item.getInventorySlot(), item.getItem());
                 }
