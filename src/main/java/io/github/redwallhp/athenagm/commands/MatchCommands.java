@@ -163,7 +163,10 @@ public class MatchCommands implements CommandExecutor {
             }
         }
         for (Team team : teamSizeMap.values()) {
-            if (! team.isSpectator()) team.add(player, false);
+            if (! team.isSpectator()) {
+                team.add(player, false);
+                break;
+            }
         }
 
     }
