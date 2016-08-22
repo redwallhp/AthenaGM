@@ -88,6 +88,7 @@ public class KitsModule implements Module {
             for (ItemStack blacklisted : blacklist) {
                 if (blacklisted.getType().equals(item.getType())) {
                     it.remove();
+                    break; //only remove one item per pass, to prevent IllegalStateException
                 }
             }
         }
