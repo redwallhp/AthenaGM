@@ -15,6 +15,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -83,6 +84,19 @@ public class PlayerFreezeModule implements Module {
     @EventHandler
     public void onPlayerChangedTeam(PlayerChangedTeamEvent event) {
         setMovement(event.getPlayer());
+    }
+
+
+    /**
+     * Ensure no movement at all when frozen
+     */
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (shouldFreeze(event.getPlayer())) {
+            if (event.getTo().getX() != event.getFrom().getX() || event.getTo().getZ() != event.getFrom().getZ()) {
+                event.setCancelled(true);
+            }
+        }
     }
 
 
