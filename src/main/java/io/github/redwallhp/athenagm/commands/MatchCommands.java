@@ -156,17 +156,19 @@ public class MatchCommands implements CommandExecutor {
             return;
         }
 
-        TreeMap<Integer, Team> teamSizeMap = new TreeMap<Integer, Team>();
-        for (Team team : arena.getMatch().getTeams().values()) {
-            if (team.getPlayers().size() < team.getSize() || team.getPlayers().size() == 0) {
-                teamSizeMap.put(team.getPlayers().size(), team);
+        Team lowest = null;
+        for (Team t : arena.getMatch().getTeams().values()) {
+            if (t.isSpectator()) continue;
+            if (t.getPlayers().size() >= t.getSize()) continue;
+            if (lowest == null || t.getPlayers().size() < lowest.getPlayers().size()) {
+                lowest = t;
             }
         }
-        for (Team team : teamSizeMap.values()) {
-            if (! team.isSpectator()) {
-                team.add(player, false);
-                break;
-            }
+
+        if (lowest != null) {
+            lowest.add(player, false);
+        } else {
+            sender.sendMessage(ChatColor.RED + "Unable to join team.");
         }
 
     }
