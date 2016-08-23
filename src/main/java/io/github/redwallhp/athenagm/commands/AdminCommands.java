@@ -121,11 +121,9 @@ public class AdminCommands implements CommandExecutor {
 
         for (Arena arena : plugin.getArenaHandler().getArenas()) {
             if (arena.getId().equalsIgnoreCase(args[1])) {
-                boolean success = arena.getRotation().setNextMap(args[2]);
+                boolean success = arena.forceMapChange(args[2]);
                 if (!success) {
                     sender.sendMessage(ChatColor.RED + "There is no configured map by that name.");
-                } else {
-                    arena.startNewMatch();
                 }
                 break;
             }

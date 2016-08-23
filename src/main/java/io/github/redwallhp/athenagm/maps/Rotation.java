@@ -97,6 +97,7 @@ public class Rotation {
     /**
      * Advance the rotation to a specific named map
      * @param mapName the map to change to
+     * @return success
      */
     public boolean setNextMap(String mapName) {
         if (mapList.contains(mapName)) {

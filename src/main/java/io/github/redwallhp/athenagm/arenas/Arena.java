@@ -89,6 +89,17 @@ public class Arena {
     }
 
 
+    public boolean forceMapChange(String fileName) {
+        boolean success = rotation.setNextMap(fileName);
+        if (success) {
+            mapLoader = new MapLoader(rotation.getNextMap(), this);
+            startNewMatch();
+            return true;
+        }
+        return false;
+    }
+
+
     public ArenaHandler getHandler() {
         return this.handler;
     }
