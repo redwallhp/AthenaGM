@@ -70,7 +70,7 @@ public class MapInfoKitItem {
     public void addEnchantment(String name, int level) {
         Enchantment enchantment = Enchantment.getByName(name.toUpperCase());
         if (enchantment != null) {
-            this.item.addEnchantment(enchantment, level);
+            this.item.addUnsafeEnchantment(enchantment, level);
         }
     }
 
