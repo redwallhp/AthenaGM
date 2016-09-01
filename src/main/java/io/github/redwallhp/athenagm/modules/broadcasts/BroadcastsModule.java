@@ -73,8 +73,10 @@ public class BroadcastsModule implements Module {
 
     private void printMessage() {
         String msg = messages.get(new Random().nextInt(messages.size()));
+        String fMsg;
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            player.sendMessage(String.format("%s\u24D8%s %s", ChatColor.DARK_PURPLE, ChatColor.LIGHT_PURPLE, msg));
+            fMsg = msg.replaceAll("%player%", player.getName());
+            player.sendMessage(String.format("%s\u24D8%s %s", ChatColor.DARK_PURPLE, ChatColor.LIGHT_PURPLE, fMsg));
         }
     }
 
