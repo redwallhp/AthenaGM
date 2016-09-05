@@ -20,6 +20,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupArrowEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.inventory.Inventory;
@@ -204,6 +206,20 @@ public class SpectatorModule implements Module {
             event.getPlayer().setItemInHand(event.getItemDrop().getItemStack());
             event.getItemDrop().remove();
         }
+    }
+
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+        if (!isPlayerSpectator(event.getPlayer())) return;
+        event.setCancelled(true);
+    }
+
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerPickupArrow(PlayerPickupArrowEvent event) {
+        if (!isPlayerSpectator(event.getPlayer())) return;
+        event.setCancelled(true);
     }
 
 
