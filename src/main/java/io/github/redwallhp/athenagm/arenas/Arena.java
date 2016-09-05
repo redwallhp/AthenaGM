@@ -7,6 +7,7 @@ import io.github.redwallhp.athenagm.events.MatchCreateEvent;
 import io.github.redwallhp.athenagm.maps.MapLoader;
 import io.github.redwallhp.athenagm.maps.Rotation;
 import io.github.redwallhp.athenagm.matches.Match;
+import io.github.redwallhp.athenagm.matches.MatchState;
 import io.github.redwallhp.athenagm.matches.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -93,6 +94,7 @@ public class Arena {
         boolean success = rotation.setNextMap(fileName);
         if (success) {
             mapLoader = new MapLoader(rotation.getNextMap(), this);
+            match.setState(MatchState.ENDED); //force end without starting next-round timer
             startNewMatch();
             return true;
         }

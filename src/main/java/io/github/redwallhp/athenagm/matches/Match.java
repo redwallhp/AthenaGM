@@ -140,7 +140,7 @@ public class Match {
      * detect state changes, such as match start.
      * @see MatchStateChangedEvent
      */
-    private void setState(MatchState state) {
+    public void setState(MatchState state) {
         MatchState previousState = this.state;
         this.state = state;
         MatchStateChangedEvent event = new MatchStateChangedEvent(this, previousState);
