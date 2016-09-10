@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 /**
  * Called when one player kills another player, while in a match
+ * @deprecated Use AthenaDeathEvent instead
  */
 public class PlayerMurderPlayerEvent extends Event {
 

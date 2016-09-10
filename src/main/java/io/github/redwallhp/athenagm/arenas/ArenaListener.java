@@ -18,7 +18,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.*;
@@ -88,49 +87,9 @@ public class ArenaListener implements Listener {
 
 
     /**
-     * Call PlayerDamagePlayerEvent when a player attacks another player
-     * while in an ongoing match.
-     * @see PlayerDamagePlayerEvent
-     */
-    @EventHandler(priority = EventPriority.LOW)
-    public void triggerPlayerDamagePlayerEvent(EntityDamageByEntityEvent event) {
-
-        Player victim = null;
-        Player attacker = null;
-        boolean ranged = false;
-
-        // Melee
-        if (event.getEntityType().equals(EntityType.PLAYER) && event.getDamager().getType().equals(EntityType.PLAYER)) {
-            victim = (Player) event.getEntity();
-            attacker = (Player) event.getDamager();
-        }
-
-        // Projectile
-        if (event.getEntityType().equals(EntityType.PLAYER) && event.getCause().equals(EntityDamageEvent.DamageCause.PROJECTILE)) {
-            Projectile a = (Projectile) event.getDamager();
-            if (a.getShooter() instanceof Player) {
-                victim = (Player) event.getEntity();
-                attacker = (Player) a.getShooter();
-                ranged = true;
-            }
-        }
-
-        if (attacker == null || victim == null) return;
-        Arena arena = arenaHandler.getArenaForPlayer(victim);
-        if (arena == null) return;
-
-        PlayerDamagePlayerEvent e = new PlayerDamagePlayerEvent(arena.getMatch(), attacker, victim, ranged, event);
-        Bukkit.getPluginManager().callEvent(e);
-        if (e.isCancelled()) {
-            event.setCancelled(true);
-        }
-
-    }
-
-
-    /**
      * Call PlayerMurderPlayerEvent when a player kills another player during a match
      * @see PlayerMurderPlayerEvent
+     * @deprecated AthenaDeathEvent replaces this, which will be removed soon.
      */
     @EventHandler(priority = EventPriority.LOW)
     public void triggerPlayerMurderEvent(EntityDeathEvent event) {
@@ -172,6 +131,7 @@ public class ArenaListener implements Listener {
     /**
      * Call PlayerMatchDeathEvent when a player dies during a match
      * @see PlayerMatchDeathEvent
+     * @deprecated AthenaDeathEvent replaces this, which will be removed soon.
      */
     @EventHandler(priority = EventPriority.LOW)
     public void triggerPlayerMatchDeathEvent(EntityDeathEvent event) {
@@ -188,9 +148,9 @@ public class ArenaListener implements Listener {
      * Update PlayerScore on death
      */
     @EventHandler(priority = EventPriority.LOW)
-    public void updateScoreOnDeath(PlayerMatchDeathEvent event) {
-        if (event.getTeam() != null) {
-            event.getTeam().getPlayerScore(event.getPlayer()).incrementDeaths();
+    public void updateScoreOnDeath(AthenaDeathEvent event) {
+        if (event.getPlayerTeam() != null) {
+            event.getPlayerTeam().getPlayerScore(event.getPlayer()).incrementDeaths();
         }
     }
 
@@ -199,8 +159,8 @@ public class ArenaListener implements Listener {
      * Update PlayerScore on kill
      */
     @EventHandler(priority = EventPriority.LOW)
-    public void updateScoreOnKill(PlayerMurderPlayerEvent event) {
-        if (event.getVictimTeam() != null && event.getKillerTeam() != null && event.getVictimTeam() != event.getKillerTeam()) {
+    public void updateScoreOnKill(AthenaDeathEvent event) {
+        if (event.getPlayerTeam() != null && event.getKillerTeam() != null && event.getPlayerTeam() != event.getKillerTeam()) {
             event.getKillerTeam().getPlayerScore(event.getKiller()).incrementKills();
         }
     }

@@ -100,7 +100,7 @@ public class PlayerDamagePlayerEvent extends Event implements Cancellable {
 
 
     /**
-     * Get the time, in milliseconds, that the kill happened
+     * Get the time, in milliseconds, that the damage happened
      */
     public long getTime() {
         return time;
@@ -108,7 +108,7 @@ public class PlayerDamagePlayerEvent extends Event implements Cancellable {
 
 
     /**
-     * Get the distance, in meters/blocks, between the killer and victim
+     * Get the distance, in meters/blocks, between the damager and victim
      */
     public int getDistance() {
         return distance;
@@ -116,7 +116,7 @@ public class PlayerDamagePlayerEvent extends Event implements Cancellable {
 
 
     /**
-     * Get the murder weapon
+     * Get the weapon used
      */
     public ItemStack getItem() {
         return item;

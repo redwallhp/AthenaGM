@@ -11,6 +11,7 @@ import io.github.redwallhp.athenagm.maps.VoidGenerator;
 import io.github.redwallhp.athenagm.modules.Module;
 import io.github.redwallhp.athenagm.modules.ModuleLoader;
 import io.github.redwallhp.athenagm.regions.RegionHandler;
+import io.github.redwallhp.athenagm.tracker.Tracker;
 import org.bukkit.Bukkit;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
@@ -43,6 +44,7 @@ public class AthenaGM extends JavaPlugin {
         this.regionHandler = new RegionHandler(this);
         this.arenaHandler = new ArenaHandler(this);
         this.hub = new Hub(this);
+        new Tracker(this);
         registerCommands();
     }
 

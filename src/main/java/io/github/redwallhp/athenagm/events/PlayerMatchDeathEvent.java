@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Called when a player dies, if they are in a match
+ * @deprecated Use AthenaDeathEvent instead
  */
 public class PlayerMatchDeathEvent extends Event {
 
