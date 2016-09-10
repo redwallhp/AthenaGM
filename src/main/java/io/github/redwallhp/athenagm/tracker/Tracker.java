@@ -14,7 +14,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.util.HashMap;
@@ -112,25 +111,6 @@ public class Tracker implements Listener {
 
         Bukkit.getPluginManager().callEvent(e);
 
-    }
-
-
-    // test handler
-    @EventHandler
-    public void catchAthenaDeathEvent(AthenaDeathEvent event) {
-        plugin.getLogger().info("Match: " + event.getMatch().toString());
-        plugin.getLogger().info("Victim: " + event.getPlayer().getName());
-        plugin.getLogger().info("Victim Team: " + event.getPlayerTeam().getName());
-        if (event.isPvP()) {
-            plugin.getLogger().info("Killer: " + event.getKiller().getName());
-            plugin.getLogger().info("Killer Team: " + event.getKillerTeam().getName());
-        }
-        plugin.getLogger().info("Time: " + event.getTime());
-        if (event.isPvP()) {
-            plugin.getLogger().info("Ranged: " + event.getDamageEvent().isRanged());
-            plugin.getLogger().info("Distance: " + event.getDamageEvent().getDistance());
-            plugin.getLogger().info("Item: " + event.getDamageEvent().getItem().getType().toString());
-        }
     }
 
 
