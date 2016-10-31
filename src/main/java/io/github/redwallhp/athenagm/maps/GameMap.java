@@ -292,6 +292,7 @@ public class GameMap {
         flags.add(new StringFlag("exit_hail"));
         flags.add(new DoubleFlag("velocity"));
         flags.add(new VectorFlag("teleport"));
+        flags.add(new IntegerFlag("time_lock"));
 
         for (Flag<?> flag : flags) {
             String path = String.format("regions.%s.flags.%s", name, flag.getName());

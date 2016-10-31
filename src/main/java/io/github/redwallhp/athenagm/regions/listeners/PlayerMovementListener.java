@@ -13,7 +13,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -24,12 +29,15 @@ public class PlayerMovementListener implements Listener {
 
     private AthenaGM plugin;
     private RegionHandler regionHandler;
+    private HashMap<UUID, Integer> timeLockedPlayers;
 
 
     public PlayerMovementListener(RegionHandler regionHandler) {
         this.regionHandler = regionHandler;
         this.plugin = regionHandler.getPlugin();
+        this.timeLockedPlayers = new HashMap<UUID, Integer>();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        doPlayerTimeAdjustment();
     }
 
 
@@ -46,6 +54,7 @@ public class PlayerMovementListener implements Listener {
             handleVelocity(event, toRegion);
             handleTeleport(event, toRegion);
             handleHubPortal(event, toRegion);
+            handleTimeLock(event, toRegion);
         }
     }
 
@@ -190,6 +199,43 @@ public class PlayerMovementListener implements Listener {
                 event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_ENDERMEN_TELEPORT, 1f, 1f);
             }
         }
+    }
+
+
+    /**
+     * Handle time lock flag, setting which players will have their time altered.
+     */
+    private void handleTimeLock(PlayerMoveEvent event, CuboidRegion toRegion) {
+        if (toRegion != null && toRegion.getFlagValue("time_lock") != null) {
+            int lockedTime = toRegion.getFlagValue("time_lock");
+            timeLockedPlayers.put(event.getPlayer().getUniqueId(), lockedTime);
+            event.getPlayer().setPlayerTime(lockedTime, false);
+        } else {
+            if (timeLockedPlayers.containsKey(event.getPlayer().getUniqueId())) {
+                timeLockedPlayers.remove(event.getPlayer().getUniqueId());
+                event.getPlayer().resetPlayerTime();
+            }
+        }
+    }
+
+
+    /**
+     * Adjust players' personal times constantly when they're inside a region with the time lock flag
+     */
+    private void doPlayerTimeAdjustment() {
+        new BukkitRunnable() {
+            public void run() {
+                Player player;
+                int time;
+                for (Map.Entry<UUID, Integer> entry : timeLockedPlayers.entrySet()) {
+                    player = plugin.getServer().getPlayer(entry.getKey());
+                    if (player != null) {
+                        time = entry.getValue();
+                        player.setPlayerTime(time, false);
+                    }
+                }
+            }
+        }.runTaskTimer(plugin, 200L, 200L);
     }
 
 
