@@ -112,9 +112,6 @@ public class GameMap {
             String team = map.get("team").toString();
             String delimitedPoint = map.get("point").toString();
             Float yaw = Float.parseFloat(map.get("yaw").toString());
-            String[] coords = delimitedPoint.split(",");
-            if (coords.length != 3) continue;
-            if (team.length() < 1) continue;
             MapInfoSpawnPoint spawnPoint = new MapInfoSpawnPoint(team, delimitedPoint, yaw);
             if (spawnPoint.isValid()) {
                 spawnPoints.add(spawnPoint);

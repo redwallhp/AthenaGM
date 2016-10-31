@@ -24,6 +24,9 @@ public class MapInfoSpawnPoint {
     public MapInfoSpawnPoint(String team, String point, Float yaw) {
         this.team = team;
         this.yaw = yaw;
+        this.x = null;
+        this.y = null;
+        this.z = null;
         parseVectorString(point);
     }
 
@@ -74,9 +77,9 @@ public class MapInfoSpawnPoint {
             this.y = Double.parseDouble(components[1]);
             this.z = Double.parseDouble(components[2]);
         } catch(NumberFormatException ex) {
-            this.x = null;
-            this.y = null;
-            this.z = null;
+            // Malformed number
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            // Less than three numbers found
         }
     }
 
@@ -84,7 +87,9 @@ public class MapInfoSpawnPoint {
      * Does this object have the required fields?
      */
     public boolean isValid() {
-        return (this.team != null && this.x != null && this.y != null && this.z != null && this.yaw != null);
+        boolean pointOk = (x != null && y != null && z != null && yaw != null);
+        boolean teamOk = (team != null && team.length() > 0);
+        return (pointOk && teamOk);
     }
 
 }
