@@ -158,12 +158,13 @@ public class GameMap {
     private List<MapInfoKitItem> loadKit(String kitId, FileConfiguration yaml) {
         List<MapInfoKitItem> items = new ArrayList<MapInfoKitItem>();
         List yamlItems = yaml.getList(String.format("kits.%s.items", kitId));
-        int i = 0;
-        while (i < yamlItems.size()) {
+        Iterator i = yamlItems.iterator();
+        while (i.hasNext()) {
 
-            Map map = (Map) yamlItems.get(i);
+            Map map = (Map) i.next();
 
             if (map.get("slot") == null || map.get("quantity") == null || map.get("material") == null) {
+                Bukkit.getLogger().warning(String.format("Error in kit %s: missing slot/quantity/material key.", kitId));
                 continue; //skip this item if it doesn't have the required fields
             }
 
@@ -183,16 +184,16 @@ public class GameMap {
             // Add enchantments
             List yamlEnchants = (List) map.get("enchantments");
             if (yamlEnchants != null && yamlEnchants.size() > 0) {
-                int k = 0;
-                while (k < yamlEnchants.size()) {
-                    Map emap = (Map) yamlEnchants.get(k);
+                Iterator k = yamlEnchants.iterator();
+                while (k.hasNext()) {
+                    Map emap = (Map) k.next();
                     if (emap.get("name") == null || emap.get("level") == null) {
+                        Bukkit.getLogger().warning(String.format("Error in kit %s: Invalid enchantment", kitId));
                         continue;
                     }
                     String enchant = emap.get("name").toString();
                     Integer level = Integer.parseInt(emap.get("level").toString());
                     item.addEnchantment(enchant, level);
-                    k++;
                 }
             }
 
@@ -233,7 +234,6 @@ public class GameMap {
 
             //Get the ItemStack and continue
             items.add(item);
-            i++;
 
         }
         return items;
