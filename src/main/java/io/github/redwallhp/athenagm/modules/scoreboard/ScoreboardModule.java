@@ -92,6 +92,22 @@ public class ScoreboardModule implements Module {
     @EventHandler
     public void onMatchTimerTickEvent(MatchTimerTickEvent event) {
         updateMatchTimeDisplay(event.getMatchTimer().getMatch(), event.getMatchTimer().timeLeftInSeconds());
+        syncScores(event.getMatchTimer().getMatch());
+    }
+
+
+    /**
+     * Update the scoreboard once every second, to account for team.incrementPoints()
+     */
+    private void syncScores(Match match) {
+        Score score;
+        Objective objective = boards.get(match).getObjective("matchscore");
+        for (Team team : match.getTeams().values()) {
+            if (!team.isSpectator()) {
+                score = objective.getScore(team.getChatColor() + team.getName());
+                score.setScore(team.getPoints());
+            }
+        }
     }
 
 
