@@ -3,6 +3,7 @@ package io.github.redwallhp.athenagm.commands;
 
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.arenas.Arena;
+import io.github.redwallhp.athenagm.modules.voting.VotingModule;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -47,6 +48,20 @@ public class ArenaCommands implements CommandExecutor {
             return true;
         }
 
+        if (cmd.getName().equalsIgnoreCase("votemap")) {
+            voteMap(sender, args);
+            return true;
+        }
+
+        if (cmd.getName().equalsIgnoreCase("vote")) {
+            if (args.length == 1) {
+                vote(sender, args[0]);
+            } else {
+                sender.sendMessage(ChatColor.RED + "Usage: /vote <choice>");
+            }
+            return true;
+        }
+
         return false;
 
     }
@@ -87,6 +102,31 @@ public class ArenaCommands implements CommandExecutor {
             }
         }
         sender.sendMessage(ChatColor.RED + String.format("Could not find arena '%s'", id));
+    }
+
+
+    private void voteMap(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "Console can't vote.");
+            return;
+        }
+        Player player = (Player) sender;
+        Arena arena = plugin.getArenaHandler().getArenaForPlayer(player);
+        String map = (args.length == 1) ? args[0] : "";
+        VotingModule module = (VotingModule) plugin.getModule("voting");
+        module.createMapVote(arena, sender, map);
+    }
+
+
+    private void vote(CommandSender sender, String choice) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "Console can't vote.");
+            return;
+        }
+        Player player = (Player) sender;
+        Arena arena = plugin.getArenaHandler().getArenaForPlayer(player);
+        VotingModule module = (VotingModule) plugin.getModule("voting");
+        module.vote(arena, player, choice);
     }
 
 
