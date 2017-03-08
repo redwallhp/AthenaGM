@@ -11,6 +11,7 @@ import io.github.redwallhp.athenagm.modules.permissions.PermissionsModule;
 import io.github.redwallhp.athenagm.modules.playerFreeze.PlayerFreezeModule;
 import io.github.redwallhp.athenagm.modules.scoreboard.ScoreboardModule;
 import io.github.redwallhp.athenagm.modules.spectator.SpectatorModule;
+import io.github.redwallhp.athenagm.modules.voting.VotingModule;
 import io.github.redwallhp.athenagm.modules.worldBorder.WorldBorderModule;
 
 import java.util.HashMap;
@@ -35,7 +36,8 @@ public class ModuleLoader {
             PlayerFreezeModule.class,
             DeathMessageModule.class,
             WorldBorderModule.class,
-            ChatModule.class
+            ChatModule.class,
+            VotingModule.class
     };
 
 
