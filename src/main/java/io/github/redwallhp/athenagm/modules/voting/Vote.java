@@ -94,7 +94,8 @@ public class Vote {
             double percentage = calculatePercentage(players, yesCount);
             if ( (players <= 2 && yesCount == 2) || (players > 2 && percentage > 0.5) ) {
                 changeMap();
-                return true;
+            } else {
+                arena.getMatch().broadcast(String.format("%s[Vote]%s Vote failed!", ChatColor.YELLOW, ChatColor.DARK_AQUA));
             }
         }
         else {
@@ -113,10 +114,11 @@ public class Vote {
             }
             if (calculatePercentage(players, totalVotes) > 0.5 && highest != null) {
                 setNextMap(highest);
-                return true;
+            } else {
+                arena.getMatch().broadcast(String.format("%s[Vote]%s Vote failed!", ChatColor.YELLOW, ChatColor.DARK_AQUA));
             }
         }
-        return false;
+        return true;
     }
 
 
