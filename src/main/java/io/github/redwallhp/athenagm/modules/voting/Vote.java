@@ -129,8 +129,7 @@ public class Vote {
         arena.getMatch().broadcast(String.format("%s[Vote]%s Vote passed! Changing map to %s in 5 seconds...", ChatColor.YELLOW, ChatColor.DARK_AQUA, map.getName()));
         new BukkitRunnable() {
             public void run() {
-                arena.getRotation().setNextMap(map.getName());
-                arena.getRotation().advance();
+                arena.forceMapChange(map.getFileName());
             }
         }.runTaskLater(arena.getPlugin(), 100L);
     }
@@ -139,8 +138,8 @@ public class Vote {
     /**
      * When a vote wins, set the map that the rotation will cycle to next
      */
-    private void setNextMap(String mapName) {
-        arena.getRotation().setNextMap(mapName);
+    private void setNextMap(String fileName) {
+        arena.getRotation().setNextMap(fileName);
         arena.getMatch().broadcast(String.format("%s[Vote]%s Vote passed! The next map will be %s...", ChatColor.YELLOW, ChatColor.DARK_AQUA, map.getName()));
     }
 

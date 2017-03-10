@@ -122,4 +122,18 @@ public class Rotation {
     }
 
 
+    /**
+     * Get a configured map by filename
+     * @param fileName String representation of the map's directory name
+     */
+    public GameMap getMapByFileName(String fileName) {
+        for (GameMap map : maps) {
+            if (map.getFileName().equalsIgnoreCase(fileName)) {
+                return map;
+            }
+        }
+        return null;
+    }
+
+
 }

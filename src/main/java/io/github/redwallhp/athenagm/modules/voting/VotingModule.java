@@ -79,16 +79,16 @@ public class VotingModule implements Module {
             int roll = random.nextInt(mapList.size());
             map = mapList.get(roll);
         } else {
-            map = arena.getRotation().getMapByName(mapName);
+            map = arena.getRotation().getMapByFileName(mapName);
         }
 
         // Fail if a valid map was not specified
         if (map == null) {
-            List<String> names = new ArrayList<String>();
+            List<String> fileNames = new ArrayList<String>();
             for (GameMap m : arena.getRotation().getMaps()) {
-                names.add(m.getName());
+                fileNames.add(m.getFileName());
             }
-            String maps = StringUtil.joinList(", ", names);
+            String maps = StringUtil.joinList(", ", fileNames);
             sender.sendMessage(String.format("%sMap not found!%s Valid maps: %s", ChatColor.RED, ChatColor.GRAY, maps));
             return false;
         }
