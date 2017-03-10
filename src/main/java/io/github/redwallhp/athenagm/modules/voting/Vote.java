@@ -87,7 +87,7 @@ public class Vote {
      */
     public boolean tick() {
         if (!timeUp()) return false;
-        if (map != null) {
+        if (voteType == VoteType.CHANGE_MAP) {
             // validation logic for yes/no map change votes
             int players = arena.getMatch().getTotalPlayers();
             int yesCount = options.get("Yes");
@@ -98,7 +98,7 @@ public class Vote {
                 arena.getMatch().broadcast(String.format("%s[Vote]%s Vote failed!", ChatColor.YELLOW, ChatColor.DARK_AQUA));
             }
         }
-        else {
+        else if (voteType == VoteType.NEXT_MAP) {
             // validation logic for multiple-map votes to set the following map
             int players = arena.getMatch().getTotalPlayers();
             int totalVotes = 0;
