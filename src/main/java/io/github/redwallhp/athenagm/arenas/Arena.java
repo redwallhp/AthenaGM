@@ -95,6 +95,7 @@ public class Arena {
         if (success) {
             mapLoader = new MapLoader(rotation.getNextMap(), this);
             match.setState(MatchState.ENDED); //force end without starting next-round timer
+            match.getTimer().clear();
             startNewMatch();
             return true;
         }
