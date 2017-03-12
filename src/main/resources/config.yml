@@ -1,5 +1,6 @@
 network_name: "Server"
 debug: false
+voting: true
 
 arenas:
   default:

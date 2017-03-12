@@ -16,6 +16,7 @@ public class Configuration {
     public boolean DEBUG;
     public String NETWORK_NAME;
     public String DEDICATED_ARENA;
+    public boolean VOTING;
     public HashMap<String, ConfiguredArena> ARENAS;
 
     public Configuration(AthenaGM instance) {
@@ -39,6 +40,7 @@ public class Configuration {
         DEBUG = plugin.getConfig().getBoolean("debug", false);
         NETWORK_NAME = plugin.getConfig().getString("network_name", "Server");
         DEDICATED_ARENA = plugin.getConfig().getString("dedicated_arena", null);
+        VOTING = plugin.getConfig().getBoolean("voting", true);
         getArenas();
     }
 

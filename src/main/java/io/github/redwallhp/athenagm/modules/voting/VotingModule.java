@@ -66,6 +66,11 @@ public class VotingModule implements Module {
      */
     public boolean createMapVote(Arena arena, CommandSender sender, String mapName) {
 
+        if (!plugin.config.VOTING) {
+            sender.sendMessage(ChatColor.RED + "Map voting is not enabled.");
+            return false;
+        }
+
         if (votes.containsKey(arena)) {
             sender.sendMessage(ChatColor.RED + "Only one vote can be active at once!");
             return false;
