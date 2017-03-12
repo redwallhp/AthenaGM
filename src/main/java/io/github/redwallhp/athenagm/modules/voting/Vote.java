@@ -163,7 +163,7 @@ public class Vote {
 
 
     private boolean timeUp() {
-        return System.currentTimeMillis() > (timeCreated + 120000);
+        return System.currentTimeMillis() > (timeCreated + 120000) || voted.size() == arena.getPlayerCount();
     }
 
 
