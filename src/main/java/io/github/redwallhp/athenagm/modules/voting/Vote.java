@@ -115,7 +115,7 @@ public class Vote {
                     totalVotes = totalVotes + entry.getValue();
                 }
             }
-            if (calculatePercentage(players, totalVotes) > 0.5 && highest != null) {
+            if (calculatePercentage(players, voted.size()) > 0.5 && highest != null && highestVal > 1) {
                 setNextMap(highest);
             } else {
                 arena.getMatch().broadcast(String.format("%s[Vote]%s Vote failed!", ChatColor.YELLOW, ChatColor.DARK_AQUA));
@@ -129,12 +129,12 @@ public class Vote {
      * Kick off an immediate map change
      */
     private void changeMap() {
-        arena.getMatch().broadcast(String.format("%s[Vote]%s Vote passed! Changing map to %s in 5 seconds...", ChatColor.YELLOW, ChatColor.DARK_AQUA, map.getName()));
+        arena.getMatch().broadcast(String.format("%s[Vote]%s Vote passed! Changing map to %s in 20 seconds...", ChatColor.YELLOW, ChatColor.DARK_AQUA, map.getName()));
         new BukkitRunnable() {
             public void run() {
                 arena.forceMapChange(map.getFileName());
             }
-        }.runTaskLater(arena.getPlugin(), 100L);
+        }.runTaskLater(arena.getPlugin(), 400L);
     }
 
 
@@ -142,8 +142,9 @@ public class Vote {
      * When a vote wins, set the map that the rotation will cycle to next
      */
     private void setNextMap(String fileName) {
+        GameMap m = arena.getRotation().getMapByFileName(fileName);
         arena.getRotation().setNextMap(fileName);
-        arena.getMatch().broadcast(String.format("%s[Vote]%s Vote passed! The next map will be %s...", ChatColor.YELLOW, ChatColor.DARK_AQUA, map.getName()));
+        arena.getMatch().broadcast(String.format("%s[Vote]%s Vote passed! The next map will be %s...", ChatColor.YELLOW, ChatColor.DARK_AQUA, m.getName()));
     }
 
 

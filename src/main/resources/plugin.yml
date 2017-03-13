@@ -93,6 +93,11 @@ commands:
     description: Start a map vote. Omit the map name to get a list of valid options.
     permission: athenagm.player
     permission-message: You don't have permission to do that.
+  votenext:
+    usage: /votenext
+    description: Start a vote for the next map. Three random options will be selected.
+    permission: athenagm.player
+    permission-message: You don't have permission to do that.
   vote:
     usage: /vote <choice>
     description: Cast your ballot in an ongoing vote.

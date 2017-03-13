@@ -121,6 +121,55 @@ public class VotingModule implements Module {
 
 
     /**
+     * Create a vote for the map that will follow the current one
+     * @param arena the Arena this vote originates from
+     * @param player the Player initiating the vote
+     * @return true if the vote was successfully started
+     */
+    public boolean createNextMapVote(Arena arena, Player player) {
+
+        if (!plugin.config.VOTING) {
+            player.sendMessage(ChatColor.RED + "Map voting is not enabled.");
+            return false;
+        }
+
+        if (votes.containsKey(arena)) {
+            player.sendMessage(ChatColor.RED + "Only one vote can be active at once!");
+            return false;
+        }
+
+        Team team = PlayerUtil.getTeamForPlayer(arena.getMatch(), player);
+        if (team == null || team.isSpectator()) {
+            player.sendMessage(ChatColor.RED + "Spectators cannot vote!");
+            return false;
+        }
+
+        // Pick three random maps
+        List<GameMap> mapList = new ArrayList<>(arena.getRotation().getMaps());
+        List<String> mapPicks = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < 3; i++) {
+            int roll = random.nextInt(mapList.size());
+            mapPicks.add(mapList.get(roll).getFileName());
+            mapList.remove(roll);
+        }
+
+        // Instantiate vote
+        votes.put(arena, new Vote(arena, mapPicks));
+
+        // Broadcast the vote text
+        arena.getMatch().broadcast(String.format("%s[Vote]%s %s has started a vote to set the next map.", ChatColor.YELLOW, ChatColor.DARK_AQUA, player.getName()));
+        arena.getMatch().broadcast(String.format("%sType one of the following to vote:", ChatColor.GRAY));
+        for (String map : mapPicks) {
+            arena.getMatch().broadcast(String.format("%s- %s/vote %s", ChatColor.GRAY, ChatColor.YELLOW, map));
+        }
+
+        return true;
+
+    }
+
+
+    /**
      * Process a player's vote
      * @param arena the arena the ballot is in
      * @param player the player casting the vote

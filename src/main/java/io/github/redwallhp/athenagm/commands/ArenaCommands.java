@@ -23,6 +23,7 @@ public class ArenaCommands implements CommandExecutor {
         plugin.getCommand("arenas").setExecutor(this);
         plugin.getCommand("join").setExecutor(this);
         plugin.getCommand("votemap").setExecutor(this);
+        plugin.getCommand("votenext").setExecutor(this);
         plugin.getCommand("vote").setExecutor(this);
     }
 
@@ -52,6 +53,11 @@ public class ArenaCommands implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("votemap")) {
             voteMap(sender, args);
+            return true;
+        }
+
+        if (cmd.getName().equalsIgnoreCase("votenext")) {
+            voteNext(sender);
             return true;
         }
 
@@ -118,6 +124,20 @@ public class ArenaCommands implements CommandExecutor {
         VotingModule module = (VotingModule) plugin.getModule("voting");
         if (arena != null) {
             module.createMapVote(arena, player, map);
+        }
+    }
+
+
+    private void voteNext(CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "Console can't vote.");
+            return;
+        }
+        Player player = (Player) sender;
+        Arena arena = plugin.getArenaHandler().getArenaForPlayer(player);
+        VotingModule module = (VotingModule) plugin.getModule("voting");
+        if (arena != null) {
+            module.createNextMapVote(arena, player);
         }
     }
 
