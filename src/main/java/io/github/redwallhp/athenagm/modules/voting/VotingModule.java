@@ -3,7 +3,9 @@ package io.github.redwallhp.athenagm.modules.voting;
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.arenas.Arena;
 import io.github.redwallhp.athenagm.maps.GameMap;
+import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.modules.Module;
+import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import io.github.redwallhp.athenagm.utilities.StringUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -126,9 +128,15 @@ public class VotingModule implements Module {
         }
 
         Vote vote = votes.get(arena);
+        Team team = PlayerUtil.getTeamForPlayer(arena.getMatch(), player);
 
         if (vote.hasVoted(player.getUniqueId())) {
             player.sendMessage(ChatColor.RED + "You have already voted!");
+            return;
+        }
+
+        if (team == null || team.isSpectator()) {
+            player.sendMessage(ChatColor.RED + "Spectators cannot vote!");
             return;
         }
 

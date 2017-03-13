@@ -8,6 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -90,9 +91,11 @@ public class Vote {
         if (voteType == VoteType.CHANGE_MAP) {
             // validation logic for yes/no map change votes
             int players = arena.getMatch().getTotalPlayers();
+            int votes = voted.size();
             int yesCount = options.get("Yes");
-            double percentage = calculatePercentage(players, yesCount);
-            if ( (players <= 2 && yesCount == 2) || (players > 2 && percentage > 0.5) ) {
+            double participation = calculatePercentage(players, votes);
+            double yesPercent = calculatePercentage(votes, yesCount);
+            if ( (players <= 2 && yesCount == 2) || (players > 2 && participation > 0.5 && yesPercent > 0.5) ) {
                 changeMap();
             } else {
                 arena.getMatch().broadcast(String.format("%s[Vote]%s Vote failed!", ChatColor.YELLOW, ChatColor.DARK_AQUA));
@@ -162,8 +165,14 @@ public class Vote {
     }
 
 
+    /**
+     * Returns true when it's time to check the vote results.
+     * Votes end after one minute, or if every active player has voted.
+     * Spectators are excluded by getPlayerCount().
+     * @return true when the voting period should end
+     */
     private boolean timeUp() {
-        return System.currentTimeMillis() > (timeCreated + 120000) || voted.size() == arena.getPlayerCount();
+        return System.currentTimeMillis() > (timeCreated + 60000) || (voted.size() == arena.getPlayerCount() && voted.size() > 1);
     }
 
 
