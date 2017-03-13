@@ -66,15 +66,21 @@ public class VotingModule implements Module {
      * @param mapName the name of the map to vote for, or "random"
      * @return true if the vote was successfully started
      */
-    public boolean createMapVote(Arena arena, CommandSender sender, String mapName) {
+    public boolean createMapVote(Arena arena, Player player, String mapName) {
 
         if (!plugin.config.VOTING) {
-            sender.sendMessage(ChatColor.RED + "Map voting is not enabled.");
+            player.sendMessage(ChatColor.RED + "Map voting is not enabled.");
             return false;
         }
 
         if (votes.containsKey(arena)) {
-            sender.sendMessage(ChatColor.RED + "Only one vote can be active at once!");
+            player.sendMessage(ChatColor.RED + "Only one vote can be active at once!");
+            return false;
+        }
+
+        Team team = PlayerUtil.getTeamForPlayer(arena.getMatch(), player);
+        if (team == null || team.isSpectator()) {
+            player.sendMessage(ChatColor.RED + "Spectators cannot vote!");
             return false;
         }
 
@@ -96,7 +102,7 @@ public class VotingModule implements Module {
                 fileNames.add(m.getFileName());
             }
             String maps = StringUtil.joinList(", ", fileNames);
-            sender.sendMessage(String.format("%sMap not found!%s Valid maps: %s", ChatColor.RED, ChatColor.GRAY, maps));
+            player.sendMessage(String.format("%sMap not found!%s Valid maps: %s", ChatColor.RED, ChatColor.GRAY, maps));
             return false;
         }
 
@@ -104,7 +110,7 @@ public class VotingModule implements Module {
         votes.put(arena, new Vote(arena, map));
 
         // Broadcast the vote text
-        arena.getMatch().broadcast(String.format("%s[Vote]%s %s has started a vote. Do you want to switch maps to %s?", ChatColor.YELLOW, ChatColor.DARK_AQUA, sender.getName(), mapName));
+        arena.getMatch().broadcast(String.format("%s[Vote]%s %s has started a vote. Do you want to switch maps to %s?", ChatColor.YELLOW, ChatColor.DARK_AQUA, player.getName(), mapName));
         String yesStr = String.format("%s/vote yes%s", ChatColor.YELLOW, ChatColor.GRAY);
         String noStr = String.format("%s/vote no%s", ChatColor.YELLOW, ChatColor.GRAY);
         arena.getMatch().broadcast(String.format("%sType %s or %s to vote!", ChatColor.GRAY, yesStr, noStr));

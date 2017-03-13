@@ -117,7 +117,7 @@ public class ArenaCommands implements CommandExecutor {
         String map = (args.length == 1) ? args[0] : "";
         VotingModule module = (VotingModule) plugin.getModule("voting");
         if (arena != null) {
-            module.createMapVote(arena, sender, map);
+            module.createMapVote(arena, player, map);
         }
     }
 
