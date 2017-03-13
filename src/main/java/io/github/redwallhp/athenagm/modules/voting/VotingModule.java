@@ -147,6 +147,7 @@ public class VotingModule implements Module {
         // Pick three random maps
         List<GameMap> mapList = new ArrayList<>(arena.getRotation().getMaps());
         List<String> mapPicks = new ArrayList<>();
+        mapList.remove(arena.getMatch().getMap());
         Random random = new Random();
         for (int i = 0; i < 3; i++) {
             int roll = random.nextInt(mapList.size());
