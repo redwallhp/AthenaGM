@@ -158,8 +158,8 @@ public class VotingModule implements Module {
         votes.put(arena, new Vote(arena, mapPicks));
 
         // Broadcast the vote text
-        arena.getMatch().broadcast(String.format("%s[Vote]%s %s has started a vote to set the next map.", ChatColor.YELLOW, ChatColor.DARK_AQUA, player.getName()));
-        arena.getMatch().broadcast(String.format("%sType one of the following to vote:", ChatColor.GRAY));
+        arena.getMatch().broadcast(String.format("%s[Vote]%s %s has started a vote to set the upcoming map.", ChatColor.YELLOW, ChatColor.DARK_AQUA, player.getName()));
+        arena.getMatch().broadcast(String.format("%sThree random maps have been selected. Type one of the following to vote:", ChatColor.GRAY));
         for (String map : mapPicks) {
             arena.getMatch().broadcast(String.format("%s- %s/vote %s", ChatColor.GRAY, ChatColor.YELLOW, map));
         }
