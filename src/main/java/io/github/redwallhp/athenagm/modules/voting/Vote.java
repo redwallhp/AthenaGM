@@ -3,6 +3,9 @@ package io.github.redwallhp.athenagm.modules.voting;
 import io.github.redwallhp.athenagm.arenas.Arena;
 import io.github.redwallhp.athenagm.maps.GameMap;
 import org.bukkit.ChatColor;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -23,6 +26,7 @@ public class Vote {
     private Set<UUID> voted;
     private GameMap map;
     private long timeCreated;
+    private BossBar bar;
 
 
     /**
@@ -86,6 +90,7 @@ public class Vote {
      * @return true if the vote passes and should be removed from circulation
      */
     public boolean tick() {
+        doBar();
         if (!timeUp()) return false;
         if (voteType == VoteType.CHANGE_MAP) {
             // validation logic for yes/no map change votes
@@ -173,6 +178,29 @@ public class Vote {
      */
     private boolean timeUp() {
         return System.currentTimeMillis() > (timeCreated + 60000) || (voted.size() == arena.getPlayerCount() && voted.size() > 1);
+    }
+
+
+    /**
+     * Manage the creation, updating and removal of a BossBar to show remaining vote time.
+     */
+    private void doBar() {
+        long elapsed = (System.currentTimeMillis() - timeCreated) / 1000;
+        int seconds = 60 - (int) elapsed;
+        String title = String.format("%d seconds left to vote", seconds);
+        if (bar == null) {
+            // create bar
+            bar = arena.getPlugin().getServer().createBossBar(title, BarColor.WHITE, BarStyle.SEGMENTED_10);
+            arena.getMatch().getAllPlayers().forEach(bar::addPlayer);
+        } else if (seconds < 1) {
+            // remove bar
+            bar.removeAll();
+            bar = null;
+        } else {
+            // update bar
+            bar.setProgress(calculatePercentage(seconds, 60));
+            bar.setTitle(title);
+        }
     }
 
 
