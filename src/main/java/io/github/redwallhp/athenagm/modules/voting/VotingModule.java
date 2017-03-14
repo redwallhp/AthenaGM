@@ -8,7 +8,6 @@ import io.github.redwallhp.athenagm.modules.Module;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
 import io.github.redwallhp.athenagm.utilities.StringUtil;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
