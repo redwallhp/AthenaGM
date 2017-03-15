@@ -125,6 +125,7 @@ public class Vote {
                 arena.getMatch().broadcast(String.format("%s[Vote]%s Vote failed!", ChatColor.YELLOW, ChatColor.DARK_AQUA));
             }
         }
+        removeBar();
         return true;
     }
 
@@ -194,13 +195,21 @@ public class Vote {
             arena.getMatch().getAllPlayers().forEach(bar::addPlayer);
         } else if (seconds < 1) {
             // remove bar
-            bar.removeAll();
-            bar = null;
+            removeBar();
         } else {
             // update bar
             bar.setProgress(calculatePercentage(seconds, 60));
             bar.setTitle(title);
         }
+    }
+
+
+    /**
+     * Ensure that the BossBar is properly removed
+     */
+    private void removeBar() {
+        bar.removeAll();
+        bar = null;
     }
 
 

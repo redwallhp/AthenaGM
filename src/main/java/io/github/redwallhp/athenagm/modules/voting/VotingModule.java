@@ -155,7 +155,9 @@ public class VotingModule implements Module {
         }
 
         // Instantiate vote
-        votes.put(arena, new Vote(arena, mapPicks));
+        Vote vote = new Vote(arena, mapPicks);
+        votes.put(arena, vote);
+        vote.cast(player, "Yes");
 
         // Broadcast the vote text
         arena.getMatch().broadcast(String.format("%s[Vote]%s %s has started a vote to set the upcoming map.", ChatColor.YELLOW, ChatColor.DARK_AQUA, player.getName()));
