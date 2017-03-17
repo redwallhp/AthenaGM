@@ -106,7 +106,9 @@ public class VotingModule implements Module {
         }
 
         // Instantiate vote
-        votes.put(arena, new Vote(arena, map));
+        Vote vote = new Vote(arena, map);
+        votes.put(arena, vote);
+        vote.cast(player, "Yes");
 
         // Broadcast the vote text
         arena.getMatch().broadcast(String.format("%s[Vote]%s %s has started a vote. Do you want to switch maps to %s?", ChatColor.YELLOW, ChatColor.DARK_AQUA, player.getName(), mapName));
@@ -155,9 +157,7 @@ public class VotingModule implements Module {
         }
 
         // Instantiate vote
-        Vote vote = new Vote(arena, mapPicks);
-        votes.put(arena, vote);
-        vote.cast(player, "Yes");
+        votes.put(arena, new Vote(arena, mapPicks));
 
         // Broadcast the vote text
         arena.getMatch().broadcast(String.format("%s[Vote]%s %s has started a vote to set the upcoming map.", ChatColor.YELLOW, ChatColor.DARK_AQUA, player.getName()));
