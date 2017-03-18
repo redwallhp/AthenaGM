@@ -77,6 +77,11 @@ public class VotingModule implements Module {
             return false;
         }
 
+        if (arena.getMatch().getTimer().timeLeftInSeconds() <= 120) {
+            player.sendMessage(ChatColor.RED + "You cannot start a map vote this late in the match.");
+            return false;
+        }
+
         Team team = PlayerUtil.getTeamForPlayer(arena.getMatch(), player);
         if (team == null || team.isSpectator()) {
             player.sendMessage(ChatColor.RED + "Spectators cannot vote!");
