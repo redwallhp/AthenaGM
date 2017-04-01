@@ -87,64 +87,6 @@ public class ArenaListener implements Listener {
 
 
     /**
-     * Call PlayerMurderPlayerEvent when a player kills another player during a match
-     * @see PlayerMurderPlayerEvent
-     * @deprecated AthenaDeathEvent replaces this, which will be removed soon.
-     */
-    @EventHandler(priority = EventPriority.LOW)
-    public void triggerPlayerMurderEvent(EntityDeathEvent event) {
-
-        if (!(event.getEntity() instanceof Player)) return;
-        if (!(event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)) return;
-
-        Player victim = null;
-        Player killer = null;
-        boolean ranged = false;
-        EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
-
-        // Melee kills
-        if (e.getDamager().getType().equals(EntityType.PLAYER)) {
-            victim = (Player) e.getEntity();
-            killer = (Player) e.getDamager();
-        }
-
-        // Projectile kills
-        if (e.getCause().equals(DamageCause.PROJECTILE)) {
-            Projectile a = (Projectile) e.getDamager();
-            if (a.getShooter() instanceof Player) {
-                victim = (Player) e.getEntity();
-                killer = (Player) a.getShooter();
-                ranged = true;
-            }
-        }
-
-        if (killer == null || victim == null) return;
-        Arena arena = arenaHandler.getArenaForPlayer(victim);
-        if (arena == null) return;
-
-        PlayerMurderPlayerEvent murderEvent = new PlayerMurderPlayerEvent(arena.getMatch(), killer, victim, ranged, e);
-        Bukkit.getPluginManager().callEvent(murderEvent);
-
-    }
-
-
-    /**
-     * Call PlayerMatchDeathEvent when a player dies during a match
-     * @see PlayerMatchDeathEvent
-     * @deprecated AthenaDeathEvent replaces this, which will be removed soon.
-     */
-    @EventHandler(priority = EventPriority.LOW)
-    public void triggerPlayerMatchDeathEvent(EntityDeathEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-        Player player = (Player) event.getEntity();
-        Arena arena = arenaHandler.getArenaForPlayer(player);
-        if (arena == null) return;
-        PlayerMatchDeathEvent e = new PlayerMatchDeathEvent(arena.getMatch(), player, event);
-        Bukkit.getPluginManager().callEvent(e);
-    }
-
-
-    /**
      * Update PlayerScore on death
      */
     @EventHandler(priority = EventPriority.LOW)
