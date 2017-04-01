@@ -208,8 +208,10 @@ public class Vote {
      * Ensure that the BossBar is properly removed
      */
     private void removeBar() {
-        bar.removeAll();
-        bar = null;
+        if (bar != null) {
+            bar.removeAll();
+            bar = null;
+        }
     }
 
 
