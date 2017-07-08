@@ -2,18 +2,14 @@ package io.github.redwallhp.athenagm.modules.kits;
 
 import io.github.redwallhp.athenagm.AthenaGM;
 import io.github.redwallhp.athenagm.events.AthenaDeathEvent;
-import io.github.redwallhp.athenagm.events.PlayerMatchDeathEvent;
 import io.github.redwallhp.athenagm.events.PlayerMatchRespawnEvent;
 import io.github.redwallhp.athenagm.maps.MapInfoKitItem;
 import io.github.redwallhp.athenagm.matches.Match;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.modules.Module;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
-import io.github.redwallhp.athenagm.utilities.TitleBuilder;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
