@@ -19,7 +19,9 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -64,7 +66,7 @@ public class FriendlyFireModule implements Module {
     @EventHandler(priority = EventPriority.LOW)
     public void blockFriendlyFirePotions(PotionSplashEvent event) {
 
-        List<PotionEffectType> blacklist = new ArrayList<PotionEffectType>();
+        Set<PotionEffectType> blacklist = new HashSet<>();
         blacklist.add(PotionEffectType.HARM);
         blacklist.add(PotionEffectType.POISON);
         blacklist.add(PotionEffectType.WEAKNESS);

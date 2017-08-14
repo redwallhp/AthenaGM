@@ -10,8 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -19,7 +17,9 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Handles the cancellation of unwanted block destruction events
@@ -71,7 +71,7 @@ public class BlockBreakListener implements Listener {
      */
     @EventHandler
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
-        List<EntityType> protectedEnts = new ArrayList<EntityType>();
+        Set<EntityType> protectedEnts = new HashSet<>();
         protectedEnts.add(EntityType.ITEM_FRAME);
         protectedEnts.add(EntityType.ARMOR_STAND);
         CuboidRegion region = regionHandler.getApplicableRegion(event.getEntity().getLocation());

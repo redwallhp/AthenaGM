@@ -10,13 +10,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Data structure defining a player kit
@@ -83,7 +84,7 @@ public class MapInfoKitItem {
      */
     public void addPotion(String typeName, boolean upgraded, boolean extended) {
         Material mat = this.item.getType();
-        List<Material> types = new ArrayList<Material>();
+        Set<Material> types = new HashSet<>();
         types.add(Material.POTION);
         types.add(Material.SPLASH_POTION);
         types.add(Material.LINGERING_POTION);

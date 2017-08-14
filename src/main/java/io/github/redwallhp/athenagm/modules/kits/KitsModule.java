@@ -13,9 +13,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.ListIterator;
+import java.util.Set;
 
 /**
  * Handle player kits on respawn
@@ -74,7 +74,7 @@ public class KitsModule implements Module {
 
         if (event.getPlayerTeam().getKitItems() == null) return;
 
-        List<ItemStack> blacklist = new ArrayList<ItemStack>();
+        Set<ItemStack> blacklist = new HashSet<>();
         for (MapInfoKitItem kitItem : event.getPlayerTeam().getKitItems()) {
             if (!kitItem.dropOnDeath()) blacklist.add(kitItem.getItem());
         }
