@@ -145,7 +145,7 @@ public class ScoreboardModule implements Module {
      * Remove scoreboards from ended Matches
      */
     private void clearUnusedScoreboards() {
-        List<Match> activeMatches = new ArrayList<Match>();
+        Set<Match> activeMatches = new HashSet<>();
         for (Arena arena : plugin.getArenaHandler().getArenas()) {
             activeMatches.add(arena.getMatch());
         }

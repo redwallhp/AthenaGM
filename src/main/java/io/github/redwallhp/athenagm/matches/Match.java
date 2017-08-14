@@ -16,6 +16,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents an ongoing Match's state and data
@@ -189,14 +190,12 @@ public class Match {
 
 
     /**
-     * Get a List of the players across the Match's Teams
+     * Get a Set of the players across the Match's Teams
      */
-    public List<Player> getAllPlayers() {
-        List<Player> players = new ArrayList<Player>();
+    public Set<Player> getAllPlayers() {
+        Set<Player> players = new HashSet<>();
         for (Team t : this.getTeams().values()) {
-            for (Player p : t.getPlayers()) {
-                players.add(p);
-            }
+            players.addAll(t.getPlayers().stream().collect(Collectors.toSet()));
         }
         return players;
     }

@@ -273,7 +273,7 @@ public class GameMap {
     private HashMap<String, Flag<?>> loadRegionFlags(String name, FileConfiguration yaml) {
 
         HashMap<String, Flag<?>> regionFlags = new HashMap<String, Flag<?>>();
-        List<Flag<?>> flags = new ArrayList<Flag<?>>();
+        Set<Flag<?>> flags = new HashSet<>();
 
         flags.add(new BooleanFlag("build"));
         flags.add(new BooleanFlag("destroy"));

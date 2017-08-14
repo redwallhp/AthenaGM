@@ -3,8 +3,8 @@ package io.github.redwallhp.athenagm.utilities;
 import org.bukkit.Color;
 import org.bukkit.Material;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ItemUtil {
 
@@ -13,8 +13,8 @@ public class ItemUtil {
      * A list of Materials that do something when right-clicked.
      * e.g. for blacklisting in PlayerInteractEvent in spectator mode.
      */
-    public static List<Material> getInteractiveBlocks() {
-        List<Material> interactive = new ArrayList<Material>();
+    public static Set<Material> getInteractiveBlocks() {
+        Set<Material> interactive = new HashSet<>();
         interactive.add(Material.ACACIA_DOOR);
         interactive.add(Material.ACACIA_FENCE_GATE);
         interactive.add(Material.ANVIL);
