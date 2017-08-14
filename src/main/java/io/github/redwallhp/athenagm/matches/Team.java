@@ -12,7 +12,9 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -28,7 +30,7 @@ public class Team {
     private String kit;
     private Integer size;
     private Boolean spectator;
-    private List<Player> players;
+    private Set<Player> players;
     private HashMap<Player, PlayerScore> playerScores;
     private int points;
 
@@ -50,7 +52,7 @@ public class Team {
         this.kit = kit;
         this.size = size;
         this.spectator = spectator;
-        this.players = new ArrayList<Player>();
+        this.players = new HashSet<>();
         this.playerScores = new HashMap<Player, PlayerScore>();
         this.points = 0;
     }
@@ -208,7 +210,7 @@ public class Team {
     /**
      * Get a List of the players on the team
      */
-    public List<Player> getPlayers() {
+    public Set<Player> getPlayers() {
         return this.players;
     }
 
